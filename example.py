@@ -56,7 +56,8 @@ def main():
 
         # Now let's filter all the blueprints of type 'vehicle' and choose one
         # at random.
-        bp = random.choice(blueprint_library.filter('vehicle.bmw.grandtourer'))
+        # bp = random.choice(blueprint_library.filter('vehicle.bmw.grandtourer'))
+        bp = random.choice(blueprint_library.filter('vehicle.tesla.model3'))
 
         # A blueprint contains the list of attributes that define a vehicle's
         # instance, we can read them and modify some of them. For instance,
