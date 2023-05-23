@@ -126,7 +126,7 @@ def main():
         # for t in range(50):
         while True:
             time.sleep(1)
-            energy_tracker.tick()
+            # energy_tracker.tick()
 
     finally:
 

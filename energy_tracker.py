@@ -1,12 +1,12 @@
 import math
-from carla import Vehicle, WorldSnapshot
+from carla import Vehicle, WorldSnapshot, Vector3D
 
 
 class EnergyTracker:
     def __init__(self, vehicle:Vehicle, A_f:float=2.3316,
                 gravity:float=9.8066, C_r:float=1.75, c_1:float=0.0328, c_2:float=4.575, 
                 rho_Air:float=1.2256, C_D:float=0.28) -> None:
-        self.vehicle = vehicle
+        self.vehicle_id = vehicle.id
         physics_vehicle = vehicle.get_physics_control()
         self.mass = physics_vehicle.mass
         self.A_f = A_f
@@ -17,29 +17,42 @@ class EnergyTracker:
         self.rho_Air = rho_Air
         self.C_D = C_D
 
-    def tick(self):
-        print(f"Power consumed: {self.power()} kW")
+        self.total_energy = 0
+        self.world = vehicle.get_world()
+        # self.last_snapshot = self.world.get_snapshot()
+        self.world.on_tick(self.on_tick)
 
-    def power(self):
-        acceleration = self.vehicle.get_acceleration()
-        v = self.vehicle.get_velocity()
-        if self.check_acceleration(acceleration, v):
-            horizontal_a = math.sqrt(acceleration.x**2 + acceleration.y**2)
-            # TODO: Use only acceleration in direction of velocity (magnitude of the projection of [a.x, a.y] onto [v.x, v.y])?
-            horizontal_v = math.sqrt(v.x ** 2 + v.y ** 2)
-            grade = 0   # Default
-            if horizontal_v > 0.555556: # 2 km/h in m/s
-                grade = v.z / horizontal_v
-            return self.wheel_power(horizontal_a, horizontal_v, grade)
+    def on_tick(self, snapshot:WorldSnapshot):
+        vehicle = snapshot.find(self.vehicle_id)
+        power = self.power(vehicle)
+        energy = power * snapshot.delta_seconds / (60 * 60)
+        self.total_energy += energy
+        print(f"Energy consumed: {energy} kWh (Total: {self.total_energy} kWh)")
+
+    def power(self, vehicle):
+        acceleration = vehicle.get_acceleration()
+        v = vehicle.get_velocity()
+        horizontal_v = math.sqrt(v.x ** 2 + v.y ** 2)
+        if horizontal_v > 0:
+            # Use only acceleration in direction of velocity (magnitude of the projection of [a.x, a.y] onto [v.x, v.y])
+            a_mag = self.acceleration_magnitude(acceleration, v)
+            if a_mag > 0:
+                grade = 0   # Default
+                if horizontal_v > 0.555556: # 2 km/h in m/s
+                    grade = v.z / horizontal_v
+                return self.wheel_power(a_mag, horizontal_v, grade)
+            else:
+                return 0    # No energy regeneration for now
         else:
-            return 0    # No energy regeneration for now
-
-    def check_acceleration(self, acceleration, velocity):
+            return 0
+    
+    def acceleration_magnitude(self, acceleration:Vector3D, direction:Vector3D):
         """
-        Return whether the object is accelerating (not decelerating) relative to the direction of its velocity.
+        Return the magnitude of the `acceleration` vector in the direction of the `direction` vector.
         """
-        d = acceleration.x*velocity.x + acceleration.y*velocity.y   # Dot product
-        return d > 0
+        dot = acceleration.x*direction.x + acceleration.y*direction.y   # Dot product
+        d_mag = math.sqrt(direction.x**2 + direction.y**2)
+        return dot / d_mag
 
     def wheel_power(self, acceleration:float, velocity:float, theta:float):
         term1 = self.mass * acceleration
