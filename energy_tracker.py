@@ -6,7 +6,8 @@ class EnergyTracker:
     def __init__(self, vehicle:Vehicle, A_f:float=2.3316,
                 gravity:float=9.8066, C_r:float=1.75, c_1:float=0.0328, c_2:float=4.575, 
                 rho_Air:float=1.2256, C_D:float=0.28,
-                motor_efficiency:float=0.91, driveline_efficiency:float=0.92) -> None:
+                motor_efficiency:float=0.91, driveline_efficiency:float=0.92, 
+                braking_alpha:float=0.0411) -> None:
         self.vehicle_id = vehicle.id
         physics_vehicle = vehicle.get_physics_control()
         self.mass = physics_vehicle.mass
@@ -19,6 +20,7 @@ class EnergyTracker:
         self.C_D = C_D
         self.motor_efficiency = motor_efficiency
         self.driveline_efficiency = driveline_efficiency
+        self.braking_alpha = braking_alpha
 
         self.total_energy = 0
         self.world = vehicle.get_world()
@@ -45,15 +47,16 @@ class EnergyTracker:
         if horizontal_v > 0:
             # Use only acceleration in direction of velocity (magnitude of the projection of [a.x, a.y] onto [v.x, v.y])
             a_mag = self.acceleration_magnitude(acceleration, v)
-            if a_mag > 0:
-                grade = 0   # Default
-                if horizontal_v > 0.555556: # 2 km/h in m/s
-                    grade = v.z / horizontal_v
-                return self.wheel_power(a_mag, horizontal_v, grade) / (self.motor_efficiency * self.driveline_efficiency)
+            grade = 0   # Default
+            if horizontal_v > 0.555556: # 2 km/h in m/s
+                grade = v.z / horizontal_v  # Use velocity to calculate road grade. There may be a better way to do this.
+            wheel_power = self.wheel_power(a_mag, horizontal_v, grade)
+            if wheel_power > 0:
+                return wheel_power / (self.motor_efficiency * self.driveline_efficiency)
             else:
-                return 0    # No energy regeneration for now
+                return wheel_power * self.braking_efficiency(a_mag)
         else:
-            # TODO: Stationary/driving backwards?
+            # TODO: Stationary?
             return 0
     
     def acceleration_magnitude(self, acceleration:Vector3D, direction:Vector3D):
@@ -74,3 +77,10 @@ class EnergyTracker:
         term3 = self.rho_Air * self.A_f * self.C_D * (velocity ** 2) / 2
         term4 = self.mass * self.gravity * math.sin(theta)
         return (term1 + term2 + term3 + term4) * velocity
+    
+    def braking_efficiency(self, acceleration:float):
+        """
+        Calculate the braking efficiency for a given acceleration.
+        https://doi.org/10.1016/j.apenergy.2016.01.097
+        """
+        return (math.e**(self.braking_alpha/abs(acceleration)))**-1
