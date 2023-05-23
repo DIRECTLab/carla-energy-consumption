@@ -23,7 +23,7 @@ import carla
 import random
 import time
 
-from timer import RepeatedTimer
+from distance_tracker import DistanceTracker
 from energy_tracker import EnergyTracker
 
 
@@ -71,6 +71,10 @@ def main():
 
         # So let's tell the world to spawn the vehicle.
         vehicle = world.spawn_actor(bp, transform)
+
+        physics_vehicle = vehicle.get_physics_control()
+        mass = physics_vehicle.mass
+        print(f"Mass: {mass} kg")
 
         # It is important to note that the actors we create won't be destroyed
         # unless we call their "destroy" function. If we fail to call "destroy"
@@ -121,12 +125,14 @@ def main():
         #         npc.set_autopilot(True)
         #         print('created %s' % npc.type_id)
 
+        distance_tracker = DistanceTracker(vehicle)
         energy_tracker = EnergyTracker(vehicle)
 
         # for t in range(50):
         while True:
             time.sleep(1)
-            # energy_tracker.tick()
+            print(f"Distance travelled: {distance_tracker.distance_travelled} m")
+            print(f"Energy consumed: {energy_tracker.total_energy} kWh")
 
     finally:
 
