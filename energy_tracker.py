@@ -85,7 +85,7 @@ class EnergyTracker:
         https://doi.org/10.1016/j.apenergy.2016.01.097
         """
         if acceleration >= 0:
-            print(f"In braking_efficiency: Rejecting {acceleration=}.", file=sys.stderr)
+            print(f"In braking_efficiency: Rejecting nonnegative {acceleration=}.", file=sys.stderr)
             return 0
         exponent = -self.braking_alpha/acceleration
         try:
