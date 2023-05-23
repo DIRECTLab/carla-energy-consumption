@@ -56,7 +56,7 @@ def main():
 
         # Now let's filter all the blueprints of type 'vehicle' and choose one
         # at random.
-        bp = random.choice(blueprint_library.filter('vehicle'))
+        bp = random.choice(blueprint_library.filter('vehicle.bmw.grandtourer'))
 
         # A blueprint contains the list of attributes that define a vehicle's
         # instance, we can read them and modify some of them. For instance,
@@ -72,10 +72,6 @@ def main():
         # So let's tell the world to spawn the vehicle.
         vehicle = world.spawn_actor(bp, transform)
 
-        physics_vehicle = vehicle.get_physics_control()
-        mass = physics_vehicle.mass
-        print(f"Mass: {mass} kg")
-
         # It is important to note that the actors we create won't be destroyed
         # unless we call their "destroy" function. If we fail to call "destroy"
         # they will stay in the simulation even after we quit the Python script.
@@ -83,6 +79,10 @@ def main():
         # destroy them afterwards.
         actor_list.append(vehicle)
         print('created %s' % vehicle.type_id)
+
+        physics_vehicle = vehicle.get_physics_control()
+        mass = physics_vehicle.mass
+        print(f"Mass: {mass} kg")
 
         # Let's put the vehicle to drive around.
         vehicle.set_autopilot(True)

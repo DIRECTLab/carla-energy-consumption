@@ -1,5 +1,6 @@
 import math
 from carla import Vehicle, WorldSnapshot, Vector3D
+import sys
 
 
 class EnergyTracker:
@@ -51,7 +52,7 @@ class EnergyTracker:
             if horizontal_v > 0.555556: # 2 km/h in m/s
                 grade = v.z / horizontal_v  # Use velocity to calculate road grade. There may be a better way to do this.
             wheel_power = self.wheel_power(a_mag, horizontal_v, grade)
-            if wheel_power > 0:
+            if wheel_power >= 0:
                 return wheel_power / (self.motor_efficiency * self.driveline_efficiency)
             else:
                 return wheel_power * self.braking_efficiency(a_mag)
@@ -83,4 +84,13 @@ class EnergyTracker:
         Calculate the braking efficiency for a given acceleration.
         https://doi.org/10.1016/j.apenergy.2016.01.097
         """
-        return (math.e**(self.braking_alpha/abs(acceleration)))**-1
+        if acceleration >= 0:
+            print(f"In braking_efficiency: Rejecting {acceleration=}.", file=sys.stderr)
+            return 0
+        exponent = -self.braking_alpha/acceleration
+        try:
+            denominator = math.e**exponent
+        except OverflowError:
+            print(f"In braking_efficiency: {exponent=} caused OverflowError. Returning 0.", file=sys.stderr)
+            return 0
+        return 1 / denominator
