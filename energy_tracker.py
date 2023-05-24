@@ -61,11 +61,11 @@ class EnergyTracker:
             grade = 0   # Default
             if horizontal_v > 0.555556: # 2 km/h in m/s
                 grade = v.z / horizontal_v  # Use velocity to calculate road grade. There may be a better way to do this.
-            wheel_power = self.wheel_power(a_mag, horizontal_v, grade)
+            wheel_power = self._wheel_power(a_mag, horizontal_v, grade)
             if wheel_power >= 0:
                 return wheel_power / (self.motor_to_wheels_efficiency)
             else:
-                return wheel_power * self.braking_efficiency(a_mag)
+                return wheel_power * self._braking_efficiency(a_mag)
         else:
             # TODO: Stationary?
             return 0
@@ -78,7 +78,7 @@ class EnergyTracker:
         direction_magnitude = math.sqrt(direction.x**2 + direction.y**2)
         return dot / direction_magnitude
 
-    def wheel_power(self, acceleration:float, velocity:float, theta:float):
+    def _wheel_power(self, acceleration:float, velocity:float, theta:float):
         """
         Calculate the power at the wheels in Watts.
         https://doi.org/10.1016/j.apenergy.2016.01.097
@@ -89,7 +89,7 @@ class EnergyTracker:
         term4 = self.mass * self.gravity * math.sin(theta)
         return (term1 + term2 + term3 + term4) * velocity
     
-    def braking_efficiency(self, acceleration:float):
+    def _braking_efficiency(self, acceleration:float):
         """
         Calculate the braking efficiency for a given acceleration.
         https://doi.org/10.1016/j.apenergy.2016.01.097
