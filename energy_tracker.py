@@ -19,23 +19,26 @@ class EnergyTracker:
         self.c_2 = c_2
         self.rho_Air = rho_Air
         self.C_D = C_D
-        self.motor_efficiency = motor_efficiency
-        self.driveline_efficiency = driveline_efficiency
+        self.motor_to_wheels_efficiency = motor_efficiency * driveline_efficiency
         self.braking_alpha = braking_alpha
 
         self.total_energy = 0
-        self.world = vehicle.get_world()
+        self._world = vehicle.get_world()
         # self.last_snapshot = self.world.get_snapshot()
-        self.on_tick_id = self.world.on_tick(self._on_tick)
+        self._on_tick_id = self._world.on_tick(self._on_tick)
 
     def __del__(self):
-        self.world.remove_on_tick(self.on_tick_id)
+        self._world.remove_on_tick(self._on_tick_id)
 
     def _on_tick(self, snapshot:WorldSnapshot):
         vehicle = snapshot.find(self.vehicle_id)
-        energy = self.energy(vehicle, snapshot.delta_seconds)
-        self.total_energy += energy
-        # print(f"Energy consumed: {energy} kWh (Total: {self.total_energy} kWh)")
+        if vehicle is None:
+            print(f"Error: Dead vehicle.", file=sys.stderr)
+            self._world.remove_on_tick(self._on_tick_id)
+        else:
+            energy = self.energy(vehicle, snapshot.delta_seconds)
+            self.total_energy += energy
+            # print(f"Energy consumed: {energy} kWh (Total: {self.total_energy} kWh)")
 
     def energy(self, vehicle, dt:float):
         """
@@ -60,7 +63,7 @@ class EnergyTracker:
                 grade = v.z / horizontal_v  # Use velocity to calculate road grade. There may be a better way to do this.
             wheel_power = self.wheel_power(a_mag, horizontal_v, grade)
             if wheel_power >= 0:
-                return wheel_power / (self.motor_efficiency * self.driveline_efficiency)
+                return wheel_power / (self.motor_to_wheels_efficiency)
             else:
                 return wheel_power * self.braking_efficiency(a_mag)
         else:
