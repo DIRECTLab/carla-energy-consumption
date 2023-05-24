@@ -96,10 +96,181 @@ def test_power_4():
     return True
 
 
+def test_power_5():
+    vehicle = TestVehicle(Vector3D(2, 0, 0), Vector3D(1, 0, 0))
+    tracker = TestEnergyTracker(vehicle)
+    power = tracker.power(vehicle)
+    try:
+        assert power > 3777.6
+        assert power < 3777.7
+    except AssertionError:
+        traceback.print_exc()
+        print(f"{power=}")
+        print()
+        return False
+    return True
+
+
+def test_power_6():
+    vehicle = TestVehicle(Vector3D(1, 0, 0), Vector3D(2, 0, 0))
+    tracker = TestEnergyTracker(vehicle)
+    power = tracker.power(vehicle)
+    try:
+        assert power > 3926.7
+        assert power < 3926.8
+    except AssertionError:
+        traceback.print_exc()
+        print(f"{power=}")
+        print()
+        return False
+    return True
+
+
+def test_power_7():
+    vehicle = TestVehicle(Vector3D(1, 0, 0), Vector3D(1, 0, 0.1))
+    tracker = TestEnergyTracker(vehicle)
+    power = tracker.power(vehicle)
+    try:
+        assert power > 3738.8
+        assert power < 3738.9
+    except AssertionError:
+        traceback.print_exc()
+        print(f"{power=}")
+        print()
+        return False
+    return True
+
+
+def test_power_8():
+    vehicle = TestVehicle(Vector3D(-1, 0, 0), Vector3D(1, 0, 0))
+    tracker = TestEnergyTracker(vehicle)
+    power = tracker.power(vehicle)
+    try:
+        assert power > -1344.0
+        assert power < -1343.9
+    except AssertionError:
+        traceback.print_exc()
+        print(f"{power=}")
+        print()
+        return False
+    return True
+
+
+def test_power_9():
+    """
+    Only use acceleration in the direction of velocity.
+    """
+    vehicle = TestVehicle(Vector3D(1, 1, 0), Vector3D(1, 0, 0))
+    tracker = TestEnergyTracker(vehicle)
+    power = tracker.power(vehicle)
+    try:
+        assert power > 1960.9
+        assert power < 1961.0
+    except AssertionError:
+        traceback.print_exc()
+        print(f"{power=}")
+        print()
+        return False
+    return True
+
+
+def test_power_10():
+    """
+    Ensure magnitude of velocity is used.
+    """
+    vehicle = TestVehicle(Vector3D(1, 1, 0), Vector3D(1, 1, 0))
+    tracker = TestEnergyTracker(vehicle)
+    power = tracker.power(vehicle)
+    try:
+        assert power > 3838.6
+        assert power < 3838.7
+    except AssertionError:
+        traceback.print_exc()
+        print(f"{power=}")
+        print()
+        return False
+    return True
+
+
+def test_energy_1():
+    vehicle = TestVehicle()
+    tracker = TestEnergyTracker(vehicle)
+    energy = tracker.energy(vehicle, 1)
+    try:
+        assert energy == 0
+    except AssertionError:
+        traceback.print_exc()
+        print(f"{energy=}")
+        print()
+        return False
+    return True
+
+
+def test_energy_2():
+    vehicle = TestVehicle(Vector3D(1, 0, 0), Vector3D(1, 0, 0))
+    tracker = TestEnergyTracker(vehicle)
+    energy = tracker.energy(vehicle, 3600)
+    try:
+        assert energy > 1.9609
+        assert energy < 1.9610
+    except AssertionError:
+        traceback.print_exc()
+        print(f"{energy=}")
+        print()
+        return False
+    return True
+
+
+def test_energy_3():
+    vehicle = TestVehicle(Vector3D(-1, 0, 0), Vector3D(1, 0, 0))
+    tracker = TestEnergyTracker(vehicle)
+    energy = tracker.energy(vehicle, 3600)
+    try:
+        assert energy > -1.3440
+        assert energy < -1.3439
+    except AssertionError:
+        traceback.print_exc()
+        print(f"{energy=}")
+        print()
+        return False
+    return True
+
+
+def test_energy_4():
+    vehicle = TestVehicle(Vector3D(1, 0, 0), Vector3D(1, 0, 0))
+    tracker = TestEnergyTracker(vehicle)
+    energy = tracker.energy(vehicle, 1)
+    try:
+        assert energy > 0.00054469
+        assert energy < 0.00054470
+    except AssertionError:
+        traceback.print_exc()
+        print(f"{energy=}")
+        print()
+        return False
+    return True
+
+
 if __name__ == "__main__":
+    tests = (
+        test_power_1, 
+        test_power_2, 
+        test_power_3, 
+        test_power_4, 
+        test_power_5, 
+        test_power_6, 
+        test_power_7,
+        test_power_8,
+        test_power_9,
+        test_power_10,
+        test_energy_1,
+        test_energy_2,
+        test_energy_3,
+        test_energy_4,
+        )
     success = 0
     total = 0
-    for test in (test_power_1, test_power_2, test_power_3, test_power_4):
+    for test in tests:
         if test():
             success += 1
         total += 1
