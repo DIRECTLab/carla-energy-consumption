@@ -42,13 +42,14 @@ def main():
         # to the simulator. Here we'll assume the simulator is accepting
         # requests in the localhost at port 2000.
         client = carla.Client('127.0.0.1', 2000)
-        client.set_timeout(2.0)
+        client.set_timeout(10.0)
 
         # Once we have a client we can retrieve the world that is currently
         # running.
         world = client.get_world()
 
         # world = client.load_world('Town04')
+        world = client.load_world('Town10HD')
 
         # Set traffic manager to normal speed (instead of default 70%)
         traffic_manager = client.get_trafficmanager()
@@ -72,6 +73,10 @@ def main():
         #     color = random.choice(recommended_colors)
         #     bp.set_attribute('color', color)
         bp.set_attribute('color', '204,255,11') # Lime green to make it visible
+
+        bp.set_attribute('role_name', 'hero')
+        traffic_manager.set_hybrid_physics_mode(True)
+        traffic_manager.set_respawn_dormant_vehicles(True)
 
         # Now we need to give an initial transform to the vehicle. We choose a
         # random transform from the list of recommended spawn points of the map.
@@ -118,7 +123,7 @@ def main():
 
         # But the city now is probably quite empty, let's add a few more
         # vehicles.
-        for _ in range(0, 30):
+        for _ in range(0, 50):
             bp = random.choice(blueprint_library.filter('vehicle'))
 
             for _ in range(5):  # Try spawning 5 times
@@ -132,7 +137,7 @@ def main():
         print(f"Total number of vehicles: {len(actor_list)}")
 
         distance_tracker = DistanceTracker(vehicle)
-        energy_tracker = EnergyTracker(vehicle, hvac=500)
+        energy_tracker = EnergyTracker(vehicle, hvac=0)
 
         # for t in range(50):
         while True:
