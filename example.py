@@ -62,9 +62,12 @@ def main():
         # A blueprint contains the list of attributes that define a vehicle's
         # instance, we can read them and modify some of them. For instance,
         # let's randomize its color.
-        if bp.has_attribute('color'):
-            color = random.choice(bp.get_attribute('color').recommended_values)
-            bp.set_attribute('color', color)
+        # if bp.has_attribute('color'):
+        #     recommended_colors = bp.get_attribute('color').recommended_values
+        #     print(f"Recommended colors: {recommended_colors}")
+        #     color = random.choice(recommended_colors)
+        #     bp.set_attribute('color', color)
+        bp.set_attribute('color', '204,255,11') # Lime green to make it visible
 
         # Now we need to give an initial transform to the vehicle. We choose a
         # random transform from the list of recommended spawn points of the map.
