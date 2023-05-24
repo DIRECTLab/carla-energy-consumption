@@ -50,6 +50,10 @@ def main():
 
         # world = client.load_world('Town04')
 
+        # Set traffic manager to normal speed (instead of default 70%)
+        traffic_manager = client.get_trafficmanager()
+        traffic_manager.global_percentage_speed_difference(0)
+
         # The world contains the list blueprints that we can use for adding new
         # actors into the simulation.
         blueprint_library = world.get_blueprint_library()
