@@ -66,10 +66,25 @@ def test_power_2():
     return True
 
 
+def test_power_3():
+    vehicle = TestVehicle(Vector3D(1, 0, 0), Vector3D(1, 0, 0))
+    tracker = TestEnergyTracker(vehicle, A_f=4.0)
+    power = tracker.power(vehicle)
+    try:
+        assert power > 1961.2
+        assert power < 1961.3
+    except AssertionError:
+        traceback.print_exc()
+        print(f"{power=}")
+        print()
+        return False
+    return True
+
+
 if __name__ == "__main__":
     success = 0
     total = 0
-    for test in (test_power_1, test_power_2):
+    for test in (test_power_1, test_power_2, test_power_3):
         if test():
             success += 1
         total += 1
