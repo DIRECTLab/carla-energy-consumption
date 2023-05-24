@@ -23,6 +23,7 @@ import carla
 import random
 import time
 
+from time_tracker import TimeTracker
 from distance_tracker import DistanceTracker
 from energy_tracker import EnergyTracker
 
@@ -136,14 +137,24 @@ def main():
                     break
         print(f"Total number of vehicles: {len(actor_list)}")
 
+        time_tracker = TimeTracker(vehicle)
         distance_tracker = DistanceTracker(vehicle)
         energy_tracker = EnergyTracker(vehicle, hvac=0)
 
         # for t in range(50):
         while True:
             time.sleep(1)
-            print(f"Distance travelled: {distance_tracker.distance_travelled} m")
-            print(f"Energy consumed: {energy_tracker.total_energy} kWh")
+            print(f"After {time_tracker.time:G} s:")
+            print(f"\tDistance travelled: {distance_tracker.distance_travelled:G} m")
+            m_per_s = distance_tracker.distance_travelled / time_tracker.time
+            km_per_h = m_per_s * 60 * 60 / 1000
+            mph = km_per_h / 1.60934
+            print(f"\tAverage speed: {m_per_s:G} m/s ({km_per_h:G} km/h) ({mph:G} mph)")
+            print(f"\tEnergy consumed: {energy_tracker.total_energy:G} kWh")
+            kWh_per_m = energy_tracker.total_energy / distance_tracker.distance_travelled
+            kWh_per_100km = kWh_per_m * 1000 * 100
+            kWh_per_100mi = kWh_per_100km / 1.60934
+            print(f"\tEnergy efficiency: {kWh_per_m:G} kWh/m ({kWh_per_100km:G} kWh / 100 km) ({kWh_per_100mi:G} kWh / 100 mi)")
 
     finally:
 
