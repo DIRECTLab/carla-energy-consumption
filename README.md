@@ -10,3 +10,10 @@ Energy consumption tracking for CARLA simulator.
 
 ## Requirements
 Follow CARLA installation instructions for both server and client. This code was tested on CARLA `v0.9.14`.
+
+## Results
+Tesla Model 3 with traffic, Town10:
+118476 m on 13.4884 kWh (18.3222 kWh / 100 mi)
+
+Tesla Model 3 with traffic, Town04:
+134928 m on 17.3534 kWh (20.6981 kWh / 100 mi)
