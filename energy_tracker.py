@@ -4,14 +4,19 @@ import sys
 
 
 class EnergyTracker:
-    def __init__(self, vehicle:Vehicle, A_f:float=2.3316,
+    def __init__(self, vehicle:Vehicle, hvac:float=0, A_f:float=2.3316,
                 gravity:float=9.8066, C_r:float=1.75, c_1:float=0.0328, c_2:float=4.575, 
                 rho_Air:float=1.2256, C_D:float=0.28,
                 motor_efficiency:float=0.91, driveline_efficiency:float=0.92, 
                 braking_alpha:float=0.0411) -> None:
+        """
+        `hvac`: Power used for HVAC, in Watts.
+        The remaining values are from https://doi.org/10.1016/j.apenergy.2016.01.097 .
+        """
         self.vehicle_id = vehicle.id
         physics_vehicle = vehicle.get_physics_control()
         self.mass = physics_vehicle.mass
+        self.hvac = hvac
         self.A_f = A_f
         self.gravity = gravity
         self.C_r = C_r
@@ -63,12 +68,12 @@ class EnergyTracker:
                 grade = v.z / horizontal_v  # Use velocity to calculate road grade. There may be a better way to do this.
             wheel_power = self._wheel_power(a_mag, horizontal_v, grade)
             if wheel_power >= 0:
-                return wheel_power / (self.motor_to_wheels_efficiency)
+                traction_power = wheel_power / (self.motor_to_wheels_efficiency)
             else:
-                return wheel_power * self._braking_efficiency(a_mag)
+                traction_power = wheel_power * self._braking_efficiency(a_mag)
+            return traction_power + self.hvac
         else:
-            # TODO: Stationary?
-            return 0
+            return self.hvac
     
     def _acceleration_magnitude(self, acceleration:Vector3D, direction:Vector3D):
         """

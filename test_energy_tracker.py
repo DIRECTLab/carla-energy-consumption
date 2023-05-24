@@ -17,12 +17,13 @@ class TestVehicle:
 
 
 class TestEnergyTracker(EnergyTracker):
-    def __init__(self, vehicle:Vehicle, A_f:float=2.3316,
+    def __init__(self, vehicle:Vehicle, hvac:float=0, A_f:float=2.3316,
                 gravity:float=9.8066, C_r:float=1.75, c_1:float=0.0328, c_2:float=4.575, 
                 rho_Air:float=1.2256, C_D:float=0.28,
                 motor_efficiency:float=0.91, driveline_efficiency:float=0.92, 
                 braking_alpha:float=0.0411, mass=1521) -> None:
         self.mass = mass
+        self.hvac = hvac
         self.A_f = A_f
         self.gravity = gravity
         self.C_r = C_r
@@ -192,6 +193,22 @@ def test_power_10():
     return True
 
 
+def test_power_11():
+    vehicle = TestVehicle(Vector3D(1, 0, 0), Vector3D(1, 0, 0))
+    tracker = TestEnergyTracker(vehicle, hvac=6000)
+    power = tracker.power(vehicle)
+    try:
+        assert power > 7960.9
+        assert power < 7961.0
+    except AssertionError:
+        traceback.print_exc()
+        print(f"{power=}")
+        print()
+        return False
+    return True
+
+
+
 def test_energy_1():
     vehicle = TestVehicle()
     tracker = TestEnergyTracker(vehicle)
@@ -263,6 +280,7 @@ if __name__ == "__main__":
         test_power_8,
         test_power_9,
         test_power_10,
+        test_power_11,
         test_energy_1,
         test_energy_2,
         test_energy_3,

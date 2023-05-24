@@ -130,7 +130,7 @@ def main():
         #         print('created %s' % npc.type_id)
 
         distance_tracker = DistanceTracker(vehicle)
-        energy_tracker = EnergyTracker(vehicle)
+        energy_tracker = EnergyTracker(vehicle, hvac=500)
 
         # for t in range(50):
         while True:
