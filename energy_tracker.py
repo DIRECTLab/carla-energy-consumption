@@ -26,17 +26,24 @@ class EnergyTracker:
         self.total_energy = 0
         self.world = vehicle.get_world()
         # self.last_snapshot = self.world.get_snapshot()
-        self.on_tick_id = self.world.on_tick(self.on_tick)
+        self.on_tick_id = self.world.on_tick(self._on_tick)
 
     def __del__(self):
         self.world.remove_on_tick(self.on_tick_id)
 
-    def on_tick(self, snapshot:WorldSnapshot):
+    def _on_tick(self, snapshot:WorldSnapshot):
         vehicle = snapshot.find(self.vehicle_id)
-        kilowatt = self.power(vehicle) / 1000
-        energy = kilowatt * snapshot.delta_seconds / (60 * 60)
+        energy = self.energy(vehicle, snapshot.delta_seconds)
         self.total_energy += energy
         # print(f"Energy consumed: {energy} kWh (Total: {self.total_energy} kWh)")
+
+    def energy(self, vehicle, dt:float):
+        """
+        Return the energy used during dt in kWh.
+        """
+        kilowatt = self.power(vehicle) / 1000
+        energy = kilowatt * dt / (60 * 60)
+        return energy
 
     def power(self, vehicle):
         """
@@ -47,7 +54,7 @@ class EnergyTracker:
         horizontal_v = math.sqrt(v.x ** 2 + v.y ** 2)
         if horizontal_v > 0:
             # Use only acceleration in direction of velocity (magnitude of the projection of [a.x, a.y] onto [v.x, v.y])
-            a_mag = self.acceleration_magnitude(acceleration, v)
+            a_mag = self._acceleration_magnitude(acceleration, v)
             grade = 0   # Default
             if horizontal_v > 0.555556: # 2 km/h in m/s
                 grade = v.z / horizontal_v  # Use velocity to calculate road grade. There may be a better way to do this.
@@ -60,13 +67,13 @@ class EnergyTracker:
             # TODO: Stationary?
             return 0
     
-    def acceleration_magnitude(self, acceleration:Vector3D, direction:Vector3D):
+    def _acceleration_magnitude(self, acceleration:Vector3D, direction:Vector3D):
         """
         Return the magnitude of the `acceleration` vector in the direction of the `direction` vector.
         """
         dot = acceleration.x*direction.x + acceleration.y*direction.y   # Dot product
-        d_mag = math.sqrt(direction.x**2 + direction.y**2)
-        return dot / d_mag
+        direction_magnitude = math.sqrt(direction.x**2 + direction.y**2)
+        return dot / direction_magnitude
 
     def wheel_power(self, acceleration:float, velocity:float, theta:float):
         """
@@ -83,6 +90,7 @@ class EnergyTracker:
         """
         Calculate the braking efficiency for a given acceleration.
         https://doi.org/10.1016/j.apenergy.2016.01.097
+        I don't love this method, but I have yet to find a better way.
         """
         if acceleration >= 0:
             print(f"In braking_efficiency: Rejecting nonnegative {acceleration=}.", file=sys.stderr)
