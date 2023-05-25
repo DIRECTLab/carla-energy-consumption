@@ -7,14 +7,17 @@ from tracker import Tracker
 class KinematicsTracker(Tracker):
     def __init__(self, vehicle: Vehicle) -> None:
         super().__init__(vehicle)
+        self.speed = 0
         self.speed_series = list()
         self.distance_travelled = 0
         self.distance_series = list()
+        self.acceleration = 0
         self.acceleration_series = list()
 
     def _update(self, snapshot: WorldSnapshot, vehicle) -> None:
         velocity = vehicle.get_velocity()
         speed = velocity.length()
+        self.speed = speed
         self.speed_series.append(speed)
         
         distance = speed * snapshot.delta_seconds
@@ -27,4 +30,5 @@ class KinematicsTracker(Tracker):
             acceleration_magnitude = dot / speed
         else:
             acceleration_magnitude = 0  # This is a pretty safe assumption
+        self.acceleration = acceleration_magnitude
         self.acceleration_series.append(acceleration_magnitude)

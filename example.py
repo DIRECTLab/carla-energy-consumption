@@ -52,7 +52,7 @@ def main():
         world = client.get_world()
 
         # world = client.load_world('Town04')
-        # world = client.load_world('Town10HD')
+        world = client.load_world('Town10HD')
 
         # Set traffic manager to normal speed (instead of default 70%)
         traffic_manager = client.get_trafficmanager()
@@ -142,6 +142,9 @@ def main():
         for tracker in trackers:
             tracker.start()
 
+        while kinematics_tracker.distance_travelled == 0:
+            time.sleep(1)
+
         # for t in range(50):
         while True:
             time.sleep(1)
@@ -151,8 +154,8 @@ def main():
             km_per_h = m_per_s * 60 * 60 / 1000
             mph = km_per_h / 1.60934
             print(f"\tAverage speed: {m_per_s:G} m/s ({km_per_h:G} km/h) ({mph:G} mph)")
-            print(f"\tSpeed: {kinematics_tracker.speed_series[-1]} m/s")
-            print(f"\tAcceleration: {kinematics_tracker.acceleration_series[-1]} m/s^2")
+            print(f"\tSpeed: {kinematics_tracker.speed} m/s")
+            print(f"\tAcceleration: {kinematics_tracker.acceleration} m/s^2")
             print(f"\tEnergy consumed: {energy_tracker.total_energy:G} kWh")
             kWh_per_m = energy_tracker.total_energy / kinematics_tracker.distance_travelled
             kWh_per_100km = kWh_per_m * 1000 * 100
