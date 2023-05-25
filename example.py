@@ -156,6 +156,9 @@ def main():
             kWh_per_100mi = kWh_per_100km / 1.60934
             print(f"\tEnergy efficiency: {kWh_per_m:G} kWh/m ({kWh_per_100km:G} kWh / 100 km) ({kWh_per_100mi:G} kWh / 100 mi)")
 
+    except KeyboardInterrupt:
+        pass
+
     finally:
 
         print('destroying actors')

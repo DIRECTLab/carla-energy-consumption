@@ -9,7 +9,7 @@ Energy consumption tracking for CARLA simulator.
 - `example.py` shows a usage example.
 
 ## Requirements
-Follow CARLA installation instructions for both server and client. This code was tested on CARLA `v0.9.14`.
+Follow CARLA installation instructions for both server and client. This code was tested on CARLA `v0.9.14`, Python `v3.8.16`.
 
 ## Results
 Tesla Model 3 with traffic, Town10:
