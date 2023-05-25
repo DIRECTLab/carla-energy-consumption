@@ -28,6 +28,7 @@ import matplotlib.pyplot as plt
 from time_tracker import TimeTracker
 from distance_tracker import DistanceTracker
 from energy_tracker import EnergyTracker
+from kinematics_tracker import KinematicsTracker
 
 
 def main():
@@ -144,8 +145,9 @@ def main():
 
         time_tracker = TimeTracker(vehicle)
         distance_tracker = DistanceTracker(vehicle)
+        kinematics_tracker = KinematicsTracker(vehicle)
         energy_tracker = EnergyTracker(vehicle, hvac=0, A_f=frontal_area, C_D=drag)
-        trackers = [time_tracker, distance_tracker, energy_tracker]
+        trackers = [time_tracker, distance_tracker, kinematics_tracker, energy_tracker]
         for tracker in trackers:
             tracker.start()
 
@@ -158,6 +160,8 @@ def main():
             km_per_h = m_per_s * 60 * 60 / 1000
             mph = km_per_h / 1.60934
             print(f"\tAverage speed: {m_per_s:G} m/s ({km_per_h:G} km/h) ({mph:G} mph)")
+            print(f"\tSpeed: {kinematics_tracker.speed_series[-1]} m/s")
+            print(f"\tAcceleration: {kinematics_tracker.acceleration_series[-1]} m/s^2")
             print(f"\tEnergy consumed: {energy_tracker.total_energy:G} kWh")
             kWh_per_m = energy_tracker.total_energy / distance_tracker.distance_travelled
             kWh_per_100km = kWh_per_m * 1000 * 100

@@ -96,12 +96,12 @@ class EnergyTracker(Tracker):
         I don't love this method, but I have yet to find a better way.
         """
         if acceleration >= 0:
-            print(f"In braking_efficiency: Rejecting nonnegative {acceleration=}.", file=sys.stderr)
+            # print(f"In braking_efficiency: Rejecting nonnegative {acceleration=}.", file=sys.stderr)
             return 0
         exponent = -self.braking_alpha/acceleration
         try:
             denominator = math.e**exponent
         except OverflowError:
-            print(f"In braking_efficiency: {exponent=} caused OverflowError. Returning 0.", file=sys.stderr)
+            # print(f"In braking_efficiency: {exponent=} caused OverflowError. Returning 0.", file=sys.stderr)
             return 0
         return 1 / denominator
