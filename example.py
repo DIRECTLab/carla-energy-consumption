@@ -51,7 +51,7 @@ def main():
         # running.
         world = client.get_world()
 
-        world = client.load_world('Town04')
+        # world = client.load_world('Town04')
         # world = client.load_world('Town10HD')
 
         # Set traffic manager to normal speed (instead of default 70%)
@@ -165,9 +165,31 @@ def main():
             print(f"\tEnergy efficiency: {kWh_per_m:G} kWh/m ({kWh_per_100km:G} kWh / 100 km) ({kWh_per_100mi:G} kWh / 100 mi)")
 
     except KeyboardInterrupt:
-        plt.plot(time_tracker.time_series, energy_tracker.power_series)
-        plt.xlabel("Time (s)")
-        plt.ylabel("Power from Motor (W)")
+        for tracker in trackers:
+            tracker.stop()
+
+        # Note that these plots may throw exceptions if different trackers had different amounts of updates. 
+        # This can be avoided via synchronous mode.
+
+        fig, power_ax = plt.subplots()
+        speed_ax = power_ax.twinx()
+
+        # Plot power over time
+        power_plot, = power_ax.plot(time_tracker.time_series, energy_tracker.power_series, "r-", label="Power")
+        power_ax.set_xlabel("Time (s)")
+        power_ax.set_ylabel("Power from Motor (W)")
+        power_ax.yaxis.label.set_color(power_plot.get_color())
+        power_ax.tick_params(axis='y', colors=power_plot.get_color())
+
+        # Plot speed over time
+        speed = [distance_tracker.distance_series[i] / time_tracker.interval_series[i] for i in range(len(distance_tracker.distance_series))]
+        speed_plot, = speed_ax.plot(time_tracker.time_series, speed, "g-", label="Speed")
+        speed_ax.set_ylabel("Vehicle Speed (m/s)")
+        speed_ax.yaxis.label.set_color(speed_plot.get_color())
+        speed_ax.tick_params(axis='y', colors=speed_plot.get_color())
+
+        power_ax.legend(handles=[power_plot, speed_plot])
+
         plt.show()
 
     finally:
