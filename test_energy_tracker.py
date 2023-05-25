@@ -212,7 +212,7 @@ def test_power_11():
 def test_energy_1():
     vehicle = TestVehicle()
     tracker = TestEnergyTracker(vehicle)
-    energy = tracker.energy(vehicle, 1)
+    energy = tracker.energy_from_power(0, 1)
     try:
         assert energy == 0
     except AssertionError:
@@ -226,7 +226,7 @@ def test_energy_1():
 def test_energy_2():
     vehicle = TestVehicle(Vector3D(1, 0, 0), Vector3D(1, 0, 0))
     tracker = TestEnergyTracker(vehicle)
-    energy = tracker.energy(vehicle, 3600)
+    energy = tracker.energy_from_power(1960.91, 3600)
     try:
         assert energy > 1.9609
         assert energy < 1.9610
@@ -241,7 +241,7 @@ def test_energy_2():
 def test_energy_3():
     vehicle = TestVehicle(Vector3D(-1, 0, 0), Vector3D(1, 0, 0))
     tracker = TestEnergyTracker(vehicle)
-    energy = tracker.energy(vehicle, 3600)
+    energy = tracker.energy_from_power(-1343.94, 3600)
     try:
         assert energy > -1.3440
         assert energy < -1.3439
@@ -256,7 +256,7 @@ def test_energy_3():
 def test_energy_4():
     vehicle = TestVehicle(Vector3D(1, 0, 0), Vector3D(1, 0, 0))
     tracker = TestEnergyTracker(vehicle)
-    energy = tracker.energy(vehicle, 1)
+    energy = tracker.energy_from_power(1960.91, 1)
     try:
         assert energy > 0.00054469
         assert energy < 0.00054470

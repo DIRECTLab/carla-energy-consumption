@@ -23,6 +23,8 @@ import carla
 import random
 import time
 
+import matplotlib.pyplot as plt
+
 from time_tracker import TimeTracker
 from distance_tracker import DistanceTracker
 from energy_tracker import EnergyTracker
@@ -49,8 +51,8 @@ def main():
         # running.
         world = client.get_world()
 
-        # world = client.load_world('Town04')
-        world = client.load_world('Town10HD')
+        world = client.load_world('Town04')
+        # world = client.load_world('Town10HD')
 
         # Set traffic manager to normal speed (instead of default 70%)
         traffic_manager = client.get_trafficmanager()
@@ -163,7 +165,10 @@ def main():
             print(f"\tEnergy efficiency: {kWh_per_m:G} kWh/m ({kWh_per_100km:G} kWh / 100 km) ({kWh_per_100mi:G} kWh / 100 mi)")
 
     except KeyboardInterrupt:
-        pass
+        plt.plot(time_tracker.time_series, energy_tracker.power_series)
+        plt.xlabel("Time (s)")
+        plt.ylabel("Power from Motor (W)")
+        plt.show()
 
     finally:
         del trackers

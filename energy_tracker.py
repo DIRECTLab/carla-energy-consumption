@@ -30,16 +30,21 @@ class EnergyTracker(Tracker):
         self.braking_alpha = braking_alpha
 
         self.total_energy = 0
+        self.power_series = list()  # No, this is not calculus
 
     def _update(self, snapshot:WorldSnapshot, vehicle) -> None:
-        energy = self.energy(vehicle, snapshot.delta_seconds)
+        power = self.power(vehicle)
+        self.power_series.append(power)
+        energy = self.energy_from_power(power, snapshot.delta_seconds)
         self.total_energy += energy
 
-    def energy(self, vehicle, dt:float):
+    def energy_from_power(self, power:float, dt:float):
         """
-        Return the energy used during dt in kWh.
+        Return the energy used in kWh.
+        `power`: Power in Watts.
+        `dt`: Time interval in s.
         """
-        kilowatt = self.power(vehicle) / 1000
+        kilowatt = power / 1000
         energy = kilowatt * dt / (60 * 60)
         return energy
 
