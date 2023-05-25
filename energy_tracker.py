@@ -2,8 +2,10 @@ import math
 from carla import Vehicle, WorldSnapshot, Vector3D
 import sys
 
+from tracker import Tracker
 
-class EnergyTracker:
+
+class EnergyTracker(Tracker):
     def __init__(self, vehicle:Vehicle, hvac:float=0, A_f:float=2.3316,
                 gravity:float=9.8066, C_r:float=1.75, c_1:float=0.0328, c_2:float=4.575, 
                 rho_Air:float=1.2256, C_D:float=0.28,
@@ -13,7 +15,7 @@ class EnergyTracker:
         `hvac`: Power used for HVAC, in Watts.
         The remaining values are from https://doi.org/10.1016/j.apenergy.2016.01.097 .
         """
-        self.vehicle_id = vehicle.id
+        super().__init__(vehicle)
         physics_vehicle = vehicle.get_physics_control()
         self.mass = physics_vehicle.mass
         self.hvac = hvac
@@ -28,22 +30,13 @@ class EnergyTracker:
         self.braking_alpha = braking_alpha
 
         self.total_energy = 0
-        self._world = vehicle.get_world()
-        # self.last_snapshot = self.world.get_snapshot()
-        self._on_tick_id = self._world.on_tick(self._on_tick)
-
-    def __del__(self):
-        self._world.remove_on_tick(self._on_tick_id)
 
     def _on_tick(self, snapshot:WorldSnapshot):
-        vehicle = snapshot.find(self.vehicle_id)
-        if vehicle is None:
-            print(f"Error: Dead vehicle.", file=sys.stderr)
-            self._world.remove_on_tick(self._on_tick_id)
-        else:
+        vehicle = super()._on_tick(snapshot)
+        if vehicle is not None:
             energy = self.energy(vehicle, snapshot.delta_seconds)
             self.total_energy += energy
-            # print(f"Energy consumed: {energy} kWh (Total: {self.total_energy} kWh)")
+        return vehicle
 
     def energy(self, vehicle, dt:float):
         """

@@ -1,6 +1,4 @@
 from carla import Vehicle, WorldSnapshot
-import math
-import sys
 
 from tracker import Tracker
 

@@ -1,5 +1,5 @@
 import traceback
-from carla import Vehicle, VehiclePhysicsControl, World, WorldSnapshot, Vector3D
+from carla import Vehicle, Vector3D
 
 from energy_tracker import EnergyTracker
 
