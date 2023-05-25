@@ -26,7 +26,6 @@ import time
 import matplotlib.pyplot as plt
 
 from time_tracker import TimeTracker
-from distance_tracker import DistanceTracker
 from energy_tracker import EnergyTracker
 from kinematics_tracker import KinematicsTracker
 
@@ -144,10 +143,9 @@ def main():
         print(f"Total number of vehicles: {len(actor_list)}")
 
         time_tracker = TimeTracker(vehicle)
-        distance_tracker = DistanceTracker(vehicle)
         kinematics_tracker = KinematicsTracker(vehicle)
         energy_tracker = EnergyTracker(vehicle, hvac=0, A_f=frontal_area, C_D=drag)
-        trackers = [time_tracker, distance_tracker, kinematics_tracker, energy_tracker]
+        trackers = [time_tracker, kinematics_tracker, energy_tracker]
         for tracker in trackers:
             tracker.start()
 
@@ -155,15 +153,15 @@ def main():
         while True:
             time.sleep(1)
             print(f"After {time_tracker.time:G} s:")
-            print(f"\tDistance travelled: {distance_tracker.distance_travelled:G} m")
-            m_per_s = distance_tracker.distance_travelled / time_tracker.time
+            print(f"\tDistance travelled: {kinematics_tracker.distance_travelled:G} m")
+            m_per_s = kinematics_tracker.distance_travelled / time_tracker.time
             km_per_h = m_per_s * 60 * 60 / 1000
             mph = km_per_h / 1.60934
             print(f"\tAverage speed: {m_per_s:G} m/s ({km_per_h:G} km/h) ({mph:G} mph)")
             print(f"\tSpeed: {kinematics_tracker.speed_series[-1]} m/s")
             print(f"\tAcceleration: {kinematics_tracker.acceleration_series[-1]} m/s^2")
             print(f"\tEnergy consumed: {energy_tracker.total_energy:G} kWh")
-            kWh_per_m = energy_tracker.total_energy / distance_tracker.distance_travelled
+            kWh_per_m = energy_tracker.total_energy / kinematics_tracker.distance_travelled
             kWh_per_100km = kWh_per_m * 1000 * 100
             kWh_per_100mi = kWh_per_100km * 1.60934
             print(f"\tEnergy efficiency: {kWh_per_m:G} kWh/m ({kWh_per_100km:G} kWh / 100 km) ({kWh_per_100mi:G} kWh / 100 mi)")
@@ -176,7 +174,6 @@ def main():
         # This can be avoided via synchronous mode.
 
         fig, power_ax = plt.subplots()
-        speed_ax = power_ax.twinx()
 
         # Plot power over time
         power_plot, = power_ax.plot(time_tracker.time_series, energy_tracker.power_series, "r-", label="Power")
@@ -186,13 +183,21 @@ def main():
         power_ax.tick_params(axis='y', colors=power_plot.get_color())
 
         # Plot speed over time
-        speed = [distance_tracker.distance_series[i] / time_tracker.interval_series[i] for i in range(len(distance_tracker.distance_series))]
-        speed_plot, = speed_ax.plot(time_tracker.time_series, speed, "g-", label="Speed")
+        speed_ax = power_ax.twinx()
+        speed_plot, = speed_ax.plot(time_tracker.time_series, kinematics_tracker.speed_series, "g-", label="Speed")
         speed_ax.set_ylabel("Vehicle Speed (m/s)")
         speed_ax.yaxis.label.set_color(speed_plot.get_color())
         speed_ax.tick_params(axis='y', colors=speed_plot.get_color())
 
-        power_ax.legend(handles=[power_plot, speed_plot])
+        # Plot acceleration over time
+        acceleration_ax = power_ax.twinx()
+        acceleration_ax.spines.right.set_position(("axes", 1.2))
+        acceleration_plot, = acceleration_ax.plot(time_tracker.time_series, kinematics_tracker.acceleration_series, "b-", label="Acceleration")
+        acceleration_ax.set_ylabel("Vehicle Acceleration (m/s^2)")
+        acceleration_ax.yaxis.label.set_color(acceleration_plot.get_color())
+        acceleration_ax.tick_params(axis='y', colors=acceleration_plot.get_color())
+
+        power_ax.legend(handles=[power_plot, speed_plot, acceleration_plot])
 
         plt.show()
 

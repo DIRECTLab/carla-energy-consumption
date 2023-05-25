@@ -8,12 +8,18 @@ class KinematicsTracker(Tracker):
     def __init__(self, vehicle: Vehicle) -> None:
         super().__init__(vehicle)
         self.speed_series = list()
+        self.distance_travelled = 0
+        self.distance_series = list()
         self.acceleration_series = list()
 
     def _update(self, snapshot: WorldSnapshot, vehicle) -> None:
         velocity = vehicle.get_velocity()
         speed = velocity.length()
         self.speed_series.append(speed)
+        
+        distance = speed * snapshot.delta_seconds
+        self.distance_travelled += distance
+        self.distance_series.append(distance)
 
         if speed != 0:
             acceleration = vehicle.get_acceleration()
