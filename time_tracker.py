@@ -8,8 +8,5 @@ class TimeTracker(Tracker):
         super().__init__(vehicle)
         self.time = 0
 
-    def _on_tick(self, snapshot:WorldSnapshot):
-        vehicle = super()._on_tick(snapshot)
-        if vehicle is not None:
-            self.time += snapshot.delta_seconds
-        return vehicle
+    def _update(self, snapshot:WorldSnapshot, vehicle) -> None:
+        self.time += snapshot.delta_seconds

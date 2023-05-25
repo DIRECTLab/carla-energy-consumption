@@ -31,12 +31,9 @@ class EnergyTracker(Tracker):
 
         self.total_energy = 0
 
-    def _on_tick(self, snapshot:WorldSnapshot):
-        vehicle = super()._on_tick(snapshot)
-        if vehicle is not None:
-            energy = self.energy(vehicle, snapshot.delta_seconds)
-            self.total_energy += energy
-        return vehicle
+    def _update(self, snapshot:WorldSnapshot, vehicle) -> None:
+        energy = self.energy(vehicle, snapshot.delta_seconds)
+        self.total_energy += energy
 
     def energy(self, vehicle, dt:float):
         """
