@@ -143,6 +143,9 @@ def main():
         time_tracker = TimeTracker(vehicle)
         distance_tracker = DistanceTracker(vehicle)
         energy_tracker = EnergyTracker(vehicle, hvac=0, A_f=frontal_area, C_D=drag)
+        trackers = [time_tracker, distance_tracker, energy_tracker]
+        for tracker in trackers:
+            tracker.start()
 
         # for t in range(50):
         while True:
@@ -163,6 +166,7 @@ def main():
         pass
 
     finally:
+        del trackers
 
         print('destroying actors')
         if camera is not None:
