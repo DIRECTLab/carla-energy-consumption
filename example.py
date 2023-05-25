@@ -97,6 +97,9 @@ def main():
         physics_vehicle = vehicle.get_physics_control()
         mass = physics_vehicle.mass
         print(f"Mass: {mass} kg")
+        # https://arxiv.org/pdf/1908.08920.pdf%5D pg17
+        drag = 0.23
+        frontal_area = 2.22
 
         # Let's put the vehicle to drive around.
         vehicle.set_autopilot(True)
@@ -139,7 +142,7 @@ def main():
 
         time_tracker = TimeTracker(vehicle)
         distance_tracker = DistanceTracker(vehicle)
-        energy_tracker = EnergyTracker(vehicle, hvac=0)
+        energy_tracker = EnergyTracker(vehicle, hvac=0, A_f=frontal_area, C_D=drag)
 
         # for t in range(50):
         while True:
@@ -153,7 +156,7 @@ def main():
             print(f"\tEnergy consumed: {energy_tracker.total_energy:G} kWh")
             kWh_per_m = energy_tracker.total_energy / distance_tracker.distance_travelled
             kWh_per_100km = kWh_per_m * 1000 * 100
-            kWh_per_100mi = kWh_per_100km / 1.60934
+            kWh_per_100mi = kWh_per_100km * 1.60934
             print(f"\tEnergy efficiency: {kWh_per_m:G} kWh/m ({kWh_per_100km:G} kWh / 100 km) ({kWh_per_100mi:G} kWh / 100 mi)")
 
     except KeyboardInterrupt:
