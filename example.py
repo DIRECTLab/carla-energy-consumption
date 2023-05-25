@@ -120,13 +120,6 @@ def main():
         # cc = carla.ColorConverter.LogarithmicDepth
         # camera.listen(lambda image: image.save_to_disk('_out/%06d.png' % image.frame, cc))
 
-        # Oh wait, I don't like the location we gave to the vehicle, I'm going
-        # to move it a bit forward.
-        # location = vehicle.get_location()
-        # location.x += 40
-        # vehicle.set_location(location)
-        # print('moved vehicle to %s' % location)
-
         # But the city now is probably quite empty, let's add a few more
         # vehicles.
         for _ in range(0, 50):
@@ -173,31 +166,27 @@ def main():
         # Note that these plots may throw exceptions if different trackers had different amounts of updates. 
         # This can be avoided via synchronous mode.
 
-        fig, power_ax = plt.subplots()
+        fig, (ax1, ax2) = plt.subplots(ncols=2)
 
-        # Plot power over time
-        power_plot, = power_ax.plot(time_tracker.time_series, energy_tracker.power_series, "r-", label="Power")
-        power_ax.set_xlabel("Time (s)")
-        power_ax.set_ylabel("Power from Motor (W)")
-        power_ax.yaxis.label.set_color(power_plot.get_color())
-        power_ax.tick_params(axis='y', colors=power_plot.get_color())
+        power_plot = plot_power(ax1, time_tracker.time_series, energy_tracker.power_series)
 
         # Plot speed over time
-        speed_ax = power_ax.twinx()
+        speed_ax = ax1.twinx()
         speed_plot, = speed_ax.plot(time_tracker.time_series, kinematics_tracker.speed_series, "g-", label="Speed")
         speed_ax.set_ylabel("Vehicle Speed (m/s)")
         speed_ax.yaxis.label.set_color(speed_plot.get_color())
         speed_ax.tick_params(axis='y', colors=speed_plot.get_color())
+        ax1.legend(handles=[power_plot, speed_plot])
+
+        plot_power(ax2, time_tracker.time_series, energy_tracker.power_series)
 
         # Plot acceleration over time
-        acceleration_ax = power_ax.twinx()
-        acceleration_ax.spines.right.set_position(("axes", 1.2))
+        acceleration_ax = ax2.twinx()
         acceleration_plot, = acceleration_ax.plot(time_tracker.time_series, kinematics_tracker.acceleration_series, "b-", label="Acceleration")
         acceleration_ax.set_ylabel("Vehicle Acceleration (m/s^2)")
         acceleration_ax.yaxis.label.set_color(acceleration_plot.get_color())
         acceleration_ax.tick_params(axis='y', colors=acceleration_plot.get_color())
-
-        power_ax.legend(handles=[power_plot, speed_plot, acceleration_plot])
+        ax2.legend(handles=[power_plot, acceleration_plot])
 
         plt.show()
 
@@ -210,6 +199,18 @@ def main():
         if client is not None:
             client.apply_batch([carla.command.DestroyActor(x) for x in actor_list])
         print('done.')
+
+def plot_power(ax, time_series, power_series):
+    """
+    Plot power over time.
+    Returns the plot.
+    """
+    plot, = ax.plot(time_series, power_series, "r-", label="Power")
+    ax.set_xlabel("Time (s)")
+    ax.set_ylabel("Power from Motor (W)")
+    ax.yaxis.label.set_color(plot.get_color())
+    ax.tick_params(axis='y', colors=plot.get_color())
+    return plot
 
 
 if __name__ == '__main__':
