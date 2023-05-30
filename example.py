@@ -43,7 +43,14 @@ def main():
     )
     argparser.add_argument(
         '-m', '--map',
-        help='mame of map to load, or "list" to list choices',
+        help='name of map to load, or "list" to list choices',
+    )
+    argparser.add_argument(
+        '-s', '--spawn-point',
+        metavar=('X', 'Y', 'Z'),
+        nargs=3,
+        type=float,
+        help='pick nearest spawn point to this coordinate for ego vehicle'
     )
     args = argparser.parse_args()
 
@@ -88,11 +95,17 @@ def main():
         traffic_manager.set_hybrid_physics_mode(True)
         traffic_manager.set_respawn_dormant_vehicles(True)
 
-        transform = random.choice(world.get_map().get_spawn_points())
+        map = world.get_map()
+        spawn_points = map.get_spawn_points()
+        if args.spawn_point is None:
+            transform = random.choice(spawn_points)
+        else:
+            choice_location = carla.Location(args.spawn_point[0], args.spawn_point[1], args.spawn_point[2])
+            transform = sorted(spawn_points, key=lambda point: point.location.distance(choice_location))[0]
         vehicle = world.spawn_actor(bp, transform)
 
         actor_list.append(vehicle)
-        print('created %s' % vehicle.type_id)
+        print(f'created {vehicle.type_id} at {transform.location}')
 
         physics_vehicle = vehicle.get_physics_control()
         mass = physics_vehicle.mass
@@ -164,7 +177,7 @@ def main():
         # Note that these plots may throw exceptions if different trackers had different amounts of updates. 
         # This can be avoided via synchronous mode.
 
-        fig, (ax1, ax2) = plt.subplots(ncols=2)
+        fig, (ax1, ax2, ax3) = plt.subplots(ncols=3)
 
         power_plot = plot_power(ax1, time_tracker.time_series, energy_tracker.power_series)
 
@@ -176,7 +189,7 @@ def main():
         speed_ax.tick_params(axis='y', colors=speed_plot.get_color())
         ax1.legend(handles=[power_plot, speed_plot])
 
-        plot_power(ax2, time_tracker.time_series, energy_tracker.power_series)
+        power_plot = plot_power(ax2, time_tracker.time_series, energy_tracker.power_series)
 
         # Plot acceleration over time
         acceleration_ax = ax2.twinx()
@@ -185,6 +198,17 @@ def main():
         acceleration_ax.yaxis.label.set_color(acceleration_plot.get_color())
         acceleration_ax.tick_params(axis='y', colors=acceleration_plot.get_color())
         ax2.legend(handles=[power_plot, acceleration_plot])
+
+        power_plot = plot_power(ax3, time_tracker.time_series, energy_tracker.power_series)
+
+        # Plot road grade over time
+        grade = [g*100 for g in kinematics_tracker.grade_series]
+        grade_ax = ax3.twinx()
+        grade_plot, = grade_ax.plot(time_tracker.time_series, grade, "c-", label="Grade")
+        grade_ax.set_ylabel("Road Grade (%)")
+        grade_ax.yaxis.label.set_color(grade_plot.get_color())
+        grade_ax.tick_params(axis='y', colors=grade_plot.get_color())
+        ax3.legend(handles=[power_plot, grade_plot])
 
         plt.show()
 

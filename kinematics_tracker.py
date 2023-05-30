@@ -13,6 +13,8 @@ class KinematicsTracker(Tracker):
         self.distance_series = list()
         self.acceleration = 0
         self.acceleration_series = list()
+        self.road_grade = 0
+        self.grade_series = list()
 
     def _update(self, snapshot: WorldSnapshot, vehicle) -> None:
         velocity = vehicle.get_velocity()
@@ -32,3 +34,11 @@ class KinematicsTracker(Tracker):
             acceleration_magnitude = 0  # This is a pretty safe assumption
         self.acceleration = acceleration_magnitude
         self.acceleration_series.append(acceleration_magnitude)
+
+        # Derive road grade from velocity
+        grade = self.road_grade
+        if velocity.z > speed:  # Don't trust instances where vertical movement > horizontal
+        # if speed > 2:
+            grade = velocity.z / speed
+        self.road_grade = grade
+        self.grade_series.append(grade)
