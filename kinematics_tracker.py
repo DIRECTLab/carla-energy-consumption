@@ -1,3 +1,4 @@
+import math
 from carla import Vehicle, WorldSnapshot
 
 
@@ -18,7 +19,7 @@ class KinematicsTracker(Tracker):
 
     def _update(self, snapshot: WorldSnapshot, vehicle) -> None:
         velocity = vehicle.get_velocity()
-        speed = velocity.length()
+        speed = math.sqrt(velocity.x ** 2 + velocity.y ** 2)
         self.speed = speed
         self.speed_series.append(speed)
         
@@ -36,9 +37,9 @@ class KinematicsTracker(Tracker):
         self.acceleration_series.append(acceleration_magnitude)
 
         # Derive road grade from velocity
-        grade = self.road_grade
-        if velocity.z > speed:  # Don't trust instances where vertical movement > horizontal
-        # if speed > 2:
+        grade = 0
+        # Ensure vehicle is moving, and don't trust instances where vertical movement > horizontal
+        if speed > 0.555556 and abs(velocity.z) < speed:
             grade = velocity.z / speed
         self.road_grade = grade
         self.grade_series.append(grade)

@@ -1,6 +1,6 @@
 import math
 from carla import Vehicle, WorldSnapshot, Vector3D
-import sys
+# import sys
 
 from tracker import Tracker
 
@@ -53,15 +53,19 @@ class EnergyTracker(Tracker):
         Return the power used by the motor in Watts.
         """
         acceleration = vehicle.get_acceleration()
-        v = vehicle.get_velocity()
-        horizontal_v = math.sqrt(v.x ** 2 + v.y ** 2)
-        if horizontal_v > 0:
+        velocity = vehicle.get_velocity()
+        speed = math.sqrt(velocity.x ** 2 + velocity.y ** 2)
+        if speed > 0:
             # Use only acceleration in direction of velocity (magnitude of the projection of [a.x, a.y] onto [v.x, v.y])
-            a_mag = self._acceleration_magnitude(acceleration, v)
+            a_mag = self._acceleration_magnitude(acceleration, velocity)
+
+            # Use velocity to calculate road grade. There may be a better way to do this.
             grade = 0   # Default
-            if horizontal_v > 0.555556: # 2 km/h in m/s
-                grade = v.z / horizontal_v  # Use velocity to calculate road grade. There may be a better way to do this.
-            wheel_power = self._wheel_power(a_mag, horizontal_v, grade)
+            # Ensure vehicle is moving, and don't trust instances where vertical movement > horizontal
+            if speed > 0.555556 and abs(velocity.z) < speed:
+                grade = velocity.z / speed
+
+            wheel_power = self._wheel_power(a_mag, speed, grade)
             if wheel_power >= 0:
                 traction_power = wheel_power / (self.motor_to_wheels_efficiency)
             else:
