@@ -132,8 +132,8 @@ def test_power_7():
     tracker = TestEnergyTracker(vehicle)
     power = tracker.power(vehicle)
     try:
-        assert power > 3738.8
-        assert power < 3738.9
+        assert power > 3732.9
+        assert power < 3733.0
     except AssertionError:
         traceback.print_exc()
         print(f"{power=}")

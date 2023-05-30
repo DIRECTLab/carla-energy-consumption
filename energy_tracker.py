@@ -60,12 +60,12 @@ class EnergyTracker(Tracker):
             a_mag = self._acceleration_magnitude(acceleration, velocity)
 
             # Use velocity to calculate road grade. There may be a better way to do this.
-            grade = 0   # Default
+            grade_angle = 0   # Default
             # Ensure vehicle is moving, and don't trust instances where vertical movement > horizontal
             if speed > 0.555556 and abs(velocity.z) < speed:
-                grade = velocity.z / speed
+                grade_angle = math.atan(velocity.z / speed)
 
-            wheel_power = self._wheel_power(a_mag, speed, grade)
+            wheel_power = self._wheel_power(a_mag, speed, grade_angle)
             if wheel_power >= 0:
                 traction_power = wheel_power / (self.motor_to_wheels_efficiency)
             else:
