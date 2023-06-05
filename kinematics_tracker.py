@@ -1,4 +1,5 @@
 import math
+from threading import Lock
 from carla import Vehicle, WorldSnapshot
 
 
@@ -16,30 +17,33 @@ class KinematicsTracker(Tracker):
         self.acceleration_series = list()
         self.road_grade = 0
         self.grade_series = list()
+        
+        self.update_lock = Lock()
 
     def _update(self, snapshot: WorldSnapshot, vehicle) -> None:
-        velocity = vehicle.get_velocity()
-        speed = math.sqrt(velocity.x ** 2 + velocity.y ** 2)
-        self.speed = speed
-        self.speed_series.append(speed)
-        
-        distance = speed * snapshot.delta_seconds
-        self.distance_travelled += distance
-        self.distance_series.append(distance)
+        with self.update_lock:
+            velocity = vehicle.get_velocity()
+            speed = math.sqrt(velocity.x ** 2 + velocity.y ** 2)
+            self.speed = speed
+            self.speed_series.append(speed)
+            
+            distance = speed * snapshot.delta_seconds
+            self.distance_travelled += distance
+            self.distance_series.append(distance)
 
-        if speed != 0:
-            acceleration = vehicle.get_acceleration()
-            dot = velocity.dot_2d(acceleration)
-            acceleration_magnitude = dot / speed
-        else:
-            acceleration_magnitude = 0  # This is a pretty safe assumption
-        self.acceleration = acceleration_magnitude
-        self.acceleration_series.append(acceleration_magnitude)
+            if speed != 0:
+                acceleration = vehicle.get_acceleration()
+                dot = velocity.dot_2d(acceleration)
+                acceleration_magnitude = dot / speed
+            else:
+                acceleration_magnitude = 0  # This is a pretty safe assumption
+            self.acceleration = acceleration_magnitude
+            self.acceleration_series.append(acceleration_magnitude)
 
-        # Derive road grade from velocity
-        grade = 0
-        # Ensure vehicle is moving, and don't trust instances where vertical movement > horizontal
-        if speed > 0.555556 and abs(velocity.z) < speed:
-            grade = velocity.z / speed
-        self.road_grade = grade
-        self.grade_series.append(grade)
+            # Derive road grade from velocity
+            grade = 0
+            # Ensure vehicle is moving, and don't trust instances where vertical movement > horizontal
+            if speed > 0.555556 and abs(velocity.z) < speed:
+                grade = velocity.z / speed
+            self.road_grade = grade
+            self.grade_series.append(grade)
