@@ -43,7 +43,7 @@ def main():
     )
     argparser.add_argument(
         '-m', '--map',
-        help='name of map to load, or "list" to list choices',
+        help='name of map to load, or "list" to list choices'
     )
     argparser.add_argument(
         '-s', '--spawn-point',
@@ -51,6 +51,22 @@ def main():
         nargs=3,
         type=float,
         help='pick nearest spawn point to this coordinate for ego vehicle'
+    )
+    # argparser.add_argument(
+    #     '-f', '--force-spawn',
+    #     action='store_true',
+    #     help='force vehicle to spawn at specified point'
+    # )
+    argparser.add_argument(
+        '-t', '--time-step',
+        metavar='T',
+        type=float,
+        help='amount of simulated time per step (seconds), or 0 for variable time step'
+    )
+    argparser.add_argument(
+        '-r', '--rendering',
+        type=yes_no,
+        help='use rendering mode (y/n)'
     )
     args = argparser.parse_args()
 
@@ -76,9 +92,20 @@ def main():
                 print("Error: This map is not available.")
                 return
 
-        # Set traffic manager to normal speed (140% instead of default 70%)
+        # Set traffic manager to normal speed (140% instead of default 70%). 
+        # This kicks the default speed up to about 25 mph.
         traffic_manager = client.get_trafficmanager()
         traffic_manager.global_percentage_speed_difference(-40)
+
+        if args.time_step is not None:
+            settings = world.get_settings()
+            settings.fixed_delta_seconds = args.time_step
+            world.apply_settings(settings)
+        if args.rendering is not None:
+            settings = world.get_settings()
+            print(f'{args.rendering=}')
+            settings.no_rendering_mode = not args.rendering
+            world.apply_settings(settings)
 
         blueprint_library = world.get_blueprint_library()
 
@@ -101,6 +128,9 @@ def main():
             transform = random.choice(spawn_points)
         else:
             choice_location = carla.Location(args.spawn_point[0], args.spawn_point[1], args.spawn_point[2])
+            # if args.force_spawn:
+            #     transform = carla.Transform(choice_location, carla.Rotation())
+            # else:
             transform = sorted(spawn_points, key=lambda point: point.location.distance(choice_location))[0]
         vehicle = world.spawn_actor(bp, transform)
 
@@ -153,8 +183,9 @@ def main():
         while kinematics_tracker.distance_travelled == 0:
             time.sleep(0.1)
 
-        # for t in range(50):
-        while True:
+        start = time.time()
+        for t in range(100):
+        # while True:
             time.sleep(1)
             print(f"After {time_tracker.time:G} s:")
             print(f"\tDistance travelled: {kinematics_tracker.distance_travelled:G} m")
@@ -169,6 +200,7 @@ def main():
             kWh_per_100km = kWh_per_m * 1000 * 100
             kWh_per_100mi = kWh_per_100km * 1.60934
             print(f"\tEnergy efficiency: {kWh_per_m:G} kWh/m ({kWh_per_100km:G} kWh / 100 km) ({kWh_per_100mi:G} kWh / 100 mi)")
+        print(f'Finished in {time.time()-start} seconds.')
 
     except KeyboardInterrupt:
         for tracker in trackers:
@@ -222,6 +254,14 @@ def main():
             print('destroying actors')
             client.apply_batch([carla.command.DestroyActor(x) for x in actor_list])
             print('done.')
+
+def yes_no(string: str):
+    string = string.lower()
+    if string in ('y', 'yes', 'true'):
+        return True
+    if string in ('n', 'no', 'false'):
+        return False
+    return None
 
 def plot_power(ax, time_series, power_series):
     """
