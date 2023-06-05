@@ -61,7 +61,7 @@ def main():
         '-t', '--time-step',
         metavar='T',
         type=float,
-        help='amount of simulated time per step (seconds), or 0 for variable time step'
+        help='amount of simulated time per step (seconds), or 0 for variable time step; set synch mode unless 0 or --asynch is set'
     )
     argparser.add_argument(
         '--asynch',
@@ -107,16 +107,14 @@ def main():
         settings = world.get_settings()
         if args.time_step is not None:
             settings.fixed_delta_seconds = args.time_step
+            if args.time_step == 0:
+                args.asynch = True
             settings.synchronous_mode = not args.asynch
             world.apply_settings(settings)
             traffic_manager.set_synchronous_mode(not args.asynch)
         if args.rendering is not None:
-            print(f'{args.rendering=}')
             settings.no_rendering_mode = not args.rendering
             world.apply_settings(settings)
-
-        # settings_check = world.get_settings()
-        # print(f'{settings_check.synchronous_mode=}')
 
         blueprint_library = world.get_blueprint_library()
 
