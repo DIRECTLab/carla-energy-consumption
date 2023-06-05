@@ -64,6 +64,11 @@ def main():
         help='amount of simulated time per step (seconds), or 0 for variable time step'
     )
     argparser.add_argument(
+        '--asynch',
+        action='store_true',
+        help='run in asynch mode, considered less reliable'
+    )
+    argparser.add_argument(
         '-r', '--rendering',
         type=yes_no,
         help='use rendering mode (y/n)'
@@ -72,6 +77,8 @@ def main():
 
     actor_list = []
 
+    settings = None
+    traffic_manager = None
     camera = None
 
     try:
@@ -97,15 +104,19 @@ def main():
         traffic_manager = client.get_trafficmanager()
         traffic_manager.global_percentage_speed_difference(-40)
 
+        settings = world.get_settings()
         if args.time_step is not None:
-            settings = world.get_settings()
             settings.fixed_delta_seconds = args.time_step
+            settings.synchronous_mode = not args.asynch
             world.apply_settings(settings)
+            traffic_manager.set_synchronous_mode(not args.asynch)
         if args.rendering is not None:
-            settings = world.get_settings()
             print(f'{args.rendering=}')
             settings.no_rendering_mode = not args.rendering
             world.apply_settings(settings)
+
+        # settings_check = world.get_settings()
+        # print(f'{settings_check.synchronous_mode=}')
 
         blueprint_library = world.get_blueprint_library()
 
@@ -173,6 +184,15 @@ def main():
                     break
         print(f"Total number of vehicles: {len(actor_list)}")
 
+        # The first second of simulation is less reliable as the vehicles are dropped onto the ground.
+        time_tracker = TimeTracker(vehicle)
+        time_tracker.start()
+        while time_tracker.time < 1:
+            if args.asynch:
+                world.wait_for_tick()
+            else:
+                world.tick()
+
         time_tracker = TimeTracker(vehicle)
         kinematics_tracker = KinematicsTracker(vehicle)
         energy_tracker = EnergyTracker(vehicle, hvac=0, A_f=frontal_area, C_D=drag)
@@ -180,27 +200,34 @@ def main():
         for tracker in trackers:
             tracker.start()
 
-        while kinematics_tracker.distance_travelled == 0:
-            time.sleep(0.1)
-
         start = time.time()
-        for t in range(100):
+        t = start
+        display_clock = t
+        while t < start + 100:
         # while True:
-            time.sleep(1)
-            print(f"After {time_tracker.time:G} s:")
-            print(f"\tDistance travelled: {kinematics_tracker.distance_travelled:G} m")
-            m_per_s = kinematics_tracker.distance_travelled / time_tracker.time
-            km_per_h = m_per_s * 60 * 60 / 1000
-            mph = km_per_h / 1.60934
-            print(f"\tAverage speed: {m_per_s:G} m/s ({km_per_h:G} km/h) ({mph:G} mph)")
-            print(f"\tSpeed: {kinematics_tracker.speed} m/s")
-            print(f"\tAcceleration: {kinematics_tracker.acceleration} m/s^2")
-            print(f"\tEnergy consumed: {energy_tracker.total_energy:G} kWh")
-            kWh_per_m = energy_tracker.total_energy / kinematics_tracker.distance_travelled
-            kWh_per_100km = kWh_per_m * 1000 * 100
-            kWh_per_100mi = kWh_per_100km * 1.60934
-            print(f"\tEnergy efficiency: {kWh_per_m:G} kWh/m ({kWh_per_100km:G} kWh / 100 km) ({kWh_per_100mi:G} kWh / 100 mi)")
-        print(f'Finished in {time.time()-start} seconds.')
+            if args.asynch:
+                world.wait_for_tick()
+            else:
+                world.tick()
+            t = time.time()
+
+            if t - display_clock > 1:
+                print(f"After {time_tracker.time:G} s:")
+                print(f"\tDistance travelled: {kinematics_tracker.distance_travelled:G} m")
+                m_per_s = kinematics_tracker.distance_travelled / time_tracker.time
+                km_per_h = m_per_s * 60 * 60 / 1000
+                mph = km_per_h / 1.60934
+                print(f"\tAverage speed: {m_per_s:G} m/s ({km_per_h:G} km/h) ({mph:G} mph)")
+                print(f"\tSpeed: {kinematics_tracker.speed} m/s")
+                print(f"\tAcceleration: {kinematics_tracker.acceleration} m/s^2")
+                print(f"\tEnergy consumed: {energy_tracker.total_energy:G} kWh")
+                kWh_per_m = energy_tracker.total_energy / kinematics_tracker.distance_travelled
+                kWh_per_100km = kWh_per_m * 1000 * 100
+                kWh_per_100mi = kWh_per_100km * 1.60934
+                print(f"\tEnergy efficiency: {kWh_per_m:G} kWh/m ({kWh_per_100km:G} kWh / 100 km) ({kWh_per_100mi:G} kWh / 100 mi)")
+                display_clock = t
+
+        print(f'Finished in {t-start} seconds.')
 
     except KeyboardInterrupt:
         for tracker in trackers:
@@ -247,6 +274,11 @@ def main():
     finally:
         # if trackers is not None:
         #     del trackers
+
+        if not args.asynch and settings is not None:
+            settings.synchronous_mode = False
+            world.apply_settings(settings)
+            traffic_manager.set_synchronous_mode(False)
 
         if camera is not None:
             camera.destroy()
