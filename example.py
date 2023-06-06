@@ -201,8 +201,9 @@ def main():
         start = time.time()
         t = start
         display_clock = t
-        while t < start + 100:
+        # while t < start + 100:
         # while True:
+        while time_tracker.time < 8028:
             if args.asynch:
                 world.wait_for_tick()
             else:
