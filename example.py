@@ -25,6 +25,7 @@ import time
 
 import argparse
 import matplotlib.pyplot as plt
+from matplotlib.ticker import PercentFormatter
 
 from time_tracker import TimeTracker
 from energy_tracker import EnergyTracker
@@ -183,10 +184,10 @@ def main():
                     break
         print(f"Total number of vehicles: {len(actor_list)}")
 
-        # The first second of simulation is less reliable as the vehicles are dropped onto the ground.
+        # The first couple seconds of simulation are less reliable as the vehicles are dropped onto the ground.
         time_tracker = TimeTracker(vehicle)
         time_tracker.start()
-        while time_tracker.time < 1:
+        while time_tracker.time < 2:
             if args.asynch:
                 world.wait_for_tick()
             else:
@@ -237,7 +238,7 @@ def main():
         # Note that these plots may throw exceptions if different trackers had different amounts of updates. 
         # This can be avoided via synchronous mode.
 
-        fig, (ax1, ax2, ax3) = plt.subplots(ncols=3)
+        fig, (ax1, ax2, ax3) = plt.subplots(ncols=3, layout='constrained')
 
         power_plot = plot_power(ax1, time_tracker.time_series, energy_tracker.power_series)
 
@@ -262,10 +263,10 @@ def main():
         power_plot = plot_power(ax3, time_tracker.time_series, energy_tracker.power_series)
 
         # Plot road grade over time
-        grade = [g*100 for g in kinematics_tracker.grade_series]
         grade_ax = ax3.twinx()
-        grade_plot, = grade_ax.plot(time_tracker.time_series, grade, "c-", label="Grade")
-        grade_ax.set_ylabel("Road Grade (%)")
+        grade_plot, = grade_ax.plot(time_tracker.time_series, kinematics_tracker.grade_series, "c-", label="Grade")
+        grade_ax.set_ylabel("Road Grade")
+        grade_ax.yaxis.set_major_formatter(PercentFormatter(xmax=1.0))
         grade_ax.yaxis.label.set_color(grade_plot.get_color())
         grade_ax.tick_params(axis='y', colors=grade_plot.get_color())
         ax3.legend(handles=[power_plot, grade_plot])
