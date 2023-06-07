@@ -134,6 +134,7 @@ After 8024.28 s:
 ```
 *Roughly 5 dozen laps, up to 6% grade.*
 
+A plot of the first lap around the highway: ![](highway_lap.png)
 
 ## Simulation Options
 For an idea of how fast the simulation will run:
