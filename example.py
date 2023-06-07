@@ -80,6 +80,7 @@ def main():
     settings = None
     traffic_manager = None
     camera = None
+    trackers = None
 
     try:
         client = carla.Client('127.0.0.1', 2000)
@@ -227,6 +228,7 @@ def main():
                 display_clock = t
 
         print(f'Finished in {t-start} seconds.')
+        raise KeyboardInterrupt
 
     except KeyboardInterrupt:
         for tracker in trackers:
@@ -271,8 +273,8 @@ def main():
         plt.show()
 
     finally:
-        # if trackers is not None:
-        #     del trackers
+        if trackers is not None:
+            del trackers
 
         if not args.asynch and settings is not None:
             settings.synchronous_mode = False

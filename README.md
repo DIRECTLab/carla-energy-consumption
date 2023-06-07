@@ -6,7 +6,7 @@ Energy consumption tracking for CARLA simulator.
 - `consumption.md` contains notes from research.
 - `distance_tracker.py` tracks vehicle distance travelled.
 - `energy_tracker.py` tracks EV energy consumption.
-- `example.py` shows a usage example.
+- `example.py` shows a usage example. This spawns traffic and tracks energy usage and other data about a simulated Tesla Model 3, displaying updates every second. At the end, it graphs the power consumed as compared with velocity, acceleration and road grade. Run `python example.py -h` to get all options.
 
 
 ## Requirements
@@ -94,22 +94,45 @@ After 8005.15 s:
 ```
 
 ### Traffic
-Tesla Model 3 with 50 vehicles, Town10 (`python example.py -s 0 0 0 -n 50 -t 0.05 -r n`): 26.6 kWh / 100mi
+#### Tesla Model 3 with 50 vehicles, Town10 (`python example.py -s 0 0 0 -n 50 -t 0.05 -r n`): 
+Trial 1:
+```
+After 8024.65 s:
+        Distance travelled: 35560.9 m
+        Average speed: 4.43146 m/s (15.9533 km/h) (9.91292 mph)
+        Speed: 4.989018251080677 m/s
+        Acceleration: -1.3857614169289407 m/s^2
+        Energy consumed: 6.00395 kWh
+        Energy efficiency: 0.000168836 kWh/m (16.8836 kWh / 100 km) (27.1714 kWh / 100 mi)
+```
 
 ### Hills
-Tesla Model 3 without traffic, Town03 (`python example.py -s 0 0 0 -n 1 -t 0.01 -r n`): 26.9 kWh / 100mi
+#### Tesla Model 3 without traffic, Town03 (`python example.py -s 0 0 0 -n 1 -t 0.025 -r n`): 26.9 kWh / 100mi
+Trial 1:
+```
+After 8022.25 s:
+        Distance travelled: 39796 m
+        Average speed: 4.9607 m/s (17.8585 km/h) (11.0968 mph)
+        Speed: 11.247537498363451 m/s
+        Acceleration: -0.17083164705338488 m/s^2
+        Energy consumed: 6.69271 kWh
+        Energy efficiency: 0.000168176 kWh/m (16.8176 kWh / 100 km) (27.0652 kWh / 100 mi)
+```
+*Roughly 2 dozen hills (> 5% grade, up to 40%) ascended/descended.*
 
 ### Highway
-Tesla Model 3 without traffic, Town04 (`python example.py -s 0 0 0 -n 1 -t 0.05 -r n`):
+#### Tesla Model 3 without traffic, Town04 (`python example.py -s 0 0 0 -n 1 -t 0.05 -r n`):
+Trial 1:
 ```
-After 6276.1 s:
-        Distance travelled: 140285 m
-        Average speed: 22.3522 m/s (80.4679 km/h) (50.0006 mph)
-        Speed: 31.11531490274225 m/s
-        Acceleration: -2.25039801703475 m/s^2
-        Energy consumed: 32.4536 kWh
-        Energy efficiency: 0.000231341 kWh/m (23.1341 kWh / 100 km) (37.2307 kWh / 100 mi)
+After 8024.28 s:
+        Distance travelled: 180856 m
+        Average speed: 22.5386 m/s (81.1389 km/h) (50.4175 mph)
+        Speed: 20.036752195228406 m/s
+        Acceleration: -2.9308030255663606 m/s^2
+        Energy consumed: 40.3028 kWh
+        Energy efficiency: 0.000222845 kWh/m (22.2845 kWh / 100 km) (35.8633 kWh / 100 mi)
 ```
+*Roughly 5 dozen laps, up to 6% grade.*
 
 
 ## Simulation Options
