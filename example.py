@@ -255,8 +255,6 @@ def main():
         # Plot acceleration over time
         acceleration_ax = ax2.twinx()
         acceleration_plot, = acceleration_ax.plot(time_tracker.time_series, kinematics_tracker.acceleration_series, "b-", label="Acceleration")
-        ybound = get_ybound(kinematics_tracker.acceleration_series)
-        acceleration_ax.set_ybound(-ybound, ybound)
         acceleration_ax.set_ylabel("Vehicle Acceleration (m/s^2)")
         acceleration_ax.yaxis.label.set_color(acceleration_plot.get_color())
         acceleration_ax.tick_params(axis='y', colors=acceleration_plot.get_color())
@@ -267,8 +265,6 @@ def main():
         # Plot road grade over time
         grade_ax = ax3.twinx()
         grade_plot, = grade_ax.plot(time_tracker.time_series, kinematics_tracker.grade_series, "c-", label="Grade")
-        ybound = get_ybound(kinematics_tracker.grade_series)
-        grade_ax.set_ybound(-ybound, ybound)
         grade_ax.set_ylabel("Road Grade")
         grade_ax.yaxis.set_major_formatter(PercentFormatter(xmax=1.0))
         grade_ax.yaxis.label.set_color(grade_plot.get_color())
@@ -293,7 +289,6 @@ def main():
             client.apply_batch([carla.command.DestroyActor(x) for x in actor_list])
             print('done.')
 
-
 def yes_no(string: str):
     string = string.lower()
     if string in ('y', 'yes', 'true'):
@@ -302,28 +297,17 @@ def yes_no(string: str):
         return False
     return None
 
-
 def plot_power(ax, time_series, power_series):
     """
     Plot power over time.
     Returns the plot.
     """
     plot, = ax.plot(time_series, power_series, "r-", label="Power")
-    ybound = get_ybound(power_series)
-    ax.set_ybound(-ybound, ybound)
     ax.set_xlabel("Time (s)")
     ax.set_ylabel("Power from Motor (W)")
     ax.yaxis.label.set_color(plot.get_color())
     ax.tick_params(axis='y', colors=plot.get_color())
     return plot
-
-
-def get_ybound(data:list) -> float:
-    """
-    Calculate a bound for centering y-axis at 0.
-    """
-    abs_max = abs(max(data, key=abs))
-    return abs_max * 1.05
 
 
 if __name__ == '__main__':
