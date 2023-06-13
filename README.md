@@ -3,14 +3,22 @@ Energy consumption tracking for CARLA simulator.
 
 
 ## Contents
-- `consumption.md` contains notes from research.
-- `distance_tracker.py` tracks vehicle distance travelled.
-- `energy_tracker.py` tracks EV energy consumption.
-- `example.py` shows a usage example. This spawns traffic and tracks energy usage and other data about a simulated Tesla Model 3, displaying updates every second. At the end, it graphs the power consumed as compared with velocity, acceleration and road grade. Run `python example.py -h` to get all options.
+- [consumption.md](consumption.md) contains notes from research.
+- [energy_tracker.py]() tracks EV energy consumption.
+        - Verification: Run `python test_energy_tracker.py`.
+- [example.py]() shows a usage example. This spawns traffic and tracks energy usage and other data about a simulated Tesla Model 3, displaying updates every second. At the end, it graphs the power consumed as compared with velocity, acceleration and road grade. Run `python example.py -h` to get all options.
+- [kinematics_tracker.py](kinematics_tracker.py) tracks vehicle speed, acceleration, road grade, and distance travelled.
+- [time_tracker.py](time_tracker.py) tracks simulation time.
+- [tracker.py](tracker.py) is a base class for `Tracker`s. 
 
 
 ## Requirements
 Follow CARLA installation instructions for both server and client. This code was tested on CARLA `v0.9.14`, Python `v3.8.16`.
+
+
+## Basic Usage
+1. Start the CARLA server.
+2. Run `python example.py`.
 
 
 ## Results
