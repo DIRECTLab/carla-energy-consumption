@@ -28,7 +28,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import PercentFormatter
 
 from time_tracker import TimeTracker
-from energy_tracker import EnergyTracker
+from soc_tracker import SocTracker
 from kinematics_tracker import KinematicsTracker
 from ev import EV
 
@@ -155,7 +155,7 @@ def main():
         # https://arxiv.org/pdf/1908.08920.pdf%5D pg17
         drag = 0.23
         frontal_area = 2.22
-        ev = EV(vehicle, A_f=frontal_area, C_D=drag)
+        ev = EV(vehicle, capacity=50.0, A_f=frontal_area, C_D=drag)
 
         vehicle.set_autopilot(True)
 
@@ -197,8 +197,8 @@ def main():
 
         time_tracker = TimeTracker(vehicle)
         kinematics_tracker = KinematicsTracker(vehicle)
-        energy_tracker = EnergyTracker(ev, hvac=0)
-        trackers = [time_tracker, kinematics_tracker, energy_tracker]
+        soc_tracker = SocTracker(ev, hvac=0.0, init_soc=1.0)
+        trackers = [time_tracker, kinematics_tracker, soc_tracker]
         for tracker in trackers:
             tracker.start()
 
@@ -223,11 +223,12 @@ def main():
                 print(f"\tAverage speed: {m_per_s:G} m/s ({km_per_h:G} km/h) ({mph:G} mph)")
                 print(f"\tSpeed: {kinematics_tracker.speed} m/s")
                 print(f"\tAcceleration: {kinematics_tracker.acceleration} m/s^2")
-                print(f"\tEnergy consumed: {energy_tracker.total_energy:G} kWh")
-                kWh_per_m = energy_tracker.total_energy / kinematics_tracker.distance_travelled
+                print(f"\tEnergy consumed: {soc_tracker.total_energy:G} kWh")
+                kWh_per_m = soc_tracker.total_energy / kinematics_tracker.distance_travelled
                 kWh_per_100km = kWh_per_m * 1000 * 100
                 kWh_per_100mi = kWh_per_100km * 1.60934
                 print(f"\tEnergy efficiency: {kWh_per_m:G} kWh/m ({kWh_per_100km:G} kWh / 100 km) ({kWh_per_100mi:G} kWh / 100 mi)")
+                print(f"\tState of charge: {soc_tracker.soc*100:.2f}%")
                 display_clock = t
 
         print(f'Finished in {t-start} seconds.')
@@ -242,7 +243,7 @@ def main():
 
         fig, (ax1, ax2, ax3) = plt.subplots(ncols=3, layout='constrained')
 
-        power_plot = plot_power(ax1, time_tracker.time_series, energy_tracker.power_series)
+        power_plot = plot_power(ax1, time_tracker.time_series, soc_tracker.power_series)
 
         # Plot speed over time
         speed_ax = ax1.twinx()
@@ -252,7 +253,7 @@ def main():
         speed_ax.tick_params(axis='y', colors=speed_plot.get_color())
         ax1.legend(handles=[power_plot, speed_plot])
 
-        power_plot = plot_power(ax2, time_tracker.time_series, energy_tracker.power_series)
+        power_plot = plot_power(ax2, time_tracker.time_series, soc_tracker.power_series)
 
         # Plot acceleration over time
         acceleration_ax = ax2.twinx()
@@ -262,7 +263,7 @@ def main():
         acceleration_ax.tick_params(axis='y', colors=acceleration_plot.get_color())
         ax2.legend(handles=[power_plot, acceleration_plot])
 
-        power_plot = plot_power(ax3, time_tracker.time_series, energy_tracker.power_series)
+        power_plot = plot_power(ax3, time_tracker.time_series, soc_tracker.power_series)
 
         # Plot road grade over time
         grade_ax = ax3.twinx()
