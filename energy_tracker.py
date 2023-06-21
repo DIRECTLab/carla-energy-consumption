@@ -1,33 +1,19 @@
 import math
-from carla import Vehicle, WorldSnapshot, Vector3D
+from carla import WorldSnapshot, Vector3D
 # import sys
 
 from tracker import Tracker
+from ev import EV
 
 
 class EnergyTracker(Tracker):
-    def __init__(self, vehicle:Vehicle, hvac:float=0, A_f:float=2.3316,
-                gravity:float=9.8066, C_r:float=1.75, c_1:float=0.0328, c_2:float=4.575, 
-                rho_Air:float=1.2256, C_D:float=0.28,
-                motor_efficiency:float=0.91, driveline_efficiency:float=0.92, 
-                braking_alpha:float=0.0411) -> None:
+    def __init__(self, ev:EV, hvac:float=0.0) -> None:
         """
         `hvac`: Power used for HVAC, in Watts.
-        The remaining values are from https://doi.org/10.1016/j.apenergy.2016.01.097 .
         """
-        super().__init__(vehicle)
-        physics_vehicle = vehicle.get_physics_control()
-        self.mass = physics_vehicle.mass
+        super().__init__(ev.vehicle)
+        self.ev = ev
         self.hvac = hvac
-        self.A_f = A_f
-        self.gravity = gravity
-        self.C_r = C_r
-        self.c_1 = c_1
-        self.c_2 = c_2
-        self.rho_Air = rho_Air
-        self.C_D = C_D
-        self.motor_to_wheels_efficiency = motor_efficiency * driveline_efficiency
-        self.braking_alpha = braking_alpha
 
         self.total_energy = 0
         self.power_series = list()  # No, this is not calculus
@@ -67,7 +53,7 @@ class EnergyTracker(Tracker):
 
             wheel_power = self._wheel_power(a_mag, speed, grade_angle)
             if wheel_power >= 0:
-                traction_power = wheel_power / (self.motor_to_wheels_efficiency)
+                traction_power = wheel_power / (self.ev.motor_to_wheels_efficiency)
             else:
                 traction_power = wheel_power * self._braking_efficiency(a_mag)
             return traction_power + self.hvac
@@ -87,10 +73,10 @@ class EnergyTracker(Tracker):
         Calculate the power at the wheels in Watts.
         https://doi.org/10.1016/j.apenergy.2016.01.097
         """
-        term1 = self.mass * acceleration
-        term2 = self.mass * self.gravity * math.cos(theta) * self.C_r * (self.c_1 * velocity + self.c_2) / 1000
-        term3 = self.rho_Air * self.A_f * self.C_D * (velocity ** 2) / 2
-        term4 = self.mass * self.gravity * math.sin(theta)
+        term1 = self.ev.mass * acceleration
+        term2 = self.ev.mass * self.ev.gravity * math.cos(theta) * self.ev.C_r * (self.ev.c_1 * velocity + self.ev.c_2) / 1000
+        term3 = self.ev.rho_Air * self.ev.A_f * self.ev.C_D * (velocity ** 2) / 2
+        term4 = self.ev.mass * self.ev.gravity * math.sin(theta)
         return (term1 + term2 + term3 + term4) * velocity
     
     def _braking_efficiency(self, acceleration:float):
@@ -102,7 +88,7 @@ class EnergyTracker(Tracker):
         if acceleration >= 0:
             # print(f"In braking_efficiency: Rejecting nonnegative {acceleration=}.", file=sys.stderr)
             return 0
-        exponent = -self.braking_alpha/acceleration
+        exponent = -self.ev.braking_alpha/acceleration
         try:
             denominator = math.e**exponent
         except OverflowError:

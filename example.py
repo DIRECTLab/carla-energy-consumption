@@ -30,6 +30,7 @@ from matplotlib.ticker import PercentFormatter
 from time_tracker import TimeTracker
 from energy_tracker import EnergyTracker
 from kinematics_tracker import KinematicsTracker
+from ev import EV
 
 
 def main():
@@ -154,6 +155,7 @@ def main():
         # https://arxiv.org/pdf/1908.08920.pdf%5D pg17
         drag = 0.23
         frontal_area = 2.22
+        ev = EV(vehicle, A_f=frontal_area, C_D=drag)
 
         vehicle.set_autopilot(True)
 
@@ -195,7 +197,7 @@ def main():
 
         time_tracker = TimeTracker(vehicle)
         kinematics_tracker = KinematicsTracker(vehicle)
-        energy_tracker = EnergyTracker(vehicle, hvac=0, A_f=frontal_area, C_D=drag)
+        energy_tracker = EnergyTracker(ev, hvac=0)
         trackers = [time_tracker, kinematics_tracker, energy_tracker]
         for tracker in trackers:
             tracker.start()
