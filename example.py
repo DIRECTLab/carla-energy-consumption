@@ -28,7 +28,6 @@ import math
 import argparse
 import matplotlib.pyplot as plt
 from matplotlib.ticker import PercentFormatter
-import numpy as np
 
 from time_tracker import TimeTracker
 from soc_tracker import SocTracker
@@ -291,20 +290,26 @@ def main():
 
         plt.show()
 
-        fig, ax = plt.subplots()
+        # Plot heatmap
         xs = [loc.x for loc in kinematics_tracker.location_series]
         ys = [loc.y for loc in kinematics_tracker.location_series]
+        # Make about one square per 2 m
         xrange = max(xs) - min(xs)
-        xbins = math.ceil(xrange / 5)
+        xbins = math.ceil(xrange / 2)
         yrange = max(ys) - min(ys)
-        ybins = math.ceil(yrange / 5)
-        H, xedges, yedges = np.histogram2d(xs, ys, bins=[xbins, ybins])
-        H = H.T
-        print(xedges)
-        print(yedges)
-        print(H)
-        plt.imshow(H, interpolation='nearest', origin='lower', extent=[xedges[0], xedges[-1], yedges[0], yedges[-1]])
-        ax.invert_yaxis()
+        ybins = math.ceil(yrange / 2)
+        fig, (ax1, ax2) = plt.subplots(ncols=2, layout='constrained')
+
+        ax1.hexbin(xs, ys, gridsize=xbins)
+        ax1.invert_yaxis()
+        ax1.set_aspect('equal', adjustable='box')
+        ax1.set_title('Vehicle Presence on Map')
+
+        ax2.hist2d(xs, ys, bins=(xbins,ybins))
+        ax2.invert_yaxis()
+        ax2.set_aspect('equal', adjustable='box')
+        ax2.set_title('Vehicle Presence on Map')
+
         plt.show()
 
     finally:
