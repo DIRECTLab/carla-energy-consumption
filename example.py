@@ -210,7 +210,7 @@ def main():
 
         time_tracker = TimeTracker(vehicle)
         kinematics_tracker = KinematicsTracker(vehicle)
-        soc_tracker = SocTracker(ev, hvac=0.0, init_soc=1.0, wireless_chargers=chargers)
+        soc_tracker = SocTracker(ev, hvac=0.0, init_soc=0.80, wireless_chargers=chargers)
         trackers = [time_tracker, kinematics_tracker, soc_tracker]
         for tracker in trackers:
             tracker.start()
