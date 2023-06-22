@@ -23,6 +23,7 @@ import carla
 import random
 import time
 import csv
+import math
 
 import argparse
 import matplotlib.pyplot as plt
@@ -294,9 +295,9 @@ def main():
         xs = [loc.x for loc in kinematics_tracker.location_series]
         ys = [loc.y for loc in kinematics_tracker.location_series]
         xrange = max(xs) - min(xs)
-        xbins = round(xrange / 5)
+        xbins = math.ceil(xrange / 5)
         yrange = max(ys) - min(ys)
-        ybins = round(yrange / 5)
+        ybins = math.ceil(yrange / 5)
         H, xedges, yedges = np.histogram2d(xs, ys, bins=[xbins, ybins])
         H = H.T
         plt.imshow(H, interpolation='nearest', origin='upper', extent=[xedges[0], xedges[-1], yedges[0], yedges[-1]])
