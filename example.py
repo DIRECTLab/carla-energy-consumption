@@ -221,6 +221,7 @@ def main():
 
             if t - display_clock > 1:
                 print(f"After {time_tracker.time:G} s:")
+                print(f"\tLocation: {vehicle.get_location()}")
                 print(f"\tDistance travelled: {kinematics_tracker.distance_travelled:G} m")
                 m_per_s = kinematics_tracker.distance_travelled / time_tracker.time
                 km_per_h = m_per_s * 60 * 60 / 1000

@@ -2,7 +2,6 @@ from carla import WorldSnapshot
 from energy_tracker import EnergyTracker
 
 from ev import EV
-from charger import Charger
 
 
 class SocTracker(EnergyTracker):
@@ -39,5 +38,6 @@ class SocTracker(EnergyTracker):
 
         # Extra SocTracker functionality
         net_energy = charging_energy - energy_spent
-        self.soc += net_energy / self.ev.capacity
+        pct_gain = net_energy / self.ev.capacity
+        self.soc = min(1.0, self.soc + pct_gain)
         self.soc_series.append(self.soc)
