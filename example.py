@@ -199,8 +199,8 @@ def main():
         time_tracker = TimeTracker(vehicle)
         kinematics_tracker = KinematicsTracker(vehicle)
         chargers = [
-            # Charger(carla.Transform(carla.Location(0,0,0), carla.Rotation()), carla.Vector3D(5,5,100)), # Wireless charger at origin with 5m width, 5m length
-            Charger(ego_transform, carla.Vector3D(10,20,100)), # Wireless charger where vehicle was spawned with 20m width, 20m length
+            # Charger(carla.Transform(carla.Location(0,0,0), carla.Rotation()), carla.Vector3D(5,1,100)), # Wireless charger at origin with 10m length, 2m width
+            Charger(ego_transform, carla.Vector3D(10,1,100)), # Wireless charger where vehicle was spawned with 20m length, 2m width
         ]
         soc_tracker = SocTracker(ev, hvac=0.0, init_soc=1.0, wireless_chargers=chargers)
         trackers = [time_tracker, kinematics_tracker, soc_tracker]
