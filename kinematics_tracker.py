@@ -9,6 +9,7 @@ from tracker import Tracker
 class KinematicsTracker(Tracker):
     def __init__(self, vehicle: Vehicle) -> None:
         super().__init__(vehicle)
+        self.location_series = list()
         self.speed = 0
         self.speed_series = list()
         self.distance_travelled = 0
@@ -22,6 +23,8 @@ class KinematicsTracker(Tracker):
 
     def _update(self, snapshot: WorldSnapshot, vehicle) -> None:
         with self.update_lock:
+            self.location_series.append(vehicle.get_transform().location)
+
             velocity = vehicle.get_velocity()
             speed = math.sqrt(velocity.x ** 2 + velocity.y ** 2)
             self.speed = speed

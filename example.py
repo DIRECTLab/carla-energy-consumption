@@ -26,6 +26,7 @@ import time
 import argparse
 import matplotlib.pyplot as plt
 from matplotlib.ticker import PercentFormatter
+import numpy as np
 
 from time_tracker import TimeTracker
 from soc_tracker import SocTracker
@@ -55,11 +56,6 @@ def main():
         type=float,
         help='pick nearest spawn point to this coordinate for ego vehicle'
     )
-    # argparser.add_argument(
-    #     '-f', '--force-spawn',
-    #     action='store_true',
-    #     help='force vehicle to spawn at specified point'
-    # )
     argparser.add_argument(
         '-t', '--time-step',
         metavar='T',
@@ -141,9 +137,6 @@ def main():
             ego_transform = random.choice(spawn_points)
         else:
             choice_location = carla.Location(args.spawn_point[0], args.spawn_point[1], args.spawn_point[2])
-            # if args.force_spawn:
-            #     transform = carla.Transform(choice_location, carla.Rotation())
-            # else:
             ego_transform = sorted(spawn_points, key=lambda point: point.location.distance(choice_location))[0]
         vehicle = world.spawn_actor(bp, ego_transform)
 
@@ -183,7 +176,6 @@ def main():
                 if npc is not None:
                     actor_list.append(npc)
                     npc.set_autopilot(True)
-                    # print('created %s' % npc.type_id)
                     break
         print(f"Total number of vehicles: {len(actor_list)}")
 
@@ -280,6 +272,18 @@ def main():
         grade_ax.tick_params(axis='y', colors=grade_plot.get_color())
         ax3.legend(handles=[power_plot, grade_plot])
 
+        plt.show()
+
+        fig, ax = plt.subplots()
+        xs = [loc.x for loc in kinematics_tracker.location_series]
+        ys = [loc.y for loc in kinematics_tracker.location_series]
+        xrange = max(xs) - min(xs)
+        xbins = round(xrange / 5)
+        yrange = max(ys) - min(ys)
+        ybins = round(yrange / 5)
+        H, xedges, yedges = np.histogram2d(xs, ys, bins=[xbins, ybins])
+        H = H.T
+        plt.imshow(H, interpolation='nearest', origin='upper', extent=[xedges[0], xedges[-1], yedges[0], yedges[-1]])
         plt.show()
 
     finally:
