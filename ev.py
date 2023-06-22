@@ -14,7 +14,7 @@ class EV:
         """
         `vehicle`: The CARLA representation of the vehicle in question.
 
-        `capacity`: Battery capacity in kWh.
+        `capacity`: Usable battery capacity in kWh.
 
         The remaining values are from https://doi.org/10.1016/j.apenergy.2016.01.097 .
         """

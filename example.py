@@ -31,6 +31,7 @@ from time_tracker import TimeTracker
 from soc_tracker import SocTracker
 from kinematics_tracker import KinematicsTracker
 from ev import EV
+from charger import Charger
 
 
 def main():
@@ -137,17 +138,17 @@ def main():
         map = world.get_map()
         spawn_points = map.get_spawn_points()
         if args.spawn_point is None:
-            transform = random.choice(spawn_points)
+            ego_transform = random.choice(spawn_points)
         else:
             choice_location = carla.Location(args.spawn_point[0], args.spawn_point[1], args.spawn_point[2])
             # if args.force_spawn:
             #     transform = carla.Transform(choice_location, carla.Rotation())
             # else:
-            transform = sorted(spawn_points, key=lambda point: point.location.distance(choice_location))[0]
-        vehicle = world.spawn_actor(bp, transform)
+            ego_transform = sorted(spawn_points, key=lambda point: point.location.distance(choice_location))[0]
+        vehicle = world.spawn_actor(bp, ego_transform)
 
         actor_list.append(vehicle)
-        print(f'created {vehicle.type_id} at {transform.location}')
+        print(f'created {vehicle.type_id} at {ego_transform.location}')
 
         physics_vehicle = vehicle.get_physics_control()
         mass = physics_vehicle.mass
@@ -197,7 +198,11 @@ def main():
 
         time_tracker = TimeTracker(vehicle)
         kinematics_tracker = KinematicsTracker(vehicle)
-        soc_tracker = SocTracker(ev, hvac=0.0, init_soc=1.0)
+        chargers = [
+            # Charger(carla.Transform(carla.Location(0,0,0), carla.Rotation()), carla.Vector3D(5,5,100)), # Wireless charger at origin with 5m width, 5m length
+            Charger(ego_transform, carla.Vector3D(10,20,100)), # Wireless charger where vehicle was spawned with 20m width, 20m length
+        ]
+        soc_tracker = SocTracker(ev, hvac=0.0, init_soc=1.0, wireless_chargers=chargers)
         trackers = [time_tracker, kinematics_tracker, soc_tracker]
         for tracker in trackers:
             tracker.start()
