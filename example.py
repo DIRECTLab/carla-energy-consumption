@@ -300,7 +300,11 @@ def main():
         ybins = math.ceil(yrange / 5)
         H, xedges, yedges = np.histogram2d(xs, ys, bins=[xbins, ybins])
         H = H.T
-        plt.imshow(H, interpolation='nearest', origin='upper', extent=[xedges[0], xedges[-1], yedges[0], yedges[-1]])
+        print(xedges)
+        print(yedges)
+        print(H)
+        plt.imshow(H, interpolation='nearest', origin='lower', extent=[xedges[0], xedges[-1], yedges[0], yedges[-1]])
+        ax.invert_yaxis()
         plt.show()
 
     finally:
