@@ -22,6 +22,7 @@ import carla
 
 import random
 import time
+import csv
 
 import argparse
 import matplotlib.pyplot as plt
@@ -71,6 +72,11 @@ def main():
         '-r', '--rendering',
         type=yes_no,
         help='use rendering mode (y/n)'
+    )
+    argparser.add_argument(
+        '-w', '--wireless-chargers',
+        type=argparse.FileType('r'),
+        help='CSV file to read wireless charging data from'
     )
     args = argparser.parse_args()
 
@@ -179,6 +185,20 @@ def main():
                     break
         print(f"Total number of vehicles: {len(actor_list)}")
 
+        # chargers = [
+        #     # Charger(carla.Transform(carla.Location(0,0,0), carla.Rotation()), carla.Vector3D(5,1,100)), # Wireless charger at origin with 10m length, 2m width
+        #     Charger(ego_transform, carla.Vector3D(10,1,100)), # Wireless charger where vehicle was spawned with 20m length, 2m width
+        # ]
+        chargers = list()
+        if args.wireless_chargers is not None:
+            reader = csv.DictReader(args.wireless_chargers)
+            for charger in reader:
+                location = carla.Location(float(charger['x']), float(charger['y']), float(charger['z']))
+                rotation = carla.Rotation(float(charger['pitch']), float(charger['yaw']), float(charger['roll']))
+                transform = carla.Transform(location, rotation)
+                dimensions = carla.Vector3D(float(charger['width']), float(charger['length']), float(charger['height']))
+                chargers.append(Charger(transform, dimensions / 2))
+
         # The first couple seconds of simulation are less reliable as the vehicles are dropped onto the ground.
         time_tracker = TimeTracker(vehicle)
         time_tracker.start()
@@ -190,10 +210,6 @@ def main():
 
         time_tracker = TimeTracker(vehicle)
         kinematics_tracker = KinematicsTracker(vehicle)
-        chargers = [
-            # Charger(carla.Transform(carla.Location(0,0,0), carla.Rotation()), carla.Vector3D(5,1,100)), # Wireless charger at origin with 10m length, 2m width
-            Charger(ego_transform, carla.Vector3D(10,1,100)), # Wireless charger where vehicle was spawned with 20m length, 2m width
-        ]
         soc_tracker = SocTracker(ev, hvac=0.0, init_soc=1.0, wireless_chargers=chargers)
         trackers = [time_tracker, kinematics_tracker, soc_tracker]
         for tracker in trackers:
