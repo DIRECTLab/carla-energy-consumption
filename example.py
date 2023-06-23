@@ -69,12 +69,14 @@ def main():
         help='run in asynch mode, considered less reliable'
     )
     argparser.add_argument(
-        '-r', '--rendering',
+        '-r', '--render',
+        metavar='Y/N',
         type=yes_no,
         help='use rendering mode (y/n)'
     )
     argparser.add_argument(
         '-w', '--wireless-chargers',
+        metavar='CHARGEFILE',
         type=argparse.FileType('r'),
         help='CSV file to read wireless charging data from'
     )
@@ -118,8 +120,8 @@ def main():
             settings.synchronous_mode = not args.asynch
             world.apply_settings(settings)
             traffic_manager.set_synchronous_mode(not args.asynch)
-        if args.rendering is not None:
-            settings.no_rendering_mode = not args.rendering
+        if args.render is not None:
+            settings.no_rendering_mode = not args.render
             world.apply_settings(settings)
 
         blueprint_library = world.get_blueprint_library()
