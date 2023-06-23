@@ -147,6 +147,8 @@ def main():
             choice_location = carla.Location(args.spawn_point[0], args.spawn_point[1], args.spawn_point[2])
             ego_transform = sorted(spawn_points, key=lambda point: point.location.distance(choice_location))[0]
         vehicle = world.spawn_actor(bp, ego_transform)
+        spawn_points.remove(ego_transform)
+        random.shuffle(spawn_points)
 
         actor_list.append(vehicle)
         print(f'created {vehicle.type_id} at {ego_transform.location}')
@@ -179,7 +181,11 @@ def main():
             bp = random.choice(blueprint_library.filter('vehicle'))
 
             for _ in range(5):  # Try spawning 5 times
-                transform = random.choice(world.get_map().get_spawn_points())
+                try:
+                    transform = spawn_points.pop()
+                except IndexError:
+                    print('All spawn points have been filled.')
+                    break
                 npc = world.try_spawn_actor(bp, transform)
                 if npc is not None:
                     actor_list.append(npc)
