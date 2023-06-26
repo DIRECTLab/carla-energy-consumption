@@ -80,6 +80,12 @@ def main():
         type=argparse.FileType('r'),
         help='CSV file to read wireless charging data from'
     )
+    argparser.add_argument(
+        '-p', '--path',
+        metavar='PATHFILE',
+        type=argparse.FileType('r'),
+        help='CSV file to read path instructions from'
+    )
     args = argparser.parse_args()
 
     actor_list = []
@@ -153,6 +159,14 @@ def main():
         actor_list.append(vehicle)
         print(f'created {vehicle.type_id} at {ego_transform.location}')
 
+        path = list()
+        if args.path is not None:
+            reader = csv.DictReader(args.path)
+            for loc in reader:
+                location = carla.Location(float(loc['x']), float(loc['y']), float(loc['z']))
+                path.append(location)
+        traffic_manager.set_path(vehicle, path) # TODO: Try set_route() instead
+
         physics_vehicle = vehicle.get_physics_control()
         mass = physics_vehicle.mass
         print(f"Mass: {mass} kg")
@@ -193,10 +207,6 @@ def main():
                     break
         print(f"Total number of vehicles: {len(actor_list)}")
 
-        # chargers = [
-        #     # Charger(carla.Transform(carla.Location(0,0,0), carla.Rotation()), carla.Vector3D(5,1,100)), # Wireless charger at origin with 10m length, 2m width
-        #     Charger(ego_transform, carla.Vector3D(10,1,100)), # Wireless charger where vehicle was spawned with 20m length, 2m width
-        # ]
         chargers = list()
         if args.wireless_chargers is not None:
             reader = csv.DictReader(args.wireless_chargers)
@@ -237,7 +247,7 @@ def main():
 
             if t - display_clock > 1:
                 print(f"After {time_tracker.time:G} s:")
-                print(f"\tLocation: {vehicle.get_location()}")
+                print(f"\tLocation: {kinematics_tracker.location_series[-1]}")
                 print(f"\tDistance travelled: {kinematics_tracker.distance_travelled:G} m")
                 m_per_s = kinematics_tracker.distance_travelled / time_tracker.time
                 km_per_h = m_per_s * 60 * 60 / 1000
