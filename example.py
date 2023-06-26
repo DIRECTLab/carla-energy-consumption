@@ -86,6 +86,12 @@ def main():
         type=argparse.FileType('r'),
         help='CSV file to read path instructions from'
     )
+    argparser.add_argument(
+        '-d', '--directions',
+        metavar='DIRECTIONSFILE',
+        type=argparse.FileType('r'),
+        help='CSV file to read vehicle directions from'
+    )
     args = argparser.parse_args()
 
     actor_list = []
@@ -165,7 +171,14 @@ def main():
             for loc in reader:
                 location = carla.Location(float(loc['x']), float(loc['y']), float(loc['z']))
                 path.append(location)
-        traffic_manager.set_path(vehicle, path) # TODO: Try set_route() instead
+        traffic_manager.set_path(vehicle, path)
+
+        route = list()
+        if args.directions is not None:
+            reader = csv.DictReader(args.directions)
+            for loc in reader:
+                route.append(loc['direction'])
+        traffic_manager.set_route(vehicle, route)
 
         physics_vehicle = vehicle.get_physics_control()
         mass = physics_vehicle.mass

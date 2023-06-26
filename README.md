@@ -4,6 +4,7 @@ Energy consumption tracking for CARLA simulator.
 
 ## Contents
 - [charger.py](charger.py) is a class for wireless chargers.
+
 - [chargers.csv](chargers.csv) is an example CSV file for loading wireless chargers in [example.py](example.py). It demonstrates the following fields, required for all files of this type:
     - `x`: global x coordinate for center of charger (meters).
     - `y`: global y coordinate for center of charger (meters).
@@ -14,19 +15,35 @@ Energy consumption tracking for CARLA simulator.
     - `roll`: rotation about the global x-axis (degrees).
     - `pitch`: rotation about the global y-axis (degrees).
     - `yaw`: rotation about the global z-axis (degrees).
+
 - [consumption.md](consumption.md) contains notes from research.
+
 - [energy_tracker.py](energy_tracker.py) tracks EV energy consumption.
     - Verification: Run `python test_energy_tracker.py`.
+
 - [ev.py](ev.py) contains a data class with info about a specific EV.
+
 - [example.py](example.py) shows a usage example. This spawns traffic and tracks energy usage and other data about a simulated Tesla Model 3, displaying updates every second. At the end, it graphs the power consumed as compared with velocity, acceleration and road grade, then plots a heatmap of the areas the vehicle travelled to. 
     - Run `python example.py -h` to get all options.
+
 - [kinematics_tracker.py](kinematics_tracker.py) tracks vehicle location, speed, acceleration, road grade, and distance travelled.
-- [path.csv](path.csv) is an example CSV file for loading a predetermined path in [example.py](example.py). It demonstrates the following fields, required for all files of this type:
+
+- [path.csv](path.csv) is an example CSV file for loading a predetermined path in [example.py](example.py). 
+    This file demonstrates the following fields, required for all files of this type:
     - `x`: global x coordinate.
     - `y`: global y coordinate.
     - `z`: global z coordinate.
+
+    *For proper functionality, ensure that points lie in roads and that there is at least one point for each road segment the vehicle should travel.* 
+
+- [directions.csv](directions.csv) is an example CSV file for loading predetermined directions in [example.py](example.py). It demonstrates the `direction` field and accepted values.
+
+    *In this mode, the vehicle will not perform lane changes. If lane changes are necessary, use a path file instead.*
+
 - [soc_tracker.py](soc_tracker.py) adds state of charge and wireless charging functionalities to an `EnergyTracker`. 
+
 - [time_tracker.py](time_tracker.py) tracks simulation time.
+
 - [tracker.py](tracker.py) is a base class for `Tracker`s. 
 
 
