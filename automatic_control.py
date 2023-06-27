@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright (c) 2018 Intel Labs.
-# authors: German Ros (german.ros@intel.com)
+# Modified from `PythonAPI/examples/automatic_control.py` by Gabriel Tonks.
 #
 # This work is licensed under the terms of the MIT license.
 # For a copy, see <https://opensource.org/licenses/MIT>.
@@ -21,6 +20,7 @@ import numpy.random as random
 import re
 import sys
 import weakref
+import networkx
 
 try:
     import pygame
@@ -53,9 +53,9 @@ except IndexError:
 import carla
 from carla import ColorConverter as cc
 
-from agents.navigation.behavior_agent import BehaviorAgent  # pylint: disable=import-error
-from agents.navigation.basic_agent import BasicAgent  # pylint: disable=import-error
-from agents.navigation.constant_velocity_agent import ConstantVelocityAgent  # pylint: disable=import-error
+from agents.navigation.behavior_agent import BehaviorAgent
+from agents.navigation.basic_agent import BasicAgent
+from agents.navigation.constant_velocity_agent import ConstantVelocityAgent
 
 
 # ==============================================================================
@@ -689,6 +689,19 @@ class CameraManager(object):
         if self.recording:
             image.save_to_disk('_out/%08d' % image.frame)
 
+
+def choose_route(agent, choices, tries=5) -> bool:
+    while tries:
+        destination = random.choice(choices).location
+        try:
+            agent.set_destination(destination)
+            return True
+        except networkx.exception.NetworkXNoPath:
+            print(f'Failed to find a route to {destination}')
+            tries -= 1
+    return False
+
+
 # ==============================================================================
 # -- Game Loop ---------------------------------------------------------
 # ==============================================================================
@@ -743,8 +756,9 @@ def game_loop(args):
 
         # Set the agent destination
         spawn_points = world.map.get_spawn_points()
-        destination = random.choice(spawn_points).location
-        agent.set_destination(destination)
+        if not choose_route(agent, spawn_points):
+            print('Could not find a good route to take. Try a more connected map.')
+            return
 
         clock = pygame.time.Clock()
 
@@ -763,9 +777,9 @@ def game_loop(args):
 
             if agent.done():
                 if args.loop:
-                    agent.set_destination(random.choice(spawn_points).location)
                     world.hud.notification("Target reached", seconds=4.0)
                     print("The target has been reached, searching for another target")
+                    choose_route(agent, spawn_points, tries=100)
                 else:
                     print("The target has been reached, stopping the simulation")
                     break
