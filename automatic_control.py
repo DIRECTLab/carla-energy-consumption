@@ -691,6 +691,9 @@ class CameraManager(object):
 
 
 def choose_route(agent, choices, tries=5) -> bool:
+    """
+    return: Whether a route was chosen.
+    """
     while tries:
         destination = random.choice(choices).location
         try:
@@ -700,6 +703,41 @@ def choose_route(agent, choices, tries=5) -> bool:
             print(f'Failed to find a route to {destination}')
             tries -= 1
     return False
+
+
+def update(clock, world, controller, display, agent, spawn_points, sync, loop):
+    """
+    Logic for updating simulation.
+    
+    return: Whether the simulation should continue.
+    """
+    clock.tick()
+    if sync:
+        world.world.tick()
+    else:
+        world.world.wait_for_tick()
+    if controller.parse_events():
+        return False
+
+    world.tick(clock)
+    world.render(display)
+    pygame.display.flip()
+
+    if agent.done():
+        if loop:
+            world.hud.notification("Target reached", seconds=4.0)
+            print("The target has been reached, searching for another target")
+            if not choose_route(agent, spawn_points):
+                print('Could not find a good route to take. Try a more connected map.')
+                return False
+        else:
+            print("The target has been reached, stopping the simulation")
+            return False
+
+    control = agent.run_step()
+    control.manual_gear_shift = False
+    world.player.apply_control(control)
+    return True
 
 
 # ==============================================================================
@@ -762,31 +800,10 @@ def game_loop(args):
 
         clock = pygame.time.Clock()
 
-        while True:
-            clock.tick()
-            if args.sync:
-                world.world.tick()
-            else:
-                world.world.wait_for_tick()
-            if controller.parse_events():
-                return
+        # TODO: Begin trackers here?
 
-            world.tick(clock)
-            world.render(display)
-            pygame.display.flip()
-
-            if agent.done():
-                if args.loop:
-                    world.hud.notification("Target reached", seconds=4.0)
-                    print("The target has been reached, searching for another target")
-                    choose_route(agent, spawn_points, tries=100)
-                else:
-                    print("The target has been reached, stopping the simulation")
-                    break
-
-            control = agent.run_step()
-            control.manual_gear_shift = False
-            world.player.apply_control(control)
+        while update(clock, world, controller, display, agent, spawn_points, args.sync, args.loop):
+            pass
 
     finally:
 
