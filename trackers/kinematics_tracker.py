@@ -3,7 +3,7 @@ from threading import Lock
 from carla import Vehicle, WorldSnapshot
 
 
-from tracker import Tracker
+from .tracker import Tracker
 
 
 class KinematicsTracker(Tracker):

@@ -15,11 +15,11 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import PercentFormatter
 import carla
 
-from time_tracker import TimeTracker
-from soc_tracker import SocTracker
-from kinematics_tracker import KinematicsTracker
-from ev import EV
-from charger import Charger
+from trackers.time_tracker import TimeTracker
+from trackers.soc_tracker import SocTracker
+from trackers.kinematics_tracker import KinematicsTracker
+from trackers.ev import EV
+from trackers.charger import Charger
 
 
 def yes_no(string: str):
