@@ -28,7 +28,7 @@ class Tracker:
         vehicle = snapshot.find(self.vehicle_id)
         if vehicle is None:
             print(f"Error: Dead vehicle {self.vehicle_id}.", file=sys.stderr)
-            self.__world.remove_on_tick(self.__on_tick_id)
+            self.stop()
         else:
             self._update(snapshot, vehicle)
     

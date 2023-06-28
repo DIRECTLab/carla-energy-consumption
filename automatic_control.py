@@ -782,7 +782,7 @@ def game_loop(args):
         time_tracker.start()
         while time_tracker.time < 2 and update(clock, world, controller, display, agent, spawn_points, args.sync, args.loop):
             pass
-        del time_tracker
+        time_tracker.stop()
 
         # TODO: Begin trackers here?
 
