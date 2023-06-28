@@ -1,7 +1,7 @@
 import traceback
 from carla import Vehicle, Vector3D
 
-from energy_tracker import EnergyTracker
+from .energy_tracker import EnergyTracker
 
 
 class TestVehicle:

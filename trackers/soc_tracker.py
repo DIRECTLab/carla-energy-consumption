@@ -1,7 +1,7 @@
 from carla import WorldSnapshot
-from energy_tracker import EnergyTracker
 
-from ev import EV
+from .energy_tracker import EnergyTracker
+from .ev import EV
 
 
 class SocTracker(EnergyTracker):
