@@ -20,30 +20,19 @@ import re
 import sys
 import weakref
 import networkx
-
-try:
-    import pygame
-    from pygame.locals import KMOD_CTRL
-    from pygame.locals import K_ESCAPE
-    from pygame.locals import K_q
-except ImportError:
-    raise RuntimeError('cannot import pygame, make sure pygame package is installed')
-
-try:
-    import numpy as np
-except ImportError:
-    raise RuntimeError(
-        'cannot import numpy, make sure numpy package is installed')
-
-# ==============================================================================
-# -- Add PythonAPI for release mode --------------------------------------------
-# ==============================================================================
+import pygame
+from pygame.locals import KMOD_CTRL
+from pygame.locals import K_ESCAPE
+from pygame.locals import K_q
+import numpy as np
 import carla
 from carla import ColorConverter as cc
 
 from agents.navigation.behavior_agent import BehaviorAgent
 from agents.navigation.basic_agent import BasicAgent
 from agents.navigation.constant_velocity_agent import ConstantVelocityAgent
+
+from trackers.time_tracker import TimeTracker
 
 
 # ==============================================================================
@@ -788,9 +777,12 @@ def game_loop(args):
 
         clock = pygame.time.Clock()
 
-        # # The first couple seconds of simulation are less reliable as the vehicles are dropped onto the ground.
-        # time_tracker = TimeTracker(vehicle)
-        # time_tracker.start()
+        # The first couple seconds of simulation are less reliable as the vehicles are dropped onto the ground.
+        time_tracker = TimeTracker(world.player)
+        time_tracker.start()
+        while time_tracker.time < 2 and update(clock, world, controller, display, agent, spawn_points, args.sync, args.loop):
+            pass
+        del time_tracker
 
         # TODO: Begin trackers here?
 
