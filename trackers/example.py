@@ -6,34 +6,42 @@
 # This work is licensed under the terms of the MIT license.
 # For a copy, see <https://opensource.org/licenses/MIT>.
 
-import glob
-import os
-import sys
-
-try:
-    sys.path.append(glob.glob('../carla/dist/carla-*%d.%d-%s.egg' % (
-        sys.version_info.major,
-        sys.version_info.minor,
-        'win-amd64' if os.name == 'nt' else 'linux-x86_64'))[0])
-except IndexError:
-    pass
-
-import carla
-
 import random
 import time
 import csv
 import math
-
 import argparse
 import matplotlib.pyplot as plt
 from matplotlib.ticker import PercentFormatter
+import carla
 
 from time_tracker import TimeTracker
 from soc_tracker import SocTracker
 from kinematics_tracker import KinematicsTracker
 from ev import EV
 from charger import Charger
+
+
+def yes_no(string: str):
+    string = string.lower()
+    if string in ('y', 'yes', 'true'):
+        return True
+    if string in ('n', 'no', 'false'):
+        return False
+    return None
+
+
+def plot_power(ax, time_series, power_series):
+    """
+    Plot power over time.
+    Returns the plot.
+    """
+    plot, = ax.plot(time_series, power_series, "r-", label="Power")
+    ax.set_xlabel("Time (s)")
+    ax.set_ylabel("Power from Motor (W)")
+    ax.yaxis.label.set_color(plot.get_color())
+    ax.tick_params(axis='y', colors=plot.get_color())
+    return plot
 
 
 def main():
@@ -359,27 +367,6 @@ def main():
             client.apply_batch([carla.command.DestroyActor(x) for x in actor_list])
             print('done.')
 
-def yes_no(string: str):
-    string = string.lower()
-    if string in ('y', 'yes', 'true'):
-        return True
-    if string in ('n', 'no', 'false'):
-        return False
-    return None
-
-def plot_power(ax, time_series, power_series):
-    """
-    Plot power over time.
-    Returns the plot.
-    """
-    plot, = ax.plot(time_series, power_series, "r-", label="Power")
-    ax.set_xlabel("Time (s)")
-    ax.set_ylabel("Power from Motor (W)")
-    ax.yaxis.label.set_color(plot.get_color())
-    ax.tick_params(axis='y', colors=plot.get_color())
-    return plot
-
 
 if __name__ == '__main__':
-
     main()

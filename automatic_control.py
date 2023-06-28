@@ -12,7 +12,6 @@ from __future__ import print_function
 import argparse
 import collections
 import datetime
-import glob
 import logging
 import math
 import os
@@ -35,17 +34,6 @@ try:
 except ImportError:
     raise RuntimeError(
         'cannot import numpy, make sure numpy package is installed')
-
-# ==============================================================================
-# -- Find CARLA module ---------------------------------------------------------
-# ==============================================================================
-try:
-    sys.path.append(glob.glob('../carla/dist/carla-*%d.%d-%s.egg' % (
-        sys.version_info.major,
-        sys.version_info.minor,
-        'win-amd64' if os.name == 'nt' else 'linux-x86_64'))[0])
-except IndexError:
-    pass
 
 # ==============================================================================
 # -- Add PythonAPI for release mode --------------------------------------------
@@ -799,6 +787,10 @@ def game_loop(args):
             return
 
         clock = pygame.time.Clock()
+
+        # # The first couple seconds of simulation are less reliable as the vehicles are dropped onto the ground.
+        # time_tracker = TimeTracker(vehicle)
+        # time_tracker.start()
 
         # TODO: Begin trackers here?
 
