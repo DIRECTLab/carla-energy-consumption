@@ -51,10 +51,33 @@ def test_soc2():
     return True
 
 
+def test_soc3():
+    """
+    SOC cannot exceed 100%
+    """
+    vehicle = TestVehicle()
+    world = vehicle.get_world()
+    ev = EV(vehicle, capacity=50.0)
+    tracker = SocTracker(ev, hvac=-1000)
+    tracker.start()
+    world.tick()
+    tracker.stop()
+    try:
+        assert tracker.soc == 1.0
+    except AssertionError:
+        traceback.print_exc()
+        print(f"{tracker.soc=}")
+        print()
+        return False
+    return True
+
+
+
 if __name__ == '__main__':
     tests = (
         test_soc1,
         test_soc2,
+        test_soc3,
     )
     success = 0
     total = 0
