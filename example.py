@@ -101,6 +101,12 @@ def main():
         type=argparse.FileType('r'),
         help='CSV file to read vehicle directions from'
     )
+    argparser.add_argument(
+        '-o', '--output',
+        metavar='OUTPUTFILE',
+        type=argparse.FileType('w'),
+        help='Name of file to write tracking data to'
+    )
     args = argparser.parse_args()
 
     actor_list = []
@@ -281,7 +287,8 @@ def main():
         # Note that these plots may throw exceptions if different trackers had different amounts of updates. 
         # This can be avoided via synchronous mode.
 
-        save_data(trackers, 'output.csv')
+        if args.output is not None:
+            save_data(trackers, args.output)
 
         fig, (ax1, ax2, ax3) = plt.subplots(ncols=3, layout='constrained')
 
