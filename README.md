@@ -15,6 +15,8 @@ Energy consumption tracking for CARLA simulator.
 
 - `agents/` is copied over from `PythonAPI/carla/agents/`. See [its README](agents/README.md).
 
+- `input/` contains example input files for [example.py](example.py). See [its README](input/README.md).
+
 - `trackers/` contains code for tracking vehicle energy consumption as well as many other statistics. It also contains [example.py](trackers/example.py) demonstrating its usage. See [its README](trackers/README.md).
 
 

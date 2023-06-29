@@ -12,5 +12,3 @@ Vehicle physics tracking for CARLA simulator.
 - [soc_tracker.py](soc_tracker.py) adds state of charge and wireless charging functionalities to an `EnergyTracker`. 
 - [time_tracker.py](time_tracker.py) tracks simulation time.
 - [tracker.py](tracker.py) is a base class for `Tracker`s. 
-
-- [input/](input/README.md) contains example input files for [example.py](example.py).
