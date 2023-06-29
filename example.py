@@ -12,12 +12,12 @@ import csv
 import argparse
 import carla
 
+from loading import get_chargers
 from reporting import print_update, save_data
 from trackers.time_tracker import TimeTracker
 from trackers.soc_tracker import SocTracker
 from trackers.kinematics_tracker import KinematicsTracker
 from trackers.ev import EV
-from trackers.charger import Charger
 
 
 def yes_no(string: str):
@@ -221,13 +221,7 @@ def main():
 
         chargers = list()
         if args.wireless_chargers is not None:
-            reader = csv.DictReader(args.wireless_chargers)
-            for charger in reader:
-                location = carla.Location(float(charger['x']), float(charger['y']), float(charger['z']))
-                rotation = carla.Rotation(float(charger['pitch']), float(charger['yaw']), float(charger['roll']))
-                transform = carla.Transform(location, rotation)
-                dimensions = carla.Vector3D(float(charger['width']), float(charger['length']), float(charger['height']))
-                chargers.append(Charger(transform, dimensions / 2))
+            chargers = get_chargers(args.wireless_chargers)
 
         # The first couple seconds of simulation are less reliable as the vehicles are dropped onto the ground.
         time_tracker = TimeTracker(vehicle)
