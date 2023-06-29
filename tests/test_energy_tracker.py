@@ -3,6 +3,8 @@ import os
 import traceback
 from carla import Vector3D
 
+from carla_test_classes import TestVehicle
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from trackers.energy_tracker import EnergyTracker
 from trackers.ev import EV
@@ -11,25 +13,6 @@ from trackers.ev import EV
 """
 This module tests the "Energy" part of `EnergyTracker`.
 """
-
-
-class TestVehicle:
-    class PhysicsControl:
-        def __init__(self) -> None:
-            self.mass = 1521
-
-    def __init__(self, acceleration:Vector3D=Vector3D(), velocity:Vector3D=Vector3D()) -> None:
-        self.__acceleration = acceleration
-        self.__velocity = velocity
-
-    def get_physics_control(self):
-        return self.PhysicsControl()
-
-    def get_acceleration(self):
-        return self.__acceleration
-
-    def get_velocity(self):
-        return self.__velocity
 
 
 class TestEnergyTracker(EnergyTracker):
