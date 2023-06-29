@@ -1,4 +1,4 @@
-from carla import WorldSnapshot
+from carla import WorldSnapshot, Location
 
 from .energy_tracker import EnergyTracker
 from .ev import EV
@@ -19,6 +19,8 @@ class SocTracker(EnergyTracker):
         self.soc = init_soc
         self.soc_series = [init_soc]
         self.wireless_chargers = wireless_chargers
+        location = ev.vehicle.get_location()
+        self.is_charging = self.energy_from_chargers(location, dt=1) > 0
 
     def _update(self, snapshot: WorldSnapshot, vehicle) -> None:
         # EnergyTracker functionality
@@ -29,15 +31,17 @@ class SocTracker(EnergyTracker):
 
         # Wireless charging
         location = vehicle.get_transform().location
-        power = 0
-        for charger in self.wireless_chargers:
-            power += charger.power_to_vehicle(location)
-        if power > 0:
-            print("Wirelessly charging!")
-        charging_energy = self.energy_from_power(power, snapshot.delta_seconds)
+        charging_energy = self.energy_from_chargers(location, snapshot.delta_seconds)
+        self.is_charging = charging_energy > 0
 
         # Extra SocTracker functionality
         net_energy = charging_energy - energy_spent
         pct_gain = net_energy / self.ev.capacity
         self.soc = min(1.0, self.soc + pct_gain)
         self.soc_series.append(self.soc)
+
+    def energy_from_chargers(self, location:Location, dt) -> float:
+        power = 0
+        for charger in self.wireless_chargers:
+            power += charger.power_to_vehicle(location)
+        return self.energy_from_power(power, dt)

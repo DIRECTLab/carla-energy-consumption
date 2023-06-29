@@ -1,4 +1,4 @@
-from carla import Vector3D, VehiclePhysicsControl, Rotation, Transform
+from carla import Vector3D, VehiclePhysicsControl, Rotation, Transform, Location
 
 
 """
@@ -67,3 +67,6 @@ class TestVehicle:
 
     def get_world(self):
         return self.__world
+    
+    def get_location(self):
+        return Location()

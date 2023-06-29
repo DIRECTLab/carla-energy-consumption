@@ -83,6 +83,7 @@ def test_wireless1():
     tracker.start()
     world.tick()
     try:
+        assert tracker.is_charging
         assert tracker.soc == 0.5
     except AssertionError:
         traceback.print_exc()
@@ -108,6 +109,7 @@ def test_wireless2():
     tracker.start()
     world.tick()
     try:
+        assert tracker.is_charging
         assert tracker.soc == 0.5
     except AssertionError:
         traceback.print_exc()
