@@ -10,11 +10,6 @@ from trackers.energy_tracker import EnergyTracker
 from trackers.ev import EV
 
 
-"""
-This module tests the "Energy" part of `EnergyTracker`.
-"""
-
-
 def test_power_1():
     vehicle = TestVehicle()
     ev = EV(vehicle, capacity=50)
@@ -260,6 +255,24 @@ def test_energy_4():
     return True
 
 
+def test_total_energy():
+    vehicle = TestVehicle(Vector3D(1, 0, 0), Vector3D(1, 0, 0))
+    world = vehicle.get_world()
+    ev = EV(vehicle, capacity=50)
+    tracker = EnergyTracker(ev)
+    tracker.start()
+    world.tick()
+    try:
+        assert tracker.total_energy > 1.9609
+        assert tracker.total_energy < 1.9610
+    except AssertionError:
+        traceback.print_exc()
+        print(f"{tracker.total_energy=}")
+        print()
+        return False
+    return True
+
+
 if __name__ == "__main__":
     tests = (
         test_power_1, 
@@ -277,6 +290,7 @@ if __name__ == "__main__":
         test_energy_2,
         test_energy_3,
         test_energy_4,
+        test_total_energy,
         )
     success = 0
     total = 0

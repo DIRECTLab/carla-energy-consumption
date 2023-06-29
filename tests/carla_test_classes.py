@@ -13,7 +13,7 @@ class TestWorldSnapshot:
     Currently only handles one vehicle.
     """
     def __init__(self, vehicle) -> None:
-        self.delta_seconds = 1.0
+        self.delta_seconds = 3600.0     # One hour
         self.__vehicle = vehicle
 
     def find(self, id):

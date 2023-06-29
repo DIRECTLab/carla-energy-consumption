@@ -1,7 +1,6 @@
 import sys
 import os
 import traceback
-from carla import Vector3D
 
 from carla_test_classes import TestVehicle
 
@@ -42,8 +41,8 @@ def test_soc2():
     world.tick()
     tracker.stop()
     try:
-        assert tracker.soc > 0.9999944
-        assert tracker.soc < 0.9999945
+        assert tracker.soc > 0.9799
+        assert tracker.soc < 0.9801
     except AssertionError:
         traceback.print_exc()
         print(f"{tracker.soc=}")
