@@ -268,10 +268,9 @@ def main():
         for tracker in trackers:
             tracker.stop()
 
-        # Note that these plots may throw exceptions if different trackers had different amounts of updates. 
-        # This can be avoided via synchronous mode.
-
         if args.output is not None:
+            # Note that this may throw exceptions if different trackers had different amounts of updates. 
+            # This can be avoided via synchronous mode.
             save_data(trackers, args.output)
 
     finally:
