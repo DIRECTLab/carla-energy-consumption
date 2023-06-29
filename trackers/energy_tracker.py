@@ -24,7 +24,8 @@ class EnergyTracker(Tracker):
         energy = self.energy_from_power(power, snapshot.delta_seconds)
         self.total_energy += energy
 
-    def energy_from_power(self, power:float, dt:float):
+    @staticmethod
+    def energy_from_power(power:float, dt:float):
         """
         Return the energy used in kWh.
         `power`: Power in Watts.
