@@ -340,7 +340,8 @@ def main():
 
     finally:
         if trackers is not None:
-            del trackers
+            for tracker in trackers:
+                tracker.stop()
 
         if not args.asynch and settings is not None:
             settings.synchronous_mode = False
