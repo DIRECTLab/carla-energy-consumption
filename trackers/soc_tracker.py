@@ -17,7 +17,7 @@ class SocTracker(EnergyTracker):
         """
         super().__init__(ev, hvac)
         self.soc = init_soc
-        self.soc_series = [init_soc]
+        self.soc_series = []
         self.wireless_chargers = wireless_chargers
         location = ev.vehicle.get_location()
         self.is_charging = self.energy_from_chargers(location, dt=1) > 0

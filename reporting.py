@@ -1,5 +1,8 @@
+import pandas as pd
+
 from trackers.time_tracker import TimeTracker
 from trackers.kinematics_tracker import KinematicsTracker
+from trackers.energy_tracker import EnergyTracker
 from trackers.soc_tracker import SocTracker
 
 
@@ -20,3 +23,26 @@ def print_update(time_tracker:TimeTracker, kinematics_tracker:KinematicsTracker,
     print(f"\tEnergy efficiency: {kWh_per_m:G} kWh/m ({kWh_per_100km:G} kWh / 100 km) ({kWh_per_100mi:G} kWh / 100 mi)")
     print(f"\tState of charge: {soc_tracker.soc*100:.2f}%")
     print(f"\tThe vehicle is {'not ' if not soc_tracker.is_charging else ''}charging.")
+
+
+def save_data(trackers:list, file):
+    if len(trackers) == 0:
+        return
+    
+    data = dict()
+    for tracker in trackers:
+        if isinstance(tracker, TimeTracker):
+            data['time'] = tracker.time_series
+            data['dt'] = tracker.interval_series
+        elif isinstance(tracker, KinematicsTracker):
+            data['location'] = tracker.location_series
+            data['speed'] = tracker.speed_series
+            data['distance'] = tracker.distance_series
+            data['acceleration'] = tracker.acceleration_series
+            data['road_grade'] = tracker.grade_series
+        elif isinstance(tracker, EnergyTracker):
+            data['power'] = tracker.power_series
+            if isinstance(tracker, SocTracker):
+                data['SOC'] = tracker.soc_series
+
+    pd.DataFrame(data).to_csv(file)

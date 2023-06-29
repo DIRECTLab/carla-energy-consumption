@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 from matplotlib.ticker import PercentFormatter
 import carla
 
-from reporting import print_update
+from reporting import print_update, save_data
 from trackers.time_tracker import TimeTracker
 from trackers.soc_tracker import SocTracker
 from trackers.kinematics_tracker import KinematicsTracker
@@ -280,6 +280,8 @@ def main():
 
         # Note that these plots may throw exceptions if different trackers had different amounts of updates. 
         # This can be avoided via synchronous mode.
+
+        save_data(trackers, 'output.csv')
 
         fig, (ax1, ax2, ax3) = plt.subplots(ncols=3, layout='constrained')
 
