@@ -15,19 +15,10 @@ This module tests the "Energy" part of `EnergyTracker`.
 """
 
 
-class TestEnergyTracker(EnergyTracker):
-    def __init__(self, ev:EV, hvac:float=0.0) -> None:
-        self.ev = ev
-        self.hvac = hvac
-
-    def __del__(self):
-        pass
-
-
 def test_power_1():
     vehicle = TestVehicle()
     ev = EV(vehicle, capacity=50)
-    tracker = TestEnergyTracker(ev)
+    tracker = EnergyTracker(ev)
     power = tracker.power(vehicle)
     try:
         assert power == 0
@@ -42,7 +33,7 @@ def test_power_1():
 def test_power_2():
     vehicle = TestVehicle(Vector3D(1, 0, 0), Vector3D(1, 0, 0))
     ev = EV(vehicle, capacity=50)
-    tracker = TestEnergyTracker(ev)
+    tracker = EnergyTracker(ev)
     power = tracker.power(vehicle)
     try:
         assert power > 1960.9
@@ -58,7 +49,7 @@ def test_power_2():
 def test_power_3():
     vehicle = TestVehicle(Vector3D(1, 0, 0), Vector3D(1, 0, 0))
     ev = EV(vehicle, capacity=50, A_f=4.0)
-    tracker = TestEnergyTracker(ev)
+    tracker = EnergyTracker(ev)
     power = tracker.power(vehicle)
     try:
         assert power > 1961.2
@@ -74,7 +65,7 @@ def test_power_3():
 def test_power_4():
     vehicle = TestVehicle(Vector3D(1, 0, 0), Vector3D(1, 0, 0))
     ev = EV(vehicle, capacity=50, C_r=2.0)
-    tracker = TestEnergyTracker(ev)
+    tracker = EnergyTracker(ev)
     power = tracker.power(vehicle)
     try:
         assert power > 1981.4
@@ -90,7 +81,7 @@ def test_power_4():
 def test_power_5():
     vehicle = TestVehicle(Vector3D(2, 0, 0), Vector3D(1, 0, 0))
     ev = EV(vehicle, capacity=50)
-    tracker = TestEnergyTracker(ev)
+    tracker = EnergyTracker(ev)
     power = tracker.power(vehicle)
     try:
         assert power > 3777.6
@@ -106,7 +97,7 @@ def test_power_5():
 def test_power_6():
     vehicle = TestVehicle(Vector3D(1, 0, 0), Vector3D(2, 0, 0))
     ev = EV(vehicle, capacity=50)
-    tracker = TestEnergyTracker(ev)
+    tracker = EnergyTracker(ev)
     power = tracker.power(vehicle)
     try:
         assert power > 3926.7
@@ -122,7 +113,7 @@ def test_power_6():
 def test_power_7():
     vehicle = TestVehicle(Vector3D(1, 0, 0), Vector3D(1, 0, 0.1))
     ev = EV(vehicle, capacity=50)
-    tracker = TestEnergyTracker(ev)
+    tracker = EnergyTracker(ev)
     power = tracker.power(vehicle)
     try:
         assert power > 3732.9
@@ -138,7 +129,7 @@ def test_power_7():
 def test_power_8():
     vehicle = TestVehicle(Vector3D(-1, 0, 0), Vector3D(1, 0, 0))
     ev = EV(vehicle, capacity=50)
-    tracker = TestEnergyTracker(ev)
+    tracker = EnergyTracker(ev)
     power = tracker.power(vehicle)
     try:
         assert power > -1344.0
@@ -157,7 +148,7 @@ def test_power_9():
     """
     vehicle = TestVehicle(Vector3D(1, 1, 0), Vector3D(1, 0, 0))
     ev = EV(vehicle, capacity=50)
-    tracker = TestEnergyTracker(ev)
+    tracker = EnergyTracker(ev)
     power = tracker.power(vehicle)
     try:
         assert power > 1960.9
@@ -176,7 +167,7 @@ def test_power_10():
     """
     vehicle = TestVehicle(Vector3D(1, 1, 0), Vector3D(1, 1, 0))
     ev = EV(vehicle, capacity=50)
-    tracker = TestEnergyTracker(ev)
+    tracker = EnergyTracker(ev)
     power = tracker.power(vehicle)
     try:
         assert power > 3838.6
@@ -192,7 +183,7 @@ def test_power_10():
 def test_power_11():
     vehicle = TestVehicle(Vector3D(1, 0, 0), Vector3D(1, 0, 0))
     ev = EV(vehicle, capacity=50)
-    tracker = TestEnergyTracker(ev, hvac=6000)
+    tracker = EnergyTracker(ev, hvac=6000)
     power = tracker.power(vehicle)
     try:
         assert power > 7960.9
@@ -209,7 +200,7 @@ def test_power_11():
 def test_energy_1():
     vehicle = TestVehicle()
     ev = EV(vehicle, capacity=50)
-    tracker = TestEnergyTracker(ev)
+    tracker = EnergyTracker(ev)
     energy = tracker.energy_from_power(0, 1)
     try:
         assert energy == 0
@@ -224,7 +215,7 @@ def test_energy_1():
 def test_energy_2():
     vehicle = TestVehicle(Vector3D(1, 0, 0), Vector3D(1, 0, 0))
     ev = EV(vehicle, capacity=50)
-    tracker = TestEnergyTracker(ev)
+    tracker = EnergyTracker(ev)
     energy = tracker.energy_from_power(1960.91, 3600)
     try:
         assert energy > 1.9609
@@ -240,7 +231,7 @@ def test_energy_2():
 def test_energy_3():
     vehicle = TestVehicle(Vector3D(-1, 0, 0), Vector3D(1, 0, 0))
     ev = EV(vehicle, capacity=50)
-    tracker = TestEnergyTracker(ev)
+    tracker = EnergyTracker(ev)
     energy = tracker.energy_from_power(-1343.94, 3600)
     try:
         assert energy > -1.3440
@@ -256,7 +247,7 @@ def test_energy_3():
 def test_energy_4():
     vehicle = TestVehicle(Vector3D(1, 0, 0), Vector3D(1, 0, 0))
     ev = EV(vehicle, capacity=50)
-    tracker = TestEnergyTracker(ev)
+    tracker = EnergyTracker(ev)
     energy = tracker.energy_from_power(1960.91, 1)
     try:
         assert energy > 0.00054469
