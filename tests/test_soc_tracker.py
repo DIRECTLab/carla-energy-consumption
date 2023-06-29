@@ -92,12 +92,38 @@ def test_wireless1():
     return True
 
 
+def test_wireless2():
+    vehicle = TestVehicle()
+    world = vehicle.get_world()
+    ev = EV(vehicle, capacity=200.0)
+    charger1 = Charger(
+        transform=Transform(Vector3D(), Rotation()), 
+        extent=Vector3D(1,1,1)
+    )
+    charger2 = Charger(
+        transform=Transform(Vector3D(2,2,2), Rotation()), 
+        extent=Vector3D(1,1,1)
+    )
+    tracker = SocTracker(ev, init_soc=0.0, wireless_chargers=[charger1, charger2])
+    tracker.start()
+    world.tick()
+    try:
+        assert tracker.soc == 0.5
+    except AssertionError:
+        traceback.print_exc()
+        print(f"{tracker.soc=}")
+        print()
+        return False
+    return True
+
+
 if __name__ == '__main__':
     tests = (
         test_soc1,
         test_soc2,
         test_soc3,
         test_wireless1,
+        test_wireless2,
     )
     success = 0
     total = 0
