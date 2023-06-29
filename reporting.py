@@ -1,4 +1,7 @@
+import math
 import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.ticker import PercentFormatter
 
 from trackers.time_tracker import TimeTracker
 from trackers.kinematics_tracker import KinematicsTracker
@@ -25,17 +28,16 @@ def print_update(time_tracker:TimeTracker, kinematics_tracker:KinematicsTracker,
     print(f"\tThe vehicle is {'not ' if not soc_tracker.is_charging else ''}charging.")
 
 
-def save_data(trackers:list, file):
-    if len(trackers) == 0:
-        return
-    
+def compile_data(trackers:list) -> pd.DataFrame:
     data = dict()
     for tracker in trackers:
         if isinstance(tracker, TimeTracker):
             data['time'] = tracker.time_series
             data['dt'] = tracker.interval_series
         elif isinstance(tracker, KinematicsTracker):
-            data['location'] = tracker.location_series
+            data['x'] = [loc.x for loc in tracker.location_series]
+            data['y'] = [loc.y for loc in tracker.location_series]
+            data['z'] = [loc.z for loc in tracker.location_series]
             data['speed'] = tracker.speed_series
             data['distance'] = tracker.distance_series
             data['acceleration'] = tracker.acceleration_series
@@ -45,4 +47,94 @@ def save_data(trackers:list, file):
             if isinstance(tracker, SocTracker):
                 data['SOC'] = tracker.soc_series
 
-    pd.DataFrame(data).to_csv(file)
+    return pd.DataFrame(data)
+
+
+def save_data(trackers:list, file):
+    df = compile_data(trackers)
+    df.to_csv(file)
+
+
+def plot_power(ax, time_series, power_series):
+    """
+    Plot power over time.
+    Returns the plot.
+    """
+    plot, = ax.plot(time_series, power_series, "r-", label="Power")
+    ax.set_xlabel("Time (s)")
+    ax.set_ylabel("Power from Motor (W)")
+    ax.yaxis.label.set_color(plot.get_color())
+    ax.tick_params(axis='y', colors=plot.get_color())
+    return plot
+
+
+def power_plots(tracking_data:pd.DataFrame):
+    """
+    Plot power against several other variables.
+
+    `tracking_data`: `DataFrame` as returned by `compile_data()` with `TimeTracker`, `KinematicsTracker` and `EnergyTracker` input.
+    """
+    fig, (ax1, ax2, ax3) = plt.subplots(ncols=3, layout='constrained')
+
+    power_plot = plot_power(ax1, tracking_data['time'], tracking_data['power'])
+
+    # Plot speed over time
+    speed_ax = ax1.twinx()
+    speed_plot, = speed_ax.plot(tracking_data['time'], tracking_data['speed'], "g-", label="Speed")
+    speed_ax.set_ylabel("Vehicle Speed (m/s)")
+    speed_ax.yaxis.label.set_color(speed_plot.get_color())
+    speed_ax.tick_params(axis='y', colors=speed_plot.get_color())
+    ax1.legend(handles=[power_plot, speed_plot])
+
+    power_plot = plot_power(ax2, tracking_data['time'], tracking_data['power'])
+
+    # Plot acceleration over time
+    acceleration_ax = ax2.twinx()
+    acceleration_plot, = acceleration_ax.plot(tracking_data['time'], tracking_data['acceleration'], "b-", label="Acceleration")
+    acceleration_ax.set_ylabel("Vehicle Acceleration (m/s^2)")
+    acceleration_ax.yaxis.label.set_color(acceleration_plot.get_color())
+    acceleration_ax.tick_params(axis='y', colors=acceleration_plot.get_color())
+    ax2.legend(handles=[power_plot, acceleration_plot])
+
+    power_plot = plot_power(ax3, tracking_data['time'], tracking_data['power'])
+
+    # Plot road grade over time
+    grade_ax = ax3.twinx()
+    grade_plot, = grade_ax.plot(tracking_data['time'], tracking_data['road_grade'], "c-", label="Grade")
+    grade_ax.set_ylabel("Road Grade")
+    grade_ax.yaxis.set_major_formatter(PercentFormatter(xmax=1.0))
+    grade_ax.yaxis.label.set_color(grade_plot.get_color())
+    grade_ax.tick_params(axis='y', colors=grade_plot.get_color())
+    ax3.legend(handles=[power_plot, grade_plot])
+
+    plt.show()
+
+
+def world_heatmap(tracking_data:pd.DataFrame, unit_size:float=2.0):
+    """
+    Plot heatmap
+
+    `tracking_data`: `DataFrame` as returned by `compile_data()` with `KinematicsTracker` input.
+
+    `unit_size`: Specifies map granularity. Default is one unit for every 2 meters.
+    """
+    # Make about one square per 2 m
+    xs = tracking_data['x']
+    xrange = xs.max() - xs.min()
+    xbins = math.ceil(xrange / unit_size)
+    ys = tracking_data['y']
+    yrange = ys.max() - ys.min()
+    ybins = math.ceil(yrange / unit_size)
+    fig, (ax1, ax2) = plt.subplots(ncols=2, layout='constrained')
+
+    ax1.hexbin(xs, ys, gridsize=xbins)
+    ax1.invert_yaxis()
+    ax1.set_aspect('equal', adjustable='box')
+    ax1.set_title('Vehicle Presence on Map')
+
+    ax2.hist2d(xs, ys, bins=(xbins,ybins))
+    ax2.invert_yaxis()
+    ax2.set_aspect('equal', adjustable='box')
+    ax2.set_title('Vehicle Presence on Map')
+
+    plt.show()

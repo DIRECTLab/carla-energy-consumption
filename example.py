@@ -9,10 +9,7 @@
 import random
 import time
 import csv
-import math
 import argparse
-import matplotlib.pyplot as plt
-from matplotlib.ticker import PercentFormatter
 import carla
 
 from reporting import print_update, save_data
@@ -30,19 +27,6 @@ def yes_no(string: str):
     if string in ('n', 'no', 'false'):
         return False
     return None
-
-
-def plot_power(ax, time_series, power_series):
-    """
-    Plot power over time.
-    Returns the plot.
-    """
-    plot, = ax.plot(time_series, power_series, "r-", label="Power")
-    ax.set_xlabel("Time (s)")
-    ax.set_ylabel("Power from Motor (W)")
-    ax.yaxis.label.set_color(plot.get_color())
-    ax.tick_params(axis='y', colors=plot.get_color())
-    return plot
 
 
 def main():
@@ -289,63 +273,6 @@ def main():
 
         if args.output is not None:
             save_data(trackers, args.output)
-
-        fig, (ax1, ax2, ax3) = plt.subplots(ncols=3, layout='constrained')
-
-        power_plot = plot_power(ax1, time_tracker.time_series, soc_tracker.power_series)
-
-        # Plot speed over time
-        speed_ax = ax1.twinx()
-        speed_plot, = speed_ax.plot(time_tracker.time_series, kinematics_tracker.speed_series, "g-", label="Speed")
-        speed_ax.set_ylabel("Vehicle Speed (m/s)")
-        speed_ax.yaxis.label.set_color(speed_plot.get_color())
-        speed_ax.tick_params(axis='y', colors=speed_plot.get_color())
-        ax1.legend(handles=[power_plot, speed_plot])
-
-        power_plot = plot_power(ax2, time_tracker.time_series, soc_tracker.power_series)
-
-        # Plot acceleration over time
-        acceleration_ax = ax2.twinx()
-        acceleration_plot, = acceleration_ax.plot(time_tracker.time_series, kinematics_tracker.acceleration_series, "b-", label="Acceleration")
-        acceleration_ax.set_ylabel("Vehicle Acceleration (m/s^2)")
-        acceleration_ax.yaxis.label.set_color(acceleration_plot.get_color())
-        acceleration_ax.tick_params(axis='y', colors=acceleration_plot.get_color())
-        ax2.legend(handles=[power_plot, acceleration_plot])
-
-        power_plot = plot_power(ax3, time_tracker.time_series, soc_tracker.power_series)
-
-        # Plot road grade over time
-        grade_ax = ax3.twinx()
-        grade_plot, = grade_ax.plot(time_tracker.time_series, kinematics_tracker.grade_series, "c-", label="Grade")
-        grade_ax.set_ylabel("Road Grade")
-        grade_ax.yaxis.set_major_formatter(PercentFormatter(xmax=1.0))
-        grade_ax.yaxis.label.set_color(grade_plot.get_color())
-        grade_ax.tick_params(axis='y', colors=grade_plot.get_color())
-        ax3.legend(handles=[power_plot, grade_plot])
-
-        plt.show()
-
-        # Plot heatmap
-        xs = [loc.x for loc in kinematics_tracker.location_series]
-        ys = [loc.y for loc in kinematics_tracker.location_series]
-        # Make about one square per 2 m
-        xrange = max(xs) - min(xs)
-        xbins = math.ceil(xrange / 2)
-        yrange = max(ys) - min(ys)
-        ybins = math.ceil(yrange / 2)
-        fig, (ax1, ax2) = plt.subplots(ncols=2, layout='constrained')
-
-        ax1.hexbin(xs, ys, gridsize=xbins)
-        ax1.invert_yaxis()
-        ax1.set_aspect('equal', adjustable='box')
-        ax1.set_title('Vehicle Presence on Map')
-
-        ax2.hist2d(xs, ys, bins=(xbins,ybins))
-        ax2.invert_yaxis()
-        ax2.set_aspect('equal', adjustable='box')
-        ax2.set_title('Vehicle Presence on Map')
-
-        plt.show()
 
     finally:
         if trackers is not None:
