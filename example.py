@@ -12,21 +12,12 @@ import csv
 import argparse
 import carla
 
-from loading import get_chargers
+from loading import yes_no, get_chargers
 from reporting import print_update, save_data
 from trackers.time_tracker import TimeTracker
 from trackers.soc_tracker import SocTracker
 from trackers.kinematics_tracker import KinematicsTracker
 from trackers.ev import EV
-
-
-def yes_no(string: str):
-    string = string.lower()
-    if string in ('y', 'yes', 'true'):
-        return True
-    if string in ('n', 'no', 'false'):
-        return False
-    return None
 
 
 def main():
@@ -70,7 +61,8 @@ def main():
     argparser.add_argument(
         '-w', '--wireless-chargers',
         metavar='CHARGEFILE',
-        type=argparse.FileType('r'),
+        type=get_chargers,
+        default=list(),
         help='CSV file to read wireless charging data from'
     )
     argparser.add_argument(
@@ -219,10 +211,6 @@ def main():
                     break
         print(f"Total number of vehicles: {len(actor_list)}")
 
-        chargers = list()
-        if args.wireless_chargers is not None:
-            chargers = get_chargers(args.wireless_chargers)
-
         # The first couple seconds of simulation are less reliable as the vehicles are dropped onto the ground.
         time_tracker = TimeTracker(vehicle)
         time_tracker.start()
@@ -234,7 +222,7 @@ def main():
 
         time_tracker = TimeTracker(vehicle)
         kinematics_tracker = KinematicsTracker(vehicle)
-        soc_tracker = SocTracker(ev, hvac=0.0, init_soc=0.80, wireless_chargers=chargers)
+        soc_tracker = SocTracker(ev, hvac=0.0, init_soc=0.80, wireless_chargers=args.wireless_chargers)
         trackers = [time_tracker, kinematics_tracker, soc_tracker]
         for tracker in trackers:
             tracker.start()
