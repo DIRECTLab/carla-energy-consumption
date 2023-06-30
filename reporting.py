@@ -29,6 +29,10 @@ def print_update(time_tracker:TimeTracker, kinematics_tracker:KinematicsTracker,
 
 
 def compile_data(trackers:list) -> pd.DataFrame:
+    """
+    Note that this may throw exceptions if different trackers had different amounts of updates. 
+    This can be avoided via synchronous mode.
+    """
     data = dict()
     for tracker in trackers:
         if isinstance(tracker, TimeTracker):
@@ -51,6 +55,10 @@ def compile_data(trackers:list) -> pd.DataFrame:
 
 
 def save_data(trackers:list, file):
+    """
+    Note that this may throw exceptions if different trackers had different amounts of updates. 
+    This can be avoided via synchronous mode.
+    """
     df = compile_data(trackers)
     df.to_csv(file)
 
