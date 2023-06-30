@@ -18,6 +18,7 @@ import os
 import numpy.random as random
 import re
 import sys
+import time
 import weakref
 import networkx
 import pygame
@@ -32,7 +33,12 @@ from agents.navigation.behavior_agent import BehaviorAgent
 from agents.navigation.basic_agent import BasicAgent
 from agents.navigation.constant_velocity_agent import ConstantVelocityAgent
 
+from loading import get_chargers
+from reporting import print_update, save_data
+from trackers.ev import EV
 from trackers.time_tracker import TimeTracker
+from trackers.kinematics_tracker import KinematicsTracker
+from trackers.soc_tracker import SocTracker
 
 
 # ==============================================================================
@@ -777,6 +783,11 @@ def game_loop(args):
 
         clock = pygame.time.Clock()
 
+        # https://arxiv.org/pdf/1908.08920.pdf%5D pg17
+        drag = 0.23
+        frontal_area = 2.22
+        ev = EV(world.player, capacity=50.0, A_f=frontal_area, C_D=drag)
+
         # The first couple seconds of simulation are less reliable as the vehicles are dropped onto the ground.
         time_tracker = TimeTracker(world.player)
         time_tracker.start()
@@ -784,14 +795,32 @@ def game_loop(args):
             pass
         time_tracker.stop()
 
-        # TODO: Begin trackers here?
+        time_tracker = TimeTracker(world.player)
+        kinematics_tracker = KinematicsTracker(world.player)
+        soc_tracker = SocTracker(ev, hvac=0.0, init_soc=0.80, wireless_chargers=args.wireless_chargers)
+        trackers = [time_tracker, kinematics_tracker, soc_tracker]
+        for tracker in trackers:
+            tracker.start()
+
+        start = time.time()
+        t = start
+        display_clock = t
 
         while update(clock, world, controller, display, agent, spawn_points, args.sync, args.loop):
-            pass
+            t = time.time()
+            if t - display_clock > 1:
+                print_update(time_tracker, kinematics_tracker, soc_tracker)
+                display_clock = t
 
     finally:
 
         if world is not None:
+            if trackers is not None:
+                for tracker in trackers:
+                    tracker.stop()
+                if args.output is not None:
+                    save_data(trackers, args.output)
+
             settings = world.world.get_settings()
             settings.synchronous_mode = False
             settings.fixed_delta_seconds = None
@@ -868,6 +897,19 @@ def main():
         help='Set seed for repeating executions (default: None)',
         default=None,
         type=int)
+    argparser.add_argument(
+        '-w', '--wireless-chargers',
+        metavar='CHARGEFILE',
+        type=get_chargers,
+        default=list(),
+        help='CSV file to read wireless charging data from'
+    )
+    argparser.add_argument(
+        '-o', '--output',
+        metavar='OUTPUTFILE',
+        type=argparse.FileType('w'),
+        help='Name of file to write tracking data to'
+    )
 
     args = argparser.parse_args()
 
