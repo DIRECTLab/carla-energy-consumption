@@ -1,10 +1,14 @@
 import argparse
 import random
-import time
 import carla
 
+from agents.navigation.behavior_agent import BehaviorAgent
+from agents.navigation.basic_agent import BasicAgent
+from agents.navigation.constant_velocity_agent import ConstantVelocityAgent
+
 from loading import get_agents, yes_no, get_chargers
-from reporting import print_update, save_data
+from supervehicle import SuperVehicle
+from reporting import save_data
 from trackers.time_tracker import TimeTracker
 from trackers.soc_tracker import SocTracker
 from trackers.kinematics_tracker import KinematicsTracker
@@ -15,12 +19,49 @@ This module seeks to combine the best of `example.py` and `automatic_control.py`
 """
 
 
+def spawn_agent_class(agent_class:dict, world:carla.World, spawn_points:list) -> list:
+    """
+    Parses a single dict from the list returned by `get_agents`.
+    """
+    supervehicles = list()
+    blueprint_library = world.get_blueprint_library()
+    bp = blueprint_library.find('vehicle.tesla.model3')
+    bp.set_attribute('color', '204,255,11') # Lime green to make it visible
+
+    for _ in range(agent_class['number']):
+        transform = random.choice(spawn_points)
+        vehicle = world.spawn_actor(bp, transform)
+        spawn_points.remove(transform)
+        print(f'created {vehicle.type_id} at {transform.location}')
+
+        # https://arxiv.org/pdf/1908.08920.pdf%5D pg17
+        drag = 0.23
+        frontal_area = 2.22
+        ev = EV(vehicle, capacity=50.0, A_f=frontal_area, C_D=drag)
+
+        if agent_class['agent_type'] == 'traffic_manager':
+            vehicle.set_autopilot(True)
+        elif agent_class['agent_type'] == 'cautious_behavior':
+            agent = BehaviorAgent(vehicle, 'cautious')
+        elif agent_class['agent_type'] == 'normal_behavior':
+            agent = BehaviorAgent(vehicle, 'normal')
+        elif agent_class['agent_type'] == 'aggressive_behavior':
+            agent = BehaviorAgent(vehicle, 'aggressive')
+        elif agent_class['agent_type'] == 'basic':
+            agent = BasicAgent(world.player, target_speed=30)
+        elif agent_class['agent_type'] == 'constant':
+            agent = ConstantVelocityAgent(world.player, target_speed=30)
+
+        supervehicles.append(SuperVehicle(ev))
+    return supervehicles
+
+
 def simulate(args):
     actor_list = []
 
     settings = None
     traffic_manager = None
-    trackers = None
+    tracked = list()
 
     try:
         client = carla.Client(args.host, args.port)
@@ -57,33 +98,14 @@ def simulate(args):
             settings.no_rendering_mode = not args.render
             world.apply_settings(settings)
 
-        blueprint_library = world.get_blueprint_library()
         map = world.get_map()
         spawn_points = map.get_spawn_points()
         random.shuffle(spawn_points)
 
-        tracked = list()
         for agent_class in args.tracked:
-            bp = blueprint_library.find('vehicle.tesla.model3')
-            bp.set_attribute('color', '204,255,11') # Lime green to make it visible
-
-            for agent in range(agent_class['number']):
-                transform = random.choice(spawn_points)
-                vehicle = world.spawn_actor(bp, transform)
-                spawn_points.remove(transform)
-
-                actor_list.append(vehicle)
-                tracked.append(vehicle)
-                print(f'created {vehicle.type_id} at {transform.location}')
-
-                physics_vehicle = vehicle.get_physics_control()
-                mass = physics_vehicle.mass
-                # https://arxiv.org/pdf/1908.08920.pdf%5D pg17
-                drag = 0.23
-                frontal_area = 2.22
-                ev = EV(vehicle, capacity=50.0, A_f=frontal_area, C_D=drag)
-
-        vehicle.set_autopilot(True)
+            aclass_parsed = spawn_agent_class(agent_class, world, spawn_points)
+            actor_list += aclass_parsed
+            tracked += aclass_parsed
 
         # for _ in range(args.number_of_vehicles-1):
         #     bp = random.choice(blueprint_library.filter('vehicle'))
@@ -102,45 +124,40 @@ def simulate(args):
         print(f"Total number of vehicles: {len(actor_list)}")
 
         # The first couple seconds of simulation are less reliable as the vehicles are dropped onto the ground.
-        time_tracker = TimeTracker(vehicle)
+        time_tracker = TimeTracker(tracked[-1].ev.vehicle)
         time_tracker.start()
         while time_tracker.time < 2:
             if args.asynch:
                 world.wait_for_tick()
             else:
                 world.tick()
+        time_tracker.stop()
 
-        time_tracker = TimeTracker(vehicle)
-        kinematics_tracker = KinematicsTracker(vehicle)
-        soc_tracker = SocTracker(ev, hvac=0.0, init_soc=0.80, wireless_chargers=args.wireless_chargers)
-        trackers = [time_tracker, kinematics_tracker, soc_tracker]
-        for tracker in trackers:
-            tracker.start()
+        for vehicle in tracked:
+            time_tracker = TimeTracker(vehicle.ev.vehicle)
+            kinematics_tracker = KinematicsTracker(vehicle.ev.vehicle)
+            soc_tracker = SocTracker(vehicle.ev, hvac=0.0, init_soc=0.80, wireless_chargers=args.wireless_chargers)
+            vehicle.trackers = [time_tracker, kinematics_tracker, soc_tracker]
+            for tracker in vehicle.trackers:
+                tracker.start()
 
-        start = time.time()
-        t = start
-        display_clock = t
         while True:
             if args.asynch:
                 world.wait_for_tick()
             else:
                 world.tick()
-            t = time.time()
-
-            if t - display_clock > 1:
-                print_update(time_tracker, kinematics_tracker, soc_tracker)
-                display_clock = t
 
     except KeyboardInterrupt:
-        for tracker in trackers:
-            tracker.stop()
+        for vehicle in tracked:
+            for tracker in vehicle.trackers:
+                tracker.stop()
 
-        if args.output is not None:
-            save_data(trackers, args.output)
+        # if args.output is not None:
+        #     save_data(vehicle.trackers, args.output)
 
     finally:
-        if trackers is not None:
-            for tracker in trackers:
+        for vehicle in tracked:
+            for tracker in vehicle.trackers:
                 tracker.stop()
 
         if not args.asynch and settings is not None:
@@ -150,7 +167,7 @@ def simulate(args):
 
         if len(actor_list) > 0:
             print('destroying actors')
-            client.apply_batch([carla.command.DestroyActor(x) for x in actor_list])
+            client.apply_batch([carla.command.DestroyActor(x.ev.vehicle) for x in actor_list])
             print('done.')
 
 
@@ -198,9 +215,8 @@ def main():
     )
     argparser.add_argument(
         '-o', '--output',
-        metavar='OUTPUTFILE',
-        type=argparse.FileType('w'),
-        help='Name of file to write tracking data to'
+        metavar='OUTPUTPATH',
+        help='Directory to write tracking data to'
     )
     argparser.add_argument(
         '--host',
