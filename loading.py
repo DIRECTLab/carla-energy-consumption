@@ -16,7 +16,7 @@ def yes_no(string: str):
     return None
 
 
-def get_chargers(path):
+def get_chargers(path) -> list:
     """
     Loads chargers from the CSV at `path`.
     """
@@ -30,3 +30,15 @@ def get_chargers(path):
             dimensions = carla.Vector3D(float(charger['width']), float(charger['length']), float(charger['height']))
             chargers.append(Charger(transform, dimensions / 2))
     return chargers
+
+
+def get_agents(path) -> dict:
+    """
+    Loads the agents from the CSV at `path`.
+    """
+    agents = dict()
+    with open(path, 'r') as file:
+        reader = csv.DictReader(file)
+        for charger in reader:
+            pass
+    return agents

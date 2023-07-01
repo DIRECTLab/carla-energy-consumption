@@ -1,0 +1,7 @@
+agent_type,number
+traffic_manager,1
+cautious_behavior,0
+normal_behavior,0
+aggressive_behavior,0
+basic,0
+constant,0
