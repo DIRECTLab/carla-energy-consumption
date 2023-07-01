@@ -58,48 +58,47 @@ def simulate(args):
             world.apply_settings(settings)
 
         blueprint_library = world.get_blueprint_library()
-
-        bp = blueprint_library.find('vehicle.tesla.model3')
-        bp.set_attribute('color', '204,255,11') # Lime green to make it visible
-
-        bp.set_attribute('role_name', 'hero')
-        traffic_manager.set_hybrid_physics_mode(True)
-        traffic_manager.set_respawn_dormant_vehicles(True)
-
         map = world.get_map()
         spawn_points = map.get_spawn_points()
-        ego_transform = random.choice(spawn_points)
-        vehicle = world.spawn_actor(bp, ego_transform)
-        spawn_points.remove(ego_transform)
         random.shuffle(spawn_points)
 
-        actor_list.append(vehicle)
-        print(f'created {vehicle.type_id} at {ego_transform.location}')
+        tracked = list()
+        for agent_class in args.tracked:
+            bp = blueprint_library.find('vehicle.tesla.model3')
+            bp.set_attribute('color', '204,255,11') # Lime green to make it visible
 
-        physics_vehicle = vehicle.get_physics_control()
-        mass = physics_vehicle.mass
-        print(f"Mass: {mass} kg")
-        # https://arxiv.org/pdf/1908.08920.pdf%5D pg17
-        drag = 0.23
-        frontal_area = 2.22
-        ev = EV(vehicle, capacity=50.0, A_f=frontal_area, C_D=drag)
+            for agent in range(agent_class['number']):
+                transform = random.choice(spawn_points)
+                vehicle = world.spawn_actor(bp, transform)
+                spawn_points.remove(transform)
+
+                actor_list.append(vehicle)
+                tracked.append(vehicle)
+                print(f'created {vehicle.type_id} at {transform.location}')
+
+                physics_vehicle = vehicle.get_physics_control()
+                mass = physics_vehicle.mass
+                # https://arxiv.org/pdf/1908.08920.pdf%5D pg17
+                drag = 0.23
+                frontal_area = 2.22
+                ev = EV(vehicle, capacity=50.0, A_f=frontal_area, C_D=drag)
 
         vehicle.set_autopilot(True)
 
-        for _ in range(args.number_of_vehicles-1):
-            bp = random.choice(blueprint_library.filter('vehicle'))
+        # for _ in range(args.number_of_vehicles-1):
+        #     bp = random.choice(blueprint_library.filter('vehicle'))
 
-            for _ in range(5):  # Try spawning 5 times
-                try:
-                    transform = spawn_points.pop()
-                except IndexError:
-                    print('All spawn points have been filled.')
-                    break
-                npc = world.try_spawn_actor(bp, transform)
-                if npc is not None:
-                    actor_list.append(npc)
-                    npc.set_autopilot(True)
-                    break
+        #     for _ in range(5):  # Try spawning 5 times
+        #         try:
+        #             transform = spawn_points.pop()
+        #         except IndexError:
+        #             print('All spawn points have been filled.')
+        #             break
+        #         npc = world.try_spawn_actor(bp, transform)
+        #         if npc is not None:
+        #             actor_list.append(npc)
+        #             npc.set_autopilot(True)
+        #             break
         print(f"Total number of vehicles: {len(actor_list)}")
 
         # The first couple seconds of simulation are less reliable as the vehicles are dropped onto the ground.
@@ -121,9 +120,7 @@ def simulate(args):
         start = time.time()
         t = start
         display_clock = t
-        # while t < start + 100:
-        # while True:
-        while time_tracker.time < 8028:
+        while True:
             if args.asynch:
                 world.wait_for_tick()
             else:
@@ -133,9 +130,6 @@ def simulate(args):
             if t - display_clock > 1:
                 print_update(time_tracker, kinematics_tracker, soc_tracker)
                 display_clock = t
-
-        print(f'Finished in {t-start} seconds.')
-        raise KeyboardInterrupt
 
     except KeyboardInterrupt:
         for tracker in trackers:
@@ -168,12 +162,12 @@ def main():
         type=get_agents,
         help='CSV file for tracked agent specifications'
     )
-    argparser.add_argument(
-        '-u', '--untracked',
-        metavar='UNTRACKEDFILE',
-        type=get_agents,
-        help='CSV file for untracked agent specifications'
-    )
+    # argparser.add_argument(
+    #     '-u', '--untracked',
+    #     metavar='UNTRACKEDFILE',
+    #     type=get_agents,
+    #     help='CSV file for untracked agent specifications'
+    # )
     argparser.add_argument(
         '-t', '--time-step',
         metavar='T',

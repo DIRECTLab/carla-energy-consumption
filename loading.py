@@ -32,13 +32,14 @@ def get_chargers(path) -> list:
     return chargers
 
 
-def get_agents(path) -> dict:
+def get_agents(path) -> list:
     """
     Loads the agents from the CSV at `path`.
     """
-    agents = dict()
+    agent_classes = list()
     with open(path, 'r') as file:
         reader = csv.DictReader(file)
-        for charger in reader:
-            pass
-    return agents
+        for agent_class in reader:
+            agent_class['number'] = int(agent_class['number'])
+            agent_classes.append(agent_class)
+    return agent_classes
