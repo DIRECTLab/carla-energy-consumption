@@ -20,7 +20,6 @@ import re
 import sys
 import time
 import weakref
-import networkx
 import pygame
 from pygame.locals import KMOD_CTRL
 from pygame.locals import K_ESCAPE
@@ -35,6 +34,8 @@ from agents.navigation.constant_velocity_agent import ConstantVelocityAgent
 
 from loading import get_chargers
 from reporting import print_update, save_data
+from supervehicle import choose_route
+
 from trackers.ev import EV
 from trackers.time_tracker import TimeTracker
 from trackers.kinematics_tracker import KinematicsTracker
@@ -671,21 +672,6 @@ class CameraManager(object):
             self.surface = pygame.surfarray.make_surface(array.swapaxes(0, 1))
         if self.recording:
             image.save_to_disk('_out/%08d' % image.frame)
-
-
-def choose_route(agent, choices, tries=5) -> bool:
-    """
-    return: Whether a route was chosen.
-    """
-    while tries:
-        destination = random.choice(choices).location
-        try:
-            agent.set_destination(destination)
-            return True
-        except networkx.exception.NetworkXNoPath:
-            print(f'Failed to find a route to {destination}')
-            tries -= 1
-    return False
 
 
 def update(clock, world, controller, display, agent, spawn_points, sync, loop):

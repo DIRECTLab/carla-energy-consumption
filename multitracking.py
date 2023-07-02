@@ -5,6 +5,7 @@ import carla
 from loading import get_agents, yes_no, get_chargers
 from supervehicle import SuperVehicle
 from reporting import save_all
+
 from trackers.time_tracker import TimeTracker
 from trackers.soc_tracker import SocTracker
 from trackers.kinematics_tracker import KinematicsTracker
@@ -77,10 +78,11 @@ def simulate(args):
 
         map = world.get_map()
         spawn_points = map.get_spawn_points()
-        random.shuffle(spawn_points)
+        remaining_spawn_points = list(spawn_points)
+        random.shuffle(remaining_spawn_points)
 
         for agent_class in args.tracked:
-            aclass_parsed = spawn_agent_class(agent_class, world, spawn_points)
+            aclass_parsed = spawn_agent_class(agent_class, world, remaining_spawn_points)
             actor_list += aclass_parsed
             tracked += aclass_parsed
 
@@ -100,6 +102,9 @@ def simulate(args):
         #             break
         print(f"Total number of vehicles: {len(actor_list)}")
 
+        for supervehicle in actor_list:
+            supervehicle.choose_route(spawn_points)
+
         # The first couple seconds of simulation are less reliable as the vehicles are dropped onto the ground.
         time_tracker = TimeTracker(tracked[-1].ev.vehicle)
         time_tracker.start()
@@ -110,12 +115,12 @@ def simulate(args):
                 world.tick()
         time_tracker.stop()
 
-        for vehicle in tracked:
-            time_tracker = TimeTracker(vehicle.ev.vehicle)
-            kinematics_tracker = KinematicsTracker(vehicle.ev.vehicle)
-            soc_tracker = SocTracker(vehicle.ev, hvac=0.0, init_soc=0.80, wireless_chargers=args.wireless_chargers)
-            vehicle.trackers = [time_tracker, kinematics_tracker, soc_tracker]
-            for tracker in vehicle.trackers:
+        for supervehicle in tracked:
+            time_tracker = TimeTracker(supervehicle.ev.vehicle)
+            kinematics_tracker = KinematicsTracker(supervehicle.ev.vehicle)
+            soc_tracker = SocTracker(supervehicle.ev, hvac=0.0, init_soc=0.80, wireless_chargers=args.wireless_chargers)
+            supervehicle.trackers = [time_tracker, kinematics_tracker, soc_tracker]
+            for tracker in supervehicle.trackers:
                 tracker.start()
 
         while True:
@@ -124,16 +129,19 @@ def simulate(args):
             else:
                 world.tick()
 
+            for supervehicle in actor_list:
+                supervehicle.run_step(spawn_points)
+
     except KeyboardInterrupt:
-        for vehicle in tracked:
-            for tracker in vehicle.trackers:
+        for supervehicle in tracked:
+            for tracker in supervehicle.trackers:
                 tracker.stop()
 
         save_all(actor_list, args.outfolder)
 
     finally:
-        for vehicle in tracked:
-            for tracker in vehicle.trackers:
+        for supervehicle in tracked:
+            for tracker in supervehicle.trackers:
                 tracker.stop()
 
         if not args.asynch and settings is not None:

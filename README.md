@@ -13,6 +13,10 @@ Energy consumption tracking for CARLA simulator.
 
     - Run `python example.py -h` to get all options. The `-t` option is strongly recommended.
 
+- [multitracking.py](multitracking.py)
+
+    - For BehaviorAgents, ensure time step is below 0.02.
+
 - `agents/` is copied over from `PythonAPI/carla/agents/`. See [its README](agents/README.md).
 
 - `input/` contains example input files for [example.py](example.py). See [its README](input/README.md).

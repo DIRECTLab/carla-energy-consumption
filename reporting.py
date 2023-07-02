@@ -5,7 +5,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.ticker import PercentFormatter
 
-from supervehicle import SuperVehicle
 from trackers.time_tracker import TimeTracker
 from trackers.kinematics_tracker import KinematicsTracker
 from trackers.energy_tracker import EnergyTracker
