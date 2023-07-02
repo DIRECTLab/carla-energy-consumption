@@ -1,8 +1,11 @@
+import os
+import csv
 import math
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.ticker import PercentFormatter
 
+from supervehicle import SuperVehicle
 from trackers.time_tracker import TimeTracker
 from trackers.kinematics_tracker import KinematicsTracker
 from trackers.energy_tracker import EnergyTracker
@@ -26,6 +29,21 @@ def print_update(time_tracker:TimeTracker, kinematics_tracker:KinematicsTracker,
     print(f"\tEnergy efficiency: {kWh_per_m:G} kWh/m ({kWh_per_100km:G} kWh / 100 km) ({kWh_per_100mi:G} kWh / 100 mi)")
     print(f"\tState of charge: {soc_tracker.soc*100:.2f}%")
     print(f"\tThe vehicle is {'not ' if not soc_tracker.is_charging else ''}charging.")
+
+
+def save_metadata(supervehicles:list, file):
+    """
+    Save metadata about the vehicles, simlar to `input/tracked_agents.py`.
+    """
+    with open(file, 'w', newline='') as csvfile:
+        fieldnames = ['id', 'agent_type']
+        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+        writer.writeheader()
+        for supervehicle in supervehicles:
+            writer.writerow({
+                'id': supervehicle.ev.vehicle.id,
+                'agent_type': supervehicle.agent_type,
+            })
 
 
 def compile_data(trackers:list) -> pd.DataFrame:
@@ -61,6 +79,16 @@ def save_data(trackers:list, file):
     """
     df = compile_data(trackers)
     df.to_csv(file)
+
+
+def save_all(supervehicles:list, outfolder):
+    """
+    Saves all tracking and metadata from a list of supervehicles.
+    """
+    save_metadata(supervehicles, os.path.join(outfolder, 'meta.csv'))
+    for supervehicle in supervehicles:
+        if len(supervehicle.trackers) > 0:
+            save_data(supervehicle.trackers, os.path.join(outfolder, f'{supervehicle.ev.vehicle.id}.csv'))
 
 
 def plot_power(ax, time_series, power_series):

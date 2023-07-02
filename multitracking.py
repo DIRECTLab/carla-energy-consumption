@@ -2,17 +2,12 @@ import argparse
 import random
 import carla
 
-from agents.navigation.behavior_agent import BehaviorAgent
-from agents.navigation.basic_agent import BasicAgent
-from agents.navigation.constant_velocity_agent import ConstantVelocityAgent
-
 from loading import get_agents, yes_no, get_chargers
 from supervehicle import SuperVehicle
-from reporting import save_data
+from reporting import save_all
 from trackers.time_tracker import TimeTracker
 from trackers.soc_tracker import SocTracker
 from trackers.kinematics_tracker import KinematicsTracker
-from trackers.ev import EV
 
 """
 This module seeks to combine the best of `example.py` and `automatic_control.py`.
@@ -32,27 +27,9 @@ def spawn_agent_class(agent_class:dict, world:carla.World, spawn_points:list) ->
         transform = random.choice(spawn_points)
         vehicle = world.spawn_actor(bp, transform)
         spawn_points.remove(transform)
+        supervehicles.append(SuperVehicle(vehicle, agent_class['agent_type']))
         print(f'created {vehicle.type_id} at {transform.location}')
 
-        # https://arxiv.org/pdf/1908.08920.pdf%5D pg17
-        drag = 0.23
-        frontal_area = 2.22
-        ev = EV(vehicle, capacity=50.0, A_f=frontal_area, C_D=drag)
-
-        if agent_class['agent_type'] == 'traffic_manager':
-            vehicle.set_autopilot(True)
-        elif agent_class['agent_type'] == 'cautious_behavior':
-            agent = BehaviorAgent(vehicle, 'cautious')
-        elif agent_class['agent_type'] == 'normal_behavior':
-            agent = BehaviorAgent(vehicle, 'normal')
-        elif agent_class['agent_type'] == 'aggressive_behavior':
-            agent = BehaviorAgent(vehicle, 'aggressive')
-        elif agent_class['agent_type'] == 'basic':
-            agent = BasicAgent(world.player, target_speed=30)
-        elif agent_class['agent_type'] == 'constant':
-            agent = ConstantVelocityAgent(world.player, target_speed=30)
-
-        supervehicles.append(SuperVehicle(ev))
     return supervehicles
 
 
@@ -152,8 +129,7 @@ def simulate(args):
             for tracker in vehicle.trackers:
                 tracker.stop()
 
-        # if args.output is not None:
-        #     save_data(vehicle.trackers, args.output)
+        save_all(actor_list, args.outfolder)
 
     finally:
         for vehicle in tracked:
@@ -178,6 +154,11 @@ def main():
         metavar='TRACKEDFILE',
         type=get_agents,
         help='CSV file for tracked agent specifications'
+    )
+    argparser.add_argument(
+        'outfolder',
+        metavar='OUTFOLDER',
+        help='directory to write tracking data to'
     )
     # argparser.add_argument(
     #     '-u', '--untracked',
@@ -212,11 +193,6 @@ def main():
         type=get_chargers,
         default=list(),
         help='CSV file to read wireless charging data from'
-    )
-    argparser.add_argument(
-        '-o', '--output',
-        metavar='OUTPUTPATH',
-        help='Directory to write tracking data to'
     )
     argparser.add_argument(
         '--host',
