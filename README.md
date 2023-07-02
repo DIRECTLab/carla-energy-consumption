@@ -5,6 +5,10 @@ Energy consumption tracking for CARLA simulator.
 ## Contents
 - [automatic_control.py](automatic_control.py) tracks a vehicle which is automatically controlled on the client side.
 
+    Basic Usage
+    1. Start the CARLA server.
+    2. Run `python automatic_control.py`.
+
     Known issues:
     - Much like the average driver, the vehicle does not stop at stop signs.
     - Unlike the average driver, the vehicle brakes frequently instead of reducing throttle.
@@ -13,9 +17,24 @@ Energy consumption tracking for CARLA simulator.
 
     - Run `python example.py -h` to get all options. The `-t` option is strongly recommended.
 
-- [multitracking.py](multitracking.py)
+    Basic Usage
+    1. Start the CARLA server.
+    2. Run `python example.py`.
+
+- [loading.py](loading.py) is a module for loading input files.
+
+- [multitracking.py](multitracking.py) tracks multiple vehicles at once. These vehicles can be controlled by the Traffic Manager or one of the agents under `agents/navigation/`.
 
     - For BehaviorAgents, ensure time step is below 0.02.
+
+    Basic Usage
+    1. Start the CARLA server.
+    2. Create an output directory, e.g. `mkdir output`.
+    3. Run `python multitracking.py input/tracked_agents.csv output/`.
+
+- [reporting.py](reporting.py) is a module for reporting tracking data.
+
+- [supervehicle.py](supervehicle.py) combines `EV` and `Agent` functionality.
 
 - `agents/` is copied over from `PythonAPI/carla/agents/`. See [its README](agents/README.md).
 
