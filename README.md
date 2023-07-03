@@ -29,7 +29,7 @@ Energy consumption tracking for CARLA simulator.
 
     Basic Usage
     1. Start the CARLA server.
-    2. Create an output directory, e.g. `mkdir output`.
+    2. Create an output directory, i.e. `mkdir output`.
     3. Run `python multitracking.py input/tracked_agents.csv output/`.
 
 - [reporting.py](reporting.py) is a module for reporting tracking data.
@@ -38,7 +38,7 @@ Energy consumption tracking for CARLA simulator.
 
 - `agents/` is copied over from `PythonAPI/carla/agents/`. See [its README](agents/README.md).
 
-- `input/` contains example input files for [example.py](example.py). See [its README](input/README.md).
+- `input/` contains example input files for [example.py](example.py). See [its README](input/README.md) for input file documentation.
 
 - `trackers/` contains code for tracking vehicle energy consumption as well as many other statistics. It also contains [example.py](trackers/example.py) demonstrating its usage. See [its README](trackers/README.md).
 

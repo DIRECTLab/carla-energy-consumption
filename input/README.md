@@ -26,7 +26,9 @@ Example input files for [example.py](../example.py).
     *For proper functionality, ensure that points lie in roads and that there is at least one point for each road segment the vehicle should travel.* 
 
 - [tracked_agents.csv](tracked_agents.csv) is an example CSV file for loading vehicles in [multitracking.py](multitracking.py). It demonstrates the following fields: 
+    - `vehicle`: which vehicle blueprint to use. To view the available blueprints, run the CARLA example found at `PythonAPI\examples\vehicle_gallery.py`.
     - `agent_type`: which agent to use for instructions. One of [traffic_manager, cautious_behavior, normal_behavior, aggressive_behavior, basic, constant].
     - `number`: number of vehicles with these specifications to spawn.
+    - `color`: RGB color of the vehicle. This field is optional.
 
 - [untracked_agents.csv](untracked_agents.csv) is a CSV for the `-u` option in [multitracking.py](multitracking.py). It follows the same pattern as [tracked_agents.csv](tracked_agents.csv). 
