@@ -35,12 +35,13 @@ def save_metadata(supervehicles:list, file):
     Save metadata about the vehicles, simlar to `input/tracked_agents.py`.
     """
     with open(file, 'w', newline='') as csvfile:
-        fieldnames = ['id', 'agent_type']
+        fieldnames = ['id', 'vehicle', 'agent_type']
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
         for supervehicle in supervehicles:
             writer.writerow({
                 'id': supervehicle.ev.vehicle.id,
+                'vehicle': supervehicle.ev.vehicle.type_id,
                 'agent_type': supervehicle.agent_type,
             })
 

@@ -15,15 +15,15 @@ This module seeks to combine the best of `example.py` and `automatic_control.py`
 """
 
 
-def spawn_agent_class(agent_class:dict, world:carla.World, spawn_points:list, color=None) -> list:
+def spawn_agent_class(agent_class:dict, world:carla.World, spawn_points:list) -> list:
     """
     Parses a single dict from the list returned by `get_agents`.
     """
     supervehicles = list()
     blueprint_library = world.get_blueprint_library()
-    bp = blueprint_library.find('vehicle.tesla.model3')
-    if color is not None:
-        bp.set_attribute('color', color) # Lime green to make it visible
+    bp = blueprint_library.find(agent_class['vehicle'])
+    if 'color' in agent_class.keys():
+        bp.set_attribute('color', agent_class['color'])
 
     for _ in range(agent_class['number']):
         try:
@@ -87,15 +87,13 @@ def simulate(args):
         remaining_spawn_points = list(spawn_points)
         random.shuffle(remaining_spawn_points)
 
-        lime_green = '204,255,11'
         for agent_class in args.tracked:
-            aclass_parsed = spawn_agent_class(agent_class, world, remaining_spawn_points, lime_green)
+            aclass_parsed = spawn_agent_class(agent_class, world, remaining_spawn_points)
             actor_list += aclass_parsed
             tracked += aclass_parsed
 
-        black = '0,0,0'
         for agent_class in args.untracked:
-            aclass_parsed = spawn_agent_class(agent_class, world, remaining_spawn_points, black)
+            aclass_parsed = spawn_agent_class(agent_class, world, remaining_spawn_points)
             actor_list += aclass_parsed
 
         print(f"Total number of vehicles: {len(actor_list)}")

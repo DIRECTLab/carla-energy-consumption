@@ -1,7 +1,7 @@
-agent_type,number
-traffic_manager,5
-cautious_behavior,0
-normal_behavior,0
-aggressive_behavior,0
-basic,0
-constant,0
+vehicle,agent_type,number,color
+vehicle.tesla.model3,traffic_manager,5,"204,255,11"
+vehicle.tesla.model3,cautious_behavior,0,"204,255,11"
+vehicle.tesla.model3,normal_behavior,0,"204,255,11"
+vehicle.tesla.model3,aggressive_behavior,0,"204,255,11"
+vehicle.tesla.model3,basic,0,"204,255,11"
+vehicle.tesla.model3,constant,0,"204,255,11"
