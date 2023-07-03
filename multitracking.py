@@ -15,20 +15,26 @@ This module seeks to combine the best of `example.py` and `automatic_control.py`
 """
 
 
-def spawn_agent_class(agent_class:dict, world:carla.World, spawn_points:list) -> list:
+def spawn_agent_class(agent_class:dict, world:carla.World, spawn_points:list, color=None) -> list:
     """
     Parses a single dict from the list returned by `get_agents`.
     """
     supervehicles = list()
     blueprint_library = world.get_blueprint_library()
     bp = blueprint_library.find('vehicle.tesla.model3')
-    bp.set_attribute('color', '204,255,11') # Lime green to make it visible
+    if color is not None:
+        bp.set_attribute('color', color) # Lime green to make it visible
 
     for _ in range(agent_class['number']):
-        transform = random.choice(spawn_points)
-        vehicle = world.spawn_actor(bp, transform)
-        spawn_points.remove(transform)
-        supervehicles.append(SuperVehicle(vehicle, agent_class['agent_type']))
+        try:
+            transform = spawn_points.pop()
+        except IndexError:
+            print('All spawn points have been filled.')
+            return supervehicles
+        vehicle = world.try_spawn_actor(bp, transform)
+        if vehicle is not None:
+            sv = SuperVehicle(vehicle, agent_class['agent_type'])
+            supervehicles.append(sv)
         print(f'created {vehicle.type_id} at {transform.location}')
 
     return supervehicles
@@ -81,25 +87,17 @@ def simulate(args):
         remaining_spawn_points = list(spawn_points)
         random.shuffle(remaining_spawn_points)
 
+        lime_green = '204,255,11'
         for agent_class in args.tracked:
-            aclass_parsed = spawn_agent_class(agent_class, world, remaining_spawn_points)
+            aclass_parsed = spawn_agent_class(agent_class, world, remaining_spawn_points, lime_green)
             actor_list += aclass_parsed
             tracked += aclass_parsed
 
-        # for _ in range(args.number_of_vehicles-1):
-        #     bp = random.choice(blueprint_library.filter('vehicle'))
+        black = '0,0,0'
+        for agent_class in args.untracked:
+            aclass_parsed = spawn_agent_class(agent_class, world, remaining_spawn_points, black)
+            actor_list += aclass_parsed
 
-        #     for _ in range(5):  # Try spawning 5 times
-        #         try:
-        #             transform = spawn_points.pop()
-        #         except IndexError:
-        #             print('All spawn points have been filled.')
-        #             break
-        #         npc = world.try_spawn_actor(bp, transform)
-        #         if npc is not None:
-        #             actor_list.append(npc)
-        #             npc.set_autopilot(True)
-        #             break
         print(f"Total number of vehicles: {len(actor_list)}")
 
         for supervehicle in actor_list:
@@ -168,12 +166,13 @@ def main():
         metavar='OUTFOLDER',
         help='directory to write tracking data to'
     )
-    # argparser.add_argument(
-    #     '-u', '--untracked',
-    #     metavar='UNTRACKEDFILE',
-    #     type=get_agents,
-    #     help='CSV file for untracked agent specifications'
-    # )
+    argparser.add_argument(
+        '-u', '--untracked',
+        metavar='UNTRACKEDFILE',
+        type=get_agents,
+        default=list(),
+        help='CSV file for untracked agent specifications'
+    )
     argparser.add_argument(
         '-t', '--time-step',
         metavar='T',
