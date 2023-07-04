@@ -2,7 +2,7 @@ import argparse
 import random
 import carla
 
-from loading import get_agents, yes_no, get_chargers
+from loading import get_agents, get_chargers
 from supervehicle import SuperVehicle
 from reporting import save_all
 
@@ -79,12 +79,11 @@ def simulate(args):
             if not args.time_step == 0 and not args.asynch and not settings.synchronous_mode:
                 settings.synchronous_mode = True
                 ticking = True
-            world.apply_settings(settings)
         if ticking:
             traffic_manager.set_synchronous_mode(True)
-        if args.render is not None:
-            settings.no_rendering_mode = not args.render
-            world.apply_settings(settings)
+        if args.render:
+            settings.no_rendering_mode = not settings.no_rendering_mode
+        world.apply_settings(settings)
 
         map = world.get_map()
         spawn_points = map.get_spawn_points()
@@ -140,6 +139,7 @@ def simulate(args):
             for tracker in supervehicle.trackers:
                 tracker.stop()
 
+        print('saving data')
         if actor_list is not None:
             save_all(actor_list, args.outfolder)
 
@@ -191,9 +191,8 @@ def main():
     )
     argparser.add_argument(
         '-r', '--render',
-        metavar='Y/N',
-        type=yes_no,
-        help='use rendering mode (y/n)'
+        action='store_true',
+        help='toggle simulation rendering'
     )
     argparser.add_argument(
         '-w', '--wireless-chargers',
