@@ -159,7 +159,7 @@ def simulate(args):
         if actor_list is not None:
             save_all(actor_list, args.outfolder)
 
-        if not args.asynch and settings is not None:
+        if ticking:
             settings.synchronous_mode = False
             world.apply_settings(settings)
             traffic_manager.set_synchronous_mode(False)
