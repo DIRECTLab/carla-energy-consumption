@@ -131,11 +131,6 @@ def main():
 
         bp = blueprint_library.find('vehicle.tesla.model3')
 
-        # if bp.has_attribute('color'):
-        #     recommended_colors = bp.get_attribute('color').recommended_values
-        #     print(f"Recommended colors: {recommended_colors}")
-        #     color = random.choice(recommended_colors)
-        #     bp.set_attribute('color', color)
         bp.set_attribute('color', '204,255,11') # Lime green to make it visible
 
         bp.set_attribute('role_name', 'hero')
@@ -180,20 +175,6 @@ def main():
         ev = EV(vehicle, capacity=50.0, A_f=frontal_area, C_D=drag)
 
         vehicle.set_autopilot(True)
-
-        # # Let's add now a "depth" camera attached to the vehicle. Note that the
-        # # transform we give here is now relative to the vehicle.
-        # camera_bp = blueprint_library.find('sensor.camera.depth')
-        # camera_transform = carla.Transform(carla.Location(x=1.5, z=2.4))
-        # camera = world.spawn_actor(camera_bp, camera_transform, attach_to=vehicle)
-        # actor_list.append(camera)
-        # print('created %s' % camera.type_id)
-
-        # # Now we register the function that will be called each time the sensor
-        # # receives an image. In this example we are saving the image to disk
-        # # converting the pixels to gray-scale.
-        # cc = carla.ColorConverter.LogarithmicDepth
-        # camera.listen(lambda image: image.save_to_disk('_out/%06d.png' % image.frame, cc))
 
         for _ in range(args.number_of_vehicles-1):
             bp = random.choice(blueprint_library.filter('vehicle'))
