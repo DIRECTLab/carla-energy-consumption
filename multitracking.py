@@ -26,15 +26,17 @@ def spawn_agent_class(agent_class:dict, world:carla.World, spawn_points:list) ->
         bp.set_attribute('color', agent_class['color'])
 
     for _ in range(agent_class['number']):
-        try:
-            transform = spawn_points.pop()
-        except IndexError:
-            print('All spawn points have been filled.')
-            return supervehicles
-        vehicle = world.try_spawn_actor(bp, transform)
-        if vehicle is not None:
-            sv = SuperVehicle(vehicle, agent_class['agent_type'])
-            supervehicles.append(sv)
+        vehicle = None
+        while vehicle is None:
+            try:
+                transform = spawn_points.pop()
+            except IndexError:
+                print('All spawn points have been filled.')
+                return supervehicles
+            vehicle = world.try_spawn_actor(bp, transform)
+
+        sv = SuperVehicle(vehicle, agent_class['agent_type'])
+        supervehicles.append(sv)
         print(f'created {vehicle.type_id} at {transform.location}')
 
     return supervehicles
@@ -71,13 +73,15 @@ def simulate(args):
         traffic_manager.global_percentage_speed_difference(-40)
 
         settings = world.get_settings()
+        ticking = False
         if args.time_step is not None:
             settings.fixed_delta_seconds = args.time_step
-            if args.time_step == 0:
-                args.asynch = True
-            settings.synchronous_mode = not args.asynch
+            if not args.time_step == 0 and not args.asynch and not settings.synchronous_mode:
+                settings.synchronous_mode = True
+                ticking = True
             world.apply_settings(settings)
-            traffic_manager.set_synchronous_mode(not args.asynch)
+        if ticking:
+            traffic_manager.set_synchronous_mode(True)
         if args.render is not None:
             settings.no_rendering_mode = not args.render
             world.apply_settings(settings)
@@ -105,10 +109,10 @@ def simulate(args):
         time_tracker = TimeTracker(tracked[-1].ev.vehicle)
         time_tracker.start()
         while time_tracker.time < 2:
-            if args.asynch:
-                world.wait_for_tick()
-            else:
+            if ticking:
                 world.tick()
+            else:
+                world.wait_for_tick()
         time_tracker.stop()
 
         for supervehicle in tracked:
@@ -120,7 +124,7 @@ def simulate(args):
                 tracker.start()
 
         while True:
-            if args.asynch:
+            if ticking:
                 world.wait_for_tick()
             else:
                 world.tick()
@@ -129,16 +133,15 @@ def simulate(args):
                 supervehicle.run_step(spawn_points)
 
     except KeyboardInterrupt:
-        for supervehicle in tracked:
-            for tracker in supervehicle.trackers:
-                tracker.stop()
-
-        save_all(actor_list, args.outfolder)
+        pass
 
     finally:
         for supervehicle in tracked:
             for tracker in supervehicle.trackers:
                 tracker.stop()
+
+        if actor_list is not None:
+            save_all(actor_list, args.outfolder)
 
         if not args.asynch and settings is not None:
             settings.synchronous_mode = False
