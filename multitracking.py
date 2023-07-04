@@ -57,11 +57,11 @@ def respawn(supervehicle:SuperVehicle, world:carla.World, spawn_points:list):
 
 
 def simulate(args):
-    actor_list = []
-
     settings = None
     traffic_manager = None
+    actor_list = list()
     tracked = list()
+    ticking = False
 
     try:
         client = carla.Client(args.host, args.port)
@@ -87,7 +87,6 @@ def simulate(args):
         traffic_manager.global_percentage_speed_difference(-40)
 
         settings = world.get_settings()
-        ticking = False
         if args.time_step is not None:
             settings.fixed_delta_seconds = args.time_step
             if not args.time_step == 0 and not args.asynch and not settings.synchronous_mode:
@@ -155,8 +154,8 @@ def simulate(args):
             for tracker in supervehicle.trackers:
                 tracker.stop()
 
-        print('saving data')
-        if actor_list is not None:
+        if len(actor_list) > 0:
+            print('saving data')
             save_all(actor_list, args.outfolder)
 
         if ticking:
