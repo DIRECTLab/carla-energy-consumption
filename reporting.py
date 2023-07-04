@@ -42,7 +42,7 @@ def save_metadata(supervehicles:list, file):
             writer.writerow({
                 'id': supervehicle.ev.vehicle.id,
                 'vehicle': supervehicle.ev.vehicle.type_id,
-                'agent_type': supervehicle.agent_type,
+                'agent_type': supervehicle.get_agent_type(),
             })
 
 

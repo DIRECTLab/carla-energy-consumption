@@ -42,6 +42,20 @@ def spawn_agent_class(agent_class:dict, world:carla.World, spawn_points:list) ->
     return supervehicles
 
 
+def respawn(supervehicle:SuperVehicle, world:carla.World, spawn_points:list):
+    """
+    Respawns a vehicle.
+    """
+    vehicle = supervehicle.ev.vehicle
+    blueprint_library = world.get_blueprint_library()
+    bp = blueprint_library.find(vehicle.type_id)
+    bp.set_attribute('color', vehicle.attributes['color'])
+    transform = random.choice(spawn_points)
+    vehicle = world.try_spawn_actor(bp, transform)
+    supervehicle.reset_vehicle(vehicle)
+    print(f'respawned {vehicle.type_id} at {transform.location}')
+
+
 def simulate(args):
     actor_list = []
 
@@ -129,6 +143,8 @@ def simulate(args):
                 world.tick()
 
             for supervehicle in actor_list:
+                if not supervehicle.ev.vehicle.is_alive:
+                    respawn(supervehicle, world, spawn_points)
                 supervehicle.run_step(spawn_points)
 
     except KeyboardInterrupt:

@@ -29,27 +29,41 @@ class SuperVehicle:
     Combines EV and Agent capabilities.
     """
     def __init__(self, vehicle:Vehicle, agent_type:str) -> None:
+        """
+        `agent_type`: One of 'traffic_manager', 'cautious_behavior', 'normal_behavior', 'aggressive_behavior', 'basic', 'constant'.
+        """
         # https://arxiv.org/pdf/1908.08920.pdf%5D pg17
         drag = 0.23
         frontal_area = 2.22
         self.ev = EV(vehicle, capacity=50.0, A_f=frontal_area, C_D=drag)
 
-        self.agent_type = agent_type
+        self.__agent_type = None
         self.agent = None
-        if agent_type == 'traffic_manager':
-            vehicle.set_autopilot(True)
-        elif agent_type == 'cautious_behavior':
-            self.agent = BehaviorAgent(vehicle, 'cautious')
-        elif agent_type == 'normal_behavior':
-            self.agent = BehaviorAgent(vehicle, 'normal')
-        elif agent_type == 'aggressive_behavior':
-            self.agent = BehaviorAgent(vehicle, 'aggressive')
-        elif agent_type == 'basic':
-            self.agent = BasicAgent(vehicle, target_speed=30)
-        elif agent_type == 'constant':
-            self.agent = ConstantVelocityAgent(vehicle, target_speed=30)
+        self.set_agent_type(agent_type)
 
         self.trackers = list()
+
+    def get_agent_type(self):
+        return self.__agent_type
+
+    def set_agent_type(self, agent_type:str):
+        """
+        `agent_type`: One of 'traffic_manager', 'cautious_behavior', 'normal_behavior', 'aggressive_behavior', 'basic', 'constant'.
+        """
+        if agent_type == 'traffic_manager':
+            self.ev.vehicle.set_autopilot(True)
+            self.agent = None
+        elif agent_type == 'cautious_behavior':
+            self.agent = BehaviorAgent(self.ev.vehicle, 'cautious')
+        elif agent_type == 'normal_behavior':
+            self.agent = BehaviorAgent(self.ev.vehicle, 'normal')
+        elif agent_type == 'aggressive_behavior':
+            self.agent = BehaviorAgent(self.ev.vehicle, 'aggressive')
+        elif agent_type == 'basic':
+            self.agent = BasicAgent(self.ev.vehicle, target_speed=30)
+        elif agent_type == 'constant':
+            self.agent = ConstantVelocityAgent(self.ev.vehicle, target_speed=30)
+        self.__agent_type = agent_type
 
     def choose_route(self, choices, tries=5) -> bool:
         """
@@ -70,3 +84,15 @@ class SuperVehicle:
         control = self.agent.run_step()
         control.manual_gear_shift = False
         self.ev.vehicle.apply_control(control)
+
+    def reset_vehicle(self, vehicle:Vehicle):
+        """
+        Sets all of its components to function with the new `vehicle` given.
+        Does not change `EV` attributes (other than `vehicle`). 
+        Its intended use is for respawning a vehicle identical to the original.
+        """
+        self.set_agent_type(vehicle)
+        for tracker in self.trackers:
+            tracker.vehicle_id = vehicle.id
+            tracker.start()
+        self.ev.vehicle = vehicle
