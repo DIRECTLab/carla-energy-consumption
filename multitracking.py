@@ -15,6 +15,25 @@ This module seeks to combine the best of `example.py` and `automatic_control.py`
 """
 
 
+def spawn_vehicle(blueprint:carla.ActorBlueprint, world:carla.World, spawn_points:list):
+    """
+    Tries every spawn point given until one is successful.
+    
+    return: The vehicle spawned, or `None` if none of the spawn points could be used.
+
+    Side effect: Spawn points are removed from the list when tried.
+    """
+    vehicle = None
+    while vehicle is None:
+        try:
+            transform = spawn_points.pop()
+        except IndexError:
+            print('All spawn points have been filled.')
+            return None
+        vehicle = world.try_spawn_actor(blueprint, transform)
+    return vehicle
+
+
 def spawn_agent_class(agent_class:dict, world:carla.World, spawn_points:list) -> list:
     """
     Parses a single dict from the list returned by `get_agents`.
@@ -26,18 +45,11 @@ def spawn_agent_class(agent_class:dict, world:carla.World, spawn_points:list) ->
         bp.set_attribute('color', agent_class['color'])
 
     for _ in range(agent_class['number']):
-        vehicle = None
-        while vehicle is None:
-            try:
-                transform = spawn_points.pop()
-            except IndexError:
-                print('All spawn points have been filled.')
-                return supervehicles
-            vehicle = world.try_spawn_actor(bp, transform)
-
+        vehicle = spawn_vehicle(bp, world, spawn_points)
+        if vehicle is None:
+            break
         sv = SuperVehicle(vehicle, agent_class['agent_type'])
         supervehicles.append(sv)
-        print(f'created {vehicle.type_id} at {transform.location}')
 
     return supervehicles
 
@@ -50,10 +62,10 @@ def respawn(supervehicle:SuperVehicle, world:carla.World, spawn_points:list):
     blueprint_library = world.get_blueprint_library()
     bp = blueprint_library.find(vehicle.type_id)
     bp.set_attribute('color', vehicle.attributes['color'])
-    transform = random.choice(spawn_points)
-    vehicle = world.try_spawn_actor(bp, transform)
-    supervehicle.reset_vehicle(vehicle)
-    print(f'respawned {vehicle.type_id} at {transform.location}')
+    vehicle = spawn_vehicle(bp, world, spawn_points)
+    if vehicle is not None:
+        supervehicle.reset_vehicle(vehicle)
+        print(f'respawned {vehicle.type_id}')
 
 
 def simulate(args):
@@ -143,7 +155,9 @@ def simulate(args):
 
             for supervehicle in actor_list:
                 if not supervehicle.ev.vehicle.is_alive:
-                    respawn(supervehicle, world, spawn_points)
+                    respawn_points = list(spawn_points)
+                    random.shuffle(respawn_points)
+                    respawn(supervehicle, world, respawn_points)
                 supervehicle.run_step(spawn_points)
 
     except KeyboardInterrupt:
