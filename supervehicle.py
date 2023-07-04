@@ -91,8 +91,8 @@ class SuperVehicle:
         Does not change `EV` attributes (other than `vehicle`). 
         Its intended use is for respawning a vehicle identical to the original.
         """
-        self.set_agent_type(vehicle)
+        self.ev.vehicle = vehicle
+        self.set_agent_type(self.__agent_type)  # This creates a new agent and/or sets autopilot
         for tracker in self.trackers:
             tracker.vehicle_id = vehicle.id
             tracker.start()
-        self.ev.vehicle = vehicle
