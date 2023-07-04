@@ -138,9 +138,9 @@ def simulate(args):
 
         while True:
             if ticking:
-                world.wait_for_tick()
-            else:
                 world.tick()
+            else:
+                world.wait_for_tick()
 
             for supervehicle in actor_list:
                 if not supervehicle.ev.vehicle.is_alive:
