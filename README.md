@@ -44,12 +44,7 @@ Energy consumption tracking for CARLA simulator.
 
 
 ## Requirements
-Follow CARLA installation instructions for both server and client. This code was tested on CARLA `v0.9.14`, Python `v3.8.16`.
-
-
-## Basic Usage
-1. Start the CARLA server.
-2. Run `python example.py`.
+Follow CARLA [installation instructions](https://carla.readthedocs.io/en/0.9.14/start_quickstart/) for both server and client. This code was tested on CARLA `v0.9.14`, Python `v3.8.16`.
 
 
 ## Results
