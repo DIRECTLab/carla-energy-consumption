@@ -110,6 +110,10 @@ def simulate(args):
             settings.no_rendering_mode = not settings.no_rendering_mode
         world.apply_settings(settings)
 
+        if args.seed is not None:
+            random.seed(args.seed)
+            traffic_manager.set_random_device_seed(args.seed)
+
         map = world.get_map()
         spawn_points = map.get_spawn_points()
         remaining_spawn_points = list(spawn_points)
@@ -242,6 +246,12 @@ def main():
         default=2000,
         type=int,
         help='TCP port to listen to (default: 2000)'
+    )
+    argparser.add_argument(
+        '--seed',
+        metavar='SEED',
+        type=int,
+        help='random seed; guarantees determinism in synch mode'
     )
     args = argparser.parse_args()
 
