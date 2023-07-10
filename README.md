@@ -3,7 +3,7 @@ Energy consumption tracking for CARLA simulator.
 
 
 ## Contents
-When in doubt, opt for [multitracking.py](multitracking.py). This program is the most up-to-date and offers most of the functionality of both [example.py](example.py) and [automatic_control.py](automatic_control.py).
+When in doubt, opt for [multitracking.py](multitracking.py). This program is the most up-to-date and offers most of the functionality of both [example.py](example.py) and [automatic_control.py](automatic_control.py), plus more.
 
 - [automatic_control.py](automatic_control.py) tracks a vehicle which is automatically controlled on the client side.
 
