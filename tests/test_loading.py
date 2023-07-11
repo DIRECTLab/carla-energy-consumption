@@ -57,10 +57,24 @@ def test_get_agents2():
     return True
 
 
+def test_get_agents3():
+    agent_classes = get_agents(os.path.join('tests', 'input', 'agents3.csv'))
+    try:
+        assert agent_classes[0]['color'] == '0,0,0'
+        assert agent_classes[1]['color'] == ''
+    except AssertionError:
+        traceback.print_exc()
+        print(f"{agent_classes=}")
+        print()
+        return False
+    return True
+
+
 if __name__ == "__main__":
     tests = (
         test_get_agents1, 
         test_get_agents2, 
+        test_get_agents3,
     )
     success = 0
     total = 0

@@ -50,4 +50,6 @@ Example input files for [example.py](../example.py).
     - `driveline_efficiency`
     - `braking_alpha`
 
+    For defaults, leave fields blank or do not include them.
+
 - [untracked_agents.csv](untracked_agents.csv) is a CSV for the `-u` option in [multitracking.py](multitracking.py). It follows the same pattern as [tracked_agents.csv](tracked_agents.csv). 

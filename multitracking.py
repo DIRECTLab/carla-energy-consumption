@@ -41,7 +41,7 @@ def spawn_agent_class(agent_class:dict, world:carla.World, spawn_points:list) ->
     supervehicles = list()
     blueprint_library = world.get_blueprint_library()
     bp = blueprint_library.find(agent_class['vehicle'])
-    if 'color' in agent_class.keys():
+    if 'color' in agent_class.keys() and agent_class['color'] != '':
         bp.set_attribute('color', agent_class['color'])
 
     for _ in range(agent_class['number']):

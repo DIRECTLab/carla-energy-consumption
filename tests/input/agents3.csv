@@ -1,0 +1,3 @@
+vehicle,agent_type,color
+vehicle.tesla.model3,traffic_manager,"0,0,0"
+vehicle.tesla.cybertruck,cautious_behavior,
