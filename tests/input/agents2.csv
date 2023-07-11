@@ -1,0 +1,3 @@
+vehicle,agent_type
+vehicle.tesla.model3,traffic_manager
+vehicle.tesla.cybertruck,cautious_behavior
