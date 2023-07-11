@@ -48,7 +48,7 @@ def spawn_agent_class(agent_class:dict, world:carla.World, spawn_points:list) ->
         vehicle = spawn_vehicle(bp, world, spawn_points)
         if vehicle is None:
             break
-        sv = SuperVehicle(vehicle, agent_class['agent_type'])
+        sv = SuperVehicle(vehicle, agent_class['agent_type'], agent_class['ev_params'])
         supervehicles.append(sv)
 
     return supervehicles
@@ -146,7 +146,7 @@ def simulate(args):
         for supervehicle in tracked:
             time_tracker = TimeTracker(supervehicle.ev.vehicle)
             kinematics_tracker = KinematicsTracker(supervehicle.ev.vehicle)
-            soc_tracker = SocTracker(supervehicle.ev, hvac=0.0, init_soc=0.80, wireless_chargers=args.wireless_chargers)
+            soc_tracker = SocTracker(supervehicle.ev, hvac=supervehicle.hvac, init_soc=0.80, wireless_chargers=args.wireless_chargers)
             supervehicle.trackers = [time_tracker, kinematics_tracker, soc_tracker]
             for tracker in supervehicle.trackers:
                 tracker.start()
