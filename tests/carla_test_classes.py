@@ -70,3 +70,6 @@ class TestVehicle:
     
     def get_location(self):
         return Location()
+    
+    def set_autopilot(self, autopilot:bool):
+        pass

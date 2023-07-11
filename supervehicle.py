@@ -32,7 +32,8 @@ class SuperVehicle:
         """
         `agent_type`: One of 'traffic_manager', 'cautious_behavior', 'normal_behavior', 'aggressive_behavior', 'basic', 'constant'.
 
-        `ev_params`: Parameters passed into the `EV` object.
+        `ev_params`: Parameters passed into the `EV` object. 
+            `capacity` (usable battery capacity in kWh) must be specified; all others are optional.
 
         `init_hvac`: Initial power consumption due to HVAC in Watts.
         """
