@@ -13,6 +13,7 @@ def test_get_agents1():
         'agent_type': 'traffic_manager',
         'number': 1,
         'hvac': 0.0,
+        'init_soc': 0.80,
         'ev_params': {
             'capacity': 50.0,
             'A_f': 2.3316,
@@ -33,6 +34,7 @@ def test_get_agents1():
         assert agent_classes[0]['agent_type'] == expected['agent_type']
         assert agent_classes[0]['number'] == expected['number']
         assert agent_classes[0]['hvac'] == expected['hvac']
+        assert agent_classes[0]['init_soc'] == expected['init_soc']
         assert agent_classes[0]['ev_params'] == expected['ev_params']
         assert agent_classes[0] == expected
     except AssertionError:

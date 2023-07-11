@@ -28,16 +28,19 @@ class SuperVehicle:
     """
     Combines EV and Agent capabilities.
     """
-    def __init__(self, vehicle:Vehicle, agent_type:str, ev_params:dict, init_hvac:float=0.0) -> None:
+    def __init__(self, vehicle:Vehicle, agent_type:str, ev_params:dict, init_soc:float, init_hvac:float=0.0) -> None:
         """
         `agent_type`: One of 'traffic_manager', 'cautious_behavior', 'normal_behavior', 'aggressive_behavior', 'basic', 'constant'.
 
         `ev_params`: Parameters passed into the `EV` object. 
             `capacity` (usable battery capacity in kWh) must be specified; all others are optional.
 
+        `init_soc`: Initial state of charge of the vehicle as a fraction of full capacity.
+
         `init_hvac`: Initial power consumption due to HVAC in Watts.
         """
         self.ev = EV(vehicle, **ev_params)
+        self.init_soc = init_soc
         self.hvac = init_hvac
 
         self.__agent_type = None

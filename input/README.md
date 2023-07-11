@@ -1,5 +1,5 @@
 # input
-Example input files for [example.py](../example.py).
+Example input files for [automatic_control.py](../automatic_control.py), [example.py](../example.py) and [multitracking.py](../multitracking.py).
 
 
 - [chargers.csv](chargers.csv) is an example CSV file for loading wireless chargers. It demonstrates the following fields, required for all files of this type:
@@ -13,11 +13,11 @@ Example input files for [example.py](../example.py).
     - `pitch`: rotation about the global y-axis (degrees).
     - `yaw`: rotation about the global z-axis (degrees).
 
-- [directions.csv](directions.csv) is an example CSV file for loading predetermined directions. It demonstrates the `direction` field and accepted values.
+- [directions.csv](directions.csv) is an example CSV file for loading predetermined directions in [example.py](../example.py). It demonstrates the `direction` field and accepted values.
 
     *In this mode, the vehicle will not perform lane changes. If lane changes are necessary, use a path file instead.*
 
-- [path.csv](path.csv) is an example CSV file for loading a predetermined path. 
+- [path.csv](path.csv) is an example CSV file for loading a predetermined path in [example.py](../example.py). 
     This file demonstrates the following fields, required for all files of this type:
     - `x`: global x coordinate.
     - `y`: global y coordinate.
@@ -34,9 +34,12 @@ Example input files for [example.py](../example.py).
         - Default: `1`.
     - `color`: RGB color of the vehicle.
     - `hvac`: power used for HVAC, in Watts.
-        - Default: `0`.
+        - Default: `0.0`.
     - `capacity`: usable battery capacity in kWh.
-        - Default: `50`.
+        - Default: `50.0`.
+    - `init_soc`: initial state of charge of the vehicle as a fraction of full capacity.
+        - Example: `init_soc = 0.80` with `capacity = 50.0` means that the battery currently has 40.0 (`0.80 * 50.0`) kWh of energy.
+        - Default: `0.80`.
 
     These power consumption parameters are also optional, and descriptions can be found in [this article](https://doi.org/10.1016/j.apenergy.2016.01.097):
     - `A_f`
