@@ -12,14 +12,14 @@ def test_ev1():
     ev_params = {
         'capacity': 40.0,
     }
-    sv = SuperVehicle(TestVehicle(), 'traffic_manager', ev_params)
+    sv = SuperVehicle(TestVehicle(), 'traffic_manager', ev_params, init_soc=1.0)
     try:
-        assert sv.ev.capacity == 40.0
-        assert sv.ev.A_f == 2.3316
+        assert sv.capacity == 40.0
+        assert sv.A_f == 2.3316
     except AssertionError:
         traceback.print_exc()
-        print(f"{sv.ev.capacity=}")
-        print(f"{sv.ev.A_f=}")
+        print(f"{sv.capacity=}")
+        print(f"{sv.A_f=}")
         print()
         return False
     return True
@@ -30,14 +30,14 @@ def test_ev2():
         'C_D': 0.23,
         'capacity': 40.0,
     }
-    sv = SuperVehicle(TestVehicle(), 'traffic_manager', ev_params)
+    sv = SuperVehicle(TestVehicle(), 'traffic_manager', ev_params, init_soc=1.0)
     try:
-        assert sv.ev.capacity == 40.0
-        assert sv.ev.C_D == 0.23
+        assert sv.capacity == 40.0
+        assert sv.C_D == 0.23
     except AssertionError:
         traceback.print_exc()
-        print(f"{sv.ev.capacity=}")
-        print(f"{sv.ev.C_D=}")
+        print(f"{sv.capacity=}")
+        print(f"{sv.C_D=}")
         print()
         return False
     return True
