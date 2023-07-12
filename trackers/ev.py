@@ -12,6 +12,9 @@ class EV:
                 motor_efficiency:float=0.91, driveline_efficiency:float=0.92, 
                 braking_alpha:float=0.0411) -> None:
         """
+        Properties of this class are intended to be immutable; 
+        after initialization, modify them at your own risk.
+
         `vehicle`: The CARLA representation of the vehicle in question.
 
         `capacity`: Usable battery capacity in kWh.
@@ -29,5 +32,7 @@ class EV:
         self.c_2 = c_2
         self.rho_Air = rho_Air
         self.C_D = C_D
+        self.motor_efficiency = motor_efficiency
+        self.driveline_efficiency = driveline_efficiency
         self.motor_to_wheels_efficiency = motor_efficiency * driveline_efficiency
         self.braking_alpha = braking_alpha
