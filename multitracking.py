@@ -162,19 +162,21 @@ def simulate(args):
             for tracker in supervehicle.trackers:
                 tracker.stop()
 
-        if len(actor_list) > 0:
-            print('saving data')
-            save_all(actor_list, args.outfolder)
+        try:
+            if len(actor_list) > 0:
+                print('saving data')
+                save_all(actor_list, args.outfolder)
 
-        if ticking:
-            settings.synchronous_mode = False
-            world.apply_settings(settings)
-            traffic_manager.set_synchronous_mode(False)
+        finally:
+            if ticking:
+                settings.synchronous_mode = False
+                world.apply_settings(settings)
+                traffic_manager.set_synchronous_mode(False)
 
-        if len(actor_list) > 0:
-            print('destroying actors')
-            client.apply_batch([carla.command.DestroyActor(x.ev.vehicle) for x in actor_list])
-            print('done.')
+            if len(actor_list) > 0:
+                print('destroying actors')
+                client.apply_batch([carla.command.DestroyActor(sv.ev.vehicle) for sv in actor_list])
+                print('done.')
 
 
 def main():

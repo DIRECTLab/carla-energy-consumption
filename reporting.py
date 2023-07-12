@@ -35,7 +35,25 @@ def save_metadata(supervehicles:list, file):
     Save metadata about the vehicles, simlar to `input/tracked_agents.py`.
     """
     with open(file, 'w', newline='') as csvfile:
-        fieldnames = ['id', 'vehicle', 'agent_type']
+        fieldnames = [
+            'id', 
+            'vehicle', 
+            'agent_type', 
+            # 'color', 
+            # 'init_hvac', 
+            # 'capacity', 
+            # 'init_soc',
+            # 'A_f',
+            # 'gravity',
+            # 'C_r',
+            # 'c_1',
+            # 'c_2',
+            # 'rho_Air',
+            # 'C_D',
+            # 'motor_efficiency',
+            # 'driveline_efficiency',
+            # 'braking_alpha',
+        ]
         writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
         writer.writeheader()
         for supervehicle in supervehicles:
@@ -43,6 +61,20 @@ def save_metadata(supervehicles:list, file):
                 'id': supervehicle.ev.vehicle.id,
                 'vehicle': supervehicle.ev.vehicle.type_id,
                 'agent_type': supervehicle.get_agent_type(),
+                # 'color': supervehicle.ev.vehicle.attributes['color'], 
+                # 'hvac': supervehicle.hvac, 
+                # 'capacity': supervehicle.ev.capacity, 
+                # 'init_soc': ,
+                # 'A_f',
+                # 'gravity',
+                # 'C_r',
+                # 'c_1',
+                # 'c_2',
+                # 'rho_Air',
+                # 'C_D',
+                # 'motor_efficiency',
+                # 'driveline_efficiency',
+                # 'braking_alpha',
             })
 
 

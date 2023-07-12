@@ -51,6 +51,9 @@ class SuperVehicle:
         self.set_agent_type(agent_type)
 
         self.trackers = list()
+        self.time_tracker = None
+        self.kinematics_tracker = None
+        self.soc_tracker = None
 
     def get_agent_type(self):
         return self.__agent_type
