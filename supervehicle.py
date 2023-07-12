@@ -57,6 +57,8 @@ class SuperVehicle:
 
     def set_agent_type(self, agent_type:str):
         """
+        Creates a new agent and/or sets autopilot.
+
         `agent_type`: One of 'traffic_manager', 'cautious_behavior', 'normal_behavior', 'aggressive_behavior', 'basic', 'constant'.
         """
         if agent_type == 'traffic_manager':
@@ -101,10 +103,9 @@ class SuperVehicle:
         Its intended use is for respawning a vehicle identical to the original.
         """
         self.ev.vehicle = vehicle
-        self.set_agent_type(self.__agent_type)  # This creates a new agent and/or sets autopilot
+        self.set_agent_type(self.__agent_type)
         for tracker in self.trackers:
             tracker.vehicle_id = vehicle.id
-            tracker.start()
 
     def initialize_trackers(self, wireless_chargers):
         """
