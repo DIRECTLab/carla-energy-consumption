@@ -27,6 +27,7 @@ When in doubt, opt for [multitracking.py](multitracking.py). This program is the
 
 - [multitracking.py](multitracking.py) tracks multiple vehicles at once. These vehicles can be controlled by the Traffic Manager or one of the agents under `agents/navigation/`.
 
+    - Run `python multitracking.py -h` to get all options. The `-t` option is strongly recommended.
     - For BehaviorAgents, ensure time step is below 0.02.
 
     Basic Usage
@@ -36,7 +37,7 @@ When in doubt, opt for [multitracking.py](multitracking.py). This program is the
 
 - [reporting.py](reporting.py) is a module for reporting tracking data.
 
-- [supervehicle.py](supervehicle.py) combines `EV` and `Agent` functionality.
+- [supervehicle.py](supervehicle.py) combines `EV`, `Agent`, and `Tracker` functionality.
 
 - `agents/` is copied over from `PythonAPI/carla/agents/`. See [its README](agents/README.md).
 
