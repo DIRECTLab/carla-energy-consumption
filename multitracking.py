@@ -54,7 +54,7 @@ def respawn(supervehicle:SuperVehicle, world:carla.World, spawn_points:list):
     """
     Respawns a vehicle.
     """
-    vehicle = supervehicle.ev.vehicle
+    vehicle = supervehicle.vehicle
     blueprint_library = world.get_blueprint_library()
     bp = blueprint_library.find(vehicle.type_id)
     bp.set_attribute('color', vehicle.attributes['color'])
@@ -148,7 +148,7 @@ def simulate(args):
                 world.wait_for_tick()
 
             for supervehicle in actor_list:
-                if not supervehicle.ev.vehicle.is_alive:
+                if not supervehicle.vehicle.is_alive:
                     respawn_points = list(spawn_points)
                     random.shuffle(respawn_points)
                     respawn(supervehicle, world, respawn_points)
@@ -175,7 +175,7 @@ def simulate(args):
 
             if len(actor_list) > 0:
                 print('destroying actors')
-                client.apply_batch([carla.command.DestroyActor(sv.ev.vehicle) for sv in actor_list])
+                client.apply_batch([carla.command.DestroyActor(sv.vehicle) for sv in actor_list])
                 print('done.')
 
 

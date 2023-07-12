@@ -27,7 +27,7 @@ def choose_route(agent, choices, tries=5) -> bool:
     return False
 
 
-class SuperVehicle:
+class SuperVehicle(EV):
     """
     Combines EV and Agent capabilities.
     """
@@ -42,7 +42,7 @@ class SuperVehicle:
 
         `init_hvac`: Initial power consumption due to HVAC in Watts.
         """
-        self.ev = EV(vehicle, **ev_params)
+        super().__init__(vehicle, **ev_params)
         self.init_soc = init_soc
         self.hvac = init_hvac
 
@@ -65,18 +65,18 @@ class SuperVehicle:
         `agent_type`: One of 'traffic_manager', 'cautious_behavior', 'normal_behavior', 'aggressive_behavior', 'basic', 'constant'.
         """
         if agent_type == 'traffic_manager':
-            self.ev.vehicle.set_autopilot(True)
+            self.vehicle.set_autopilot(True)
             self.agent = None
         elif agent_type == 'cautious_behavior':
-            self.agent = BehaviorAgent(self.ev.vehicle, 'cautious')
+            self.agent = BehaviorAgent(self.vehicle, 'cautious')
         elif agent_type == 'normal_behavior':
-            self.agent = BehaviorAgent(self.ev.vehicle, 'normal')
+            self.agent = BehaviorAgent(self.vehicle, 'normal')
         elif agent_type == 'aggressive_behavior':
-            self.agent = BehaviorAgent(self.ev.vehicle, 'aggressive')
+            self.agent = BehaviorAgent(self.vehicle, 'aggressive')
         elif agent_type == 'basic':
-            self.agent = BasicAgent(self.ev.vehicle, target_speed=30)
+            self.agent = BasicAgent(self.vehicle, target_speed=30)
         elif agent_type == 'constant':
-            self.agent = ConstantVelocityAgent(self.ev.vehicle, target_speed=30)
+            self.agent = ConstantVelocityAgent(self.vehicle, target_speed=30)
         self.__agent_type = agent_type
 
     def choose_route(self, choices, tries=5) -> bool:
@@ -97,7 +97,7 @@ class SuperVehicle:
 
         control = self.agent.run_step()
         control.manual_gear_shift = False
-        self.ev.vehicle.apply_control(control)
+        self.vehicle.apply_control(control)
 
     def reset_vehicle(self, vehicle:Vehicle):
         """
@@ -105,7 +105,7 @@ class SuperVehicle:
         Does not change `EV` attributes (other than `vehicle`). 
         Its intended use is for respawning a vehicle identical to the original.
         """
-        self.ev.vehicle = vehicle
+        self.vehicle = vehicle
         self.set_agent_type(self.__agent_type)
         for tracker in self.trackers:
             tracker.vehicle_id = vehicle.id
@@ -116,9 +116,9 @@ class SuperVehicle:
         """
         for tracker in self.trackers:
             tracker.stop()
-        self.time_tracker = TimeTracker(self.ev.vehicle)
-        self.kinematics_tracker = KinematicsTracker(self.ev.vehicle)
-        self.soc_tracker = SocTracker(self.ev, hvac=self.hvac, init_soc=self.init_soc, wireless_chargers=wireless_chargers)
+        self.time_tracker = TimeTracker(self.vehicle)
+        self.kinematics_tracker = KinematicsTracker(self.vehicle)
+        self.soc_tracker = SocTracker(self, hvac=self.hvac, init_soc=self.init_soc, wireless_chargers=wireless_chargers)
         self.trackers = [self.time_tracker, self.kinematics_tracker, self.soc_tracker]
         for tracker in self.trackers:
             tracker.start()

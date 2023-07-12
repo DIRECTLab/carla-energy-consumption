@@ -58,12 +58,12 @@ def save_metadata(supervehicles:list, file):
         writer.writeheader()
         for supervehicle in supervehicles:
             writer.writerow({
-                'id': supervehicle.ev.vehicle.id,
-                'vehicle': supervehicle.ev.vehicle.type_id,
+                'id': supervehicle.vehicle.id,
+                'vehicle': supervehicle.vehicle.type_id,
                 'agent_type': supervehicle.get_agent_type(),
-                # 'color': supervehicle.ev.vehicle.attributes['color'], 
+                # 'color': supervehicle.vehicle.attributes['color'], 
                 # 'hvac': supervehicle.hvac, 
-                # 'capacity': supervehicle.ev.capacity, 
+                # 'capacity': supervehicle.capacity, 
                 # 'init_soc': ,
                 # 'A_f',
                 # 'gravity',
@@ -120,7 +120,7 @@ def save_all(supervehicles:list, outfolder):
     save_metadata(supervehicles, os.path.join(outfolder, 'meta.csv'))
     for supervehicle in supervehicles:
         if len(supervehicle.trackers) > 0:
-            save_data(supervehicle.trackers, os.path.join(outfolder, f'{supervehicle.ev.vehicle.id}.csv'))
+            save_data(supervehicle.trackers, os.path.join(outfolder, f'{supervehicle.vehicle.id}.csv'))
 
 
 def plot_power(ax, time_series, power_series):
