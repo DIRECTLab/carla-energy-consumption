@@ -7,6 +7,9 @@ from agents.navigation.basic_agent import BasicAgent
 from agents.navigation.constant_velocity_agent import ConstantVelocityAgent
 
 from trackers.ev import EV
+from trackers.time_tracker import TimeTracker
+from trackers.soc_tracker import SocTracker
+from trackers.kinematics_tracker import KinematicsTracker
 
 
 def choose_route(agent, choices, tries=5) -> bool:
@@ -101,4 +104,17 @@ class SuperVehicle:
         self.set_agent_type(self.__agent_type)  # This creates a new agent and/or sets autopilot
         for tracker in self.trackers:
             tracker.vehicle_id = vehicle.id
+            tracker.start()
+
+    def initialize_trackers(self, wireless_chargers):
+        """
+        `wireless_chargers`: Chargers to pass to `SocTracker`.
+        """
+        for tracker in self.trackers:
+            tracker.stop()
+        self.time_tracker = TimeTracker(self.ev.vehicle)
+        self.kinematics_tracker = KinematicsTracker(self.ev.vehicle)
+        self.soc_tracker = SocTracker(self.ev, hvac=self.hvac, init_soc=self.init_soc, wireless_chargers=wireless_chargers)
+        self.trackers = [self.time_tracker, self.kinematics_tracker, self.soc_tracker]
+        for tracker in self.trackers:
             tracker.start()

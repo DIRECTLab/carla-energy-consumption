@@ -6,10 +6,6 @@ from loading import get_agents, get_chargers
 from supervehicle import SuperVehicle
 from reporting import save_all
 
-from trackers.time_tracker import TimeTracker
-from trackers.soc_tracker import SocTracker
-from trackers.kinematics_tracker import KinematicsTracker
-
 """
 This module seeks to combine the best of `example.py` and `automatic_control.py`.
 """
@@ -134,22 +130,16 @@ def simulate(args):
             supervehicle.choose_route(spawn_points)
 
         # The first couple seconds of simulation are less reliable as the vehicles are dropped onto the ground.
-        time_tracker = TimeTracker(tracked[-1].ev.vehicle)
-        time_tracker.start()
-        while time_tracker.time < 2:
+        tracked[-1].initialize_trackers(args.wireless_chargers)
+        while tracked[-1].time_tracker.time < 2:
             if ticking:
                 world.tick()
             else:
                 world.wait_for_tick()
-        time_tracker.stop()
 
         for supervehicle in tracked:
-            time_tracker = TimeTracker(supervehicle.ev.vehicle)
-            kinematics_tracker = KinematicsTracker(supervehicle.ev.vehicle)
-            soc_tracker = SocTracker(supervehicle.ev, hvac=supervehicle.hvac, init_soc=supervehicle.init_soc, wireless_chargers=args.wireless_chargers)
-            supervehicle.trackers = [time_tracker, kinematics_tracker, soc_tracker]
-            for tracker in supervehicle.trackers:
-                tracker.start()
+            supervehicle.initialize_trackers(args.wireless_chargers)
+        print('tracking initialized')
 
         while True:
             if ticking:
