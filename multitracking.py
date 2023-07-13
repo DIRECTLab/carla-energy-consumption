@@ -63,7 +63,7 @@ def respawn(supervehicle:SuperVehicle, world:carla.World, spawn_points:list):
     vehicle = spawn_vehicle(bp, world, spawn_points)
     if vehicle is not None:
         supervehicle.reset_vehicle(vehicle)
-        print(f'respawned {vehicle.type_id}')
+        print(f'Respawned {vehicle.type_id}')
 
 
 def simulate(args):
@@ -97,9 +97,9 @@ def simulate(args):
         traffic_manager.global_percentage_speed_difference(-40)
 
         settings = world.get_settings()
-        if args.time_step is not None:
-            settings.fixed_delta_seconds = args.time_step
-            if not args.time_step == 0 and not args.asynch and not settings.synchronous_mode:
+        if args.delta is not None:
+            settings.fixed_delta_seconds = args.delta
+            if not args.delta == 0 and not args.asynch and not settings.synchronous_mode:
                 settings.synchronous_mode = True
                 ticking = True
         if ticking:
@@ -133,7 +133,7 @@ def simulate(args):
 
         # The first couple seconds of simulation are less reliable as the vehicles are dropped onto the ground.
         tracked[-1].initialize_trackers(args.wireless_chargers)
-        while tracked[-1].time_tracker.time < 2:
+        while tracked[-1].time_tracker.time <= 2:
             if ticking:
                 world.tick()
             else:
@@ -141,9 +141,9 @@ def simulate(args):
 
         for supervehicle in tracked:
             supervehicle.initialize_trackers(args.wireless_chargers)
-        print('tracking initialized')
 
-        while True:
+        print(f'Tracking for {args.time} seconds. Press Ctrl-C to interrupt.')
+        while tracked[-1].time_tracker.time <= args.time:
             if ticking:
                 world.tick()
             else:
@@ -166,7 +166,7 @@ def simulate(args):
 
         try:
             if len(actor_list) > 0:
-                print('saving data')
+                print('Saving data . . .')
                 save_all(actor_list, args.outfolder)
 
         finally:
@@ -176,7 +176,7 @@ def simulate(args):
                 traffic_manager.set_synchronous_mode(False)
 
             if len(actor_list) > 0:
-                print('destroying actors')
+                print('destroying actors . . .')
                 client.apply_batch([carla.command.DestroyActor(sv.vehicle) for sv in actor_list])
                 print('done.')
 
@@ -202,10 +202,17 @@ def main():
         help='CSV file for untracked agent specifications'
     )
     argparser.add_argument(
-        '-t', '--time-step',
+        '-t', '--time',
         metavar='T',
         type=float,
-        help='amount of simulated time per step (seconds), or 0 for variable time step; set synch mode unless 0 or --asynch is set'
+        default=float('inf'),
+        help='number of simulation seconds to track; defualts to infinity'
+    )
+    argparser.add_argument(
+        '-d', '--delta',
+        metavar='D',
+        type=float,
+        help='amount of simulated time (in seconds) per step, or 0 for "real time"; sets synch mode unless 0 or --asynch is set'
     )
     argparser.add_argument(
         '-m', '--map',

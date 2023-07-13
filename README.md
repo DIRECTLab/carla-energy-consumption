@@ -27,8 +27,8 @@ When in doubt, opt for [multitracking.py](multitracking.py). This program is the
 
 - [multitracking.py](multitracking.py) tracks multiple vehicles at once. These vehicles can be controlled by the Traffic Manager or one of the agents under `agents/navigation/`.
 
-    - Run `python multitracking.py -h` to get all options. The `-t` option is strongly recommended.
-    - For BehaviorAgents, ensure time step is below 0.02.
+    - Run `python multitracking.py -h` to get all options. The `-d` option is strongly recommended.
+    - For BehaviorAgents, ensure `delta` time step is below 0.02.
 
     Basic Usage
     1. Start the CARLA server.
