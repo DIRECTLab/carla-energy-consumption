@@ -33,7 +33,7 @@ When in doubt, opt for [multitracking.py](multitracking.py). This program is the
     Basic Usage
     1. Start the CARLA server.
     2. Run `python multitracking.py input/tracked_agents.csv output/`.
-        - This will save all data to a directory called `output/`, potentially overwriting data if it already exists.
+        - This will save all data to the `output/` directory, potentially overwriting data that is already there. `output/` can be replaced by any path to a directory or potential directory.
 
 - [reporting.py](reporting.py) is a module for reporting tracking data.
 
@@ -173,7 +173,7 @@ After 8024.28 s:
 ```
 *Roughly 5 dozen laps, up to 6% grade.*
 
-A plot of the first lap around the highway: ![](highway_lap.png)
+A plot of the first lap around the highway: ![](output/highway_lap.png)
 
 
 ## Simulation Options
