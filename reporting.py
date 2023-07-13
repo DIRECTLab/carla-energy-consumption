@@ -1,4 +1,5 @@
 import os
+import glob
 import csv
 import math
 import pandas as pd
@@ -116,7 +117,15 @@ def save_data(trackers:list, file):
 def save_all(supervehicles:list, outfolder):
     """
     Saves all tracking and metadata from a list of supervehicles.
+    Removes any old CSV files.
+    Creates the directory if it does not exist.
     """
+    if os.path.exists(outfolder):
+        for file in glob.iglob(os.path.join(outfolder, '*.csv')):
+            os.remove(file)
+    else:
+        os.makedirs(outfolder)
+
     save_metadata(supervehicles, os.path.join(outfolder, 'meta.csv'))
     for supervehicle in supervehicles:
         if len(supervehicle.trackers) > 0:

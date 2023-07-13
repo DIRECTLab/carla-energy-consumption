@@ -32,8 +32,8 @@ When in doubt, opt for [multitracking.py](multitracking.py). This program is the
 
     Basic Usage
     1. Start the CARLA server.
-    2. Create an output directory, i.e. `mkdir output`.
-    3. Run `python multitracking.py input/tracked_agents.csv output/`.
+    2. Run `python multitracking.py input/tracked_agents.csv output/`.
+        - This will save all data to a directory called `output/`, potentially overwriting data if it already exists.
 
 - [reporting.py](reporting.py) is a module for reporting tracking data.
 
