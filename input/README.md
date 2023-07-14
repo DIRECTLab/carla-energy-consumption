@@ -1,5 +1,5 @@
 # input
-Example input files for [automatic_control.py](../automatic_control.py), [example.py](../example.py) and [multitracking.py](../multitracking.py).
+Example input files for [automatic_control.py](../automatic_control.py), [unitracking.py](../unitracking.py) and [multitracking.py](../multitracking.py).
 
 
 - [chargers.csv](chargers.csv) is an example CSV file for loading wireless chargers. It demonstrates the following fields, required for all files of this type:
@@ -13,11 +13,11 @@ Example input files for [automatic_control.py](../automatic_control.py), [exampl
     - `pitch`: rotation about the global y-axis (degrees).
     - `yaw`: rotation about the global z-axis (degrees).
 
-- [directions.csv](directions.csv) is an example CSV file for loading predetermined directions in [example.py](../example.py). It demonstrates the `direction` field and accepted values.
+- [directions.csv](directions.csv) is an example CSV file for loading predetermined directions in [unitracking.py](../unitracking.py). It demonstrates the `direction` field and accepted values.
 
     *In this mode, the vehicle will not perform lane changes. If lane changes are necessary, use a path file instead.*
 
-- [path.csv](path.csv) is an example CSV file for loading a predetermined path in [example.py](../example.py). 
+- [path.csv](path.csv) is an example CSV file for loading a predetermined path in [unitracking.py](../unitracking.py). 
     This file demonstrates the following fields, required for all files of this type:
     - `x`: global x coordinate.
     - `y`: global y coordinate.

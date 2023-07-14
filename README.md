@@ -3,7 +3,7 @@ Energy consumption tracking for CARLA simulator.
 
 
 ## Contents
-When in doubt, opt for [multitracking.py](multitracking.py). This program is the most up-to-date and offers most of the functionality of both [example.py](example.py) and [automatic_control.py](automatic_control.py), plus more.
+When in doubt, opt for [multitracking.py](multitracking.py). This program is the most up-to-date and offers most of the functionality of both [unitracking.py](unitracking.py) and [automatic_control.py](automatic_control.py), plus more.
 
 - [automatic_control.py](automatic_control.py) tracks a vehicle which is automatically controlled on the client side.
 
@@ -14,14 +14,6 @@ When in doubt, opt for [multitracking.py](multitracking.py). This program is the
     Known issues:
     - Much like the average driver, the vehicle does not stop at stop signs.
     - Unlike the average driver, the vehicle brakes frequently instead of reducing throttle.
-
-- [example.py](example.py) shows a usage example. This spawns traffic and tracks energy usage and other data about a simulated Tesla Model 3, displaying updates every second. At the end, it graphs the power consumed as compared with velocity, acceleration and road grade, then plots a heatmap of the areas the vehicle travelled to. 
-
-    - Run `python example.py -h` to get all options. The `-t` option is strongly recommended.
-
-    Basic Usage
-    1. Start the CARLA server.
-    2. Run `python example.py`.
 
 - [loading.py](loading.py) is a module for loading input files.
 
@@ -39,13 +31,21 @@ When in doubt, opt for [multitracking.py](multitracking.py). This program is the
 
 - [supervehicle.py](supervehicle.py) combines `EV`, `Agent`, and `Tracker` functionality.
 
+- [unitracking.py](unitracking.py) shows a usage example allowing greater control over a single vehicle. This spawns traffic and tracks energy usage and other data about a simulated Tesla Model 3, displaying updates every second. At the end, it graphs the power consumed as compared with velocity, acceleration and road grade, then plots a heatmap of the areas the vehicle travelled to. 
+
+    - Run `python unitracking.py -h` to get all options. The `-t` option is strongly recommended.
+
+    Basic Usage
+    1. Start the CARLA server.
+    2. Run `python unitracking.py`.
+
 - `agents/` is copied over from `PythonAPI/carla/agents/`. See [its README](agents/README.md).
 
-- `input/` contains example input files for  [automatic_control.py](automatic_control.py), [example.py](example.py) and [multitracking.py](multitracking.py). See [its README](input/README.md) for input file documentation.
+- `input/` contains example input files for  [automatic_control.py](automatic_control.py), [unitracking.py](unitracking.py) and [multitracking.py](multitracking.py). See [its README](input/README.md) for input file documentation.
 
 - `tests/` has all of the unit tests for the project. See [its README](tests/README.md).
 
-- `trackers/` contains code for tracking vehicle energy consumption as well as many other statistics. It also contains [example.py](trackers/example.py) demonstrating its usage. See [its README](trackers/README.md).
+- `trackers/` contains code for tracking vehicle energy consumption as well as many other statistics. It also contains [unitracking.py](trackers/unitracking.py) demonstrating its usage. See [its README](trackers/README.md).
 
 
 ## Requirements
@@ -56,7 +56,7 @@ Follow CARLA [installation instructions](https://carla.readthedocs.io/en/0.9.14/
 Results appear comparable between trials, but time step length does affect results.
 
 ### Baselines
-#### Tesla Model 3 without traffic, Town10 (`python example.py -s 0 0 0 -n 1 -t 0.01 -r n`): 
+#### Tesla Model 3 without traffic, Town10 (`python unitracking.py -s 0 0 0 -n 1 -t 0.01 -r n`): 
 Trial 1:
 ```
 After 8026.84 s:
@@ -68,7 +68,7 @@ After 8026.84 s:
         Energy efficiency: 0.000144893 kWh/m (14.4893 kWh / 100 km) (23.3182 kWh / 100 mi)
 ```
 
-#### Tesla Model 3 without traffic, Town10 (`python example.py -s 0 0 0 -n 1 -t 0.025 -r n`): 
+#### Tesla Model 3 without traffic, Town10 (`python unitracking.py -s 0 0 0 -n 1 -t 0.025 -r n`): 
 Trial 1:
 ```
 After 8016.68 s:
@@ -100,7 +100,7 @@ After 8019.8 s:
         Energy efficiency: 0.000109955 kWh/m (10.9955 kWh / 100 km) (17.6955 kWh / 100 mi)
 ```
 
-#### Tesla Model 3 without traffic, Town10 (`python example.py -s 0 0 0 -n 1 -t 0.05 -r n`):
+#### Tesla Model 3 without traffic, Town10 (`python unitracking.py -s 0 0 0 -n 1 -t 0.05 -r n`):
 Trial 1:
 ```
 After 8027.45 s:
@@ -133,7 +133,7 @@ After 8005.15 s:
 ```
 
 ### Traffic
-#### Tesla Model 3 with 50 vehicles, Town10 (`python example.py -s 0 0 0 -n 50 -t 0.05 -r n`): 
+#### Tesla Model 3 with 50 vehicles, Town10 (`python unitracking.py -s 0 0 0 -n 50 -t 0.05 -r n`): 
 Trial 1:
 ```
 After 8024.65 s:
@@ -146,7 +146,7 @@ After 8024.65 s:
 ```
 
 ### Hills
-#### Tesla Model 3 without traffic, Town03 (`python example.py -s 0 0 0 -n 1 -t 0.025 -r n`): 26.9 kWh / 100mi
+#### Tesla Model 3 without traffic, Town03 (`python unitracking.py -s 0 0 0 -n 1 -t 0.025 -r n`): 26.9 kWh / 100mi
 Trial 1:
 ```
 After 8022.25 s:
@@ -160,7 +160,7 @@ After 8022.25 s:
 *Roughly 2 dozen hills (> 5% grade, up to 40%) ascended/descended.*
 
 ### Highway
-#### Tesla Model 3 without traffic, Town04 (`python example.py -s 0 0 0 -n 1 -t 0.05 -r n`):
+#### Tesla Model 3 without traffic, Town04 (`python unitracking.py -s 0 0 0 -n 1 -t 0.05 -r n`):
 Trial 1:
 ```
 After 8024.28 s:
@@ -180,49 +180,49 @@ A plot of the first lap around the highway: ![](output/highway_lap.png)
 For an idea of how fast the simulation will run:
 
 ### Epic Mode Rendering
-```python example.py -s 0 0 0 -n 1 -t 0```
+```python unitracking.py -s 0 0 0 -n 1 -t 0```
 
 100 simulation seconds in 100 real seconds.
 
-```python example.py -s 0 0 0 -n 1 -t 0.025```
+```python unitracking.py -s 0 0 0 -n 1 -t 0.025```
 
 222 simulation seconds in 100 real seconds
 
-```python example.py -s 0 0 0 -n 1 -t 0.025 --asynch```
+```python unitracking.py -s 0 0 0 -n 1 -t 0.025 --asynch```
 
 217 simulation seconds in 100 real seconds
 
-```python example.py -s 0 0 0 -n 1 -t 0.01```
+```python unitracking.py -s 0 0 0 -n 1 -t 0.01```
 
 86 simulation seconds in 100 real seconds
 
-```python example.py -s 0 0 0 -n 1 -t 0.05```
+```python unitracking.py -s 0 0 0 -n 1 -t 0.05```
 
 440 simulation seconds in 100 real seconds
 
-```python example.py -s 0 0 0 -n 100 -t 0.025```
+```python unitracking.py -s 0 0 0 -n 100 -t 0.025```
 
 124 simulation seconds in 100 real seconds
 
 ### Low Mode Rendering
-```python example.py -s 0 0 0 -n 1 -t 0.025```
+```python unitracking.py -s 0 0 0 -n 1 -t 0.025```
 
 345 simulation seconds in 100 real seconds
 
 ### Off-Screen Rendering
-```python example.py -s 0 0 0 -n 1 -t 0.025```
+```python unitracking.py -s 0 0 0 -n 1 -t 0.025```
 
 234 simulation seconds in 100 real seconds
 
 ### No Rendering
-```python example.py -s 0 0 0 -n 1 -t 0.01 -r n```
+```python unitracking.py -s 0 0 0 -n 1 -t 0.01 -r n```
 
 851 simulation seconds in 100 real seconds
 
-```python example.py -s 0 0 0 -n 1 -t 0.025 -r n```
+```python unitracking.py -s 0 0 0 -n 1 -t 0.025 -r n```
 
 2054 simulation seconds in 100 real seconds
 
-```python example.py -s 0 0 0 -n 1 -t 0.05 -r n```
+```python unitracking.py -s 0 0 0 -n 1 -t 0.05 -r n```
 
 4002 simulation seconds in 100 real seconds

@@ -9,7 +9,7 @@ from supervehicle import SuperVehicle
 from reporting import save_all
 
 """
-This module seeks to combine the best of `example.py` and `automatic_control.py`.
+This module seeks to combine the best of `unitracking.py` and `automatic_control.py`.
 """
 
 
