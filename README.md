@@ -41,6 +41,8 @@ When in doubt, opt for [multitracking.py](multitracking.py). This program is the
 
 - `agents/` is copied over from `PythonAPI/carla/agents/`. See [its README](agents/README.md).
 
+- `docs/` contains additional software documentation.
+
 - `input/` contains example input files for  [automatic_control.py](automatic_control.py), [unitracking.py](unitracking.py) and [multitracking.py](multitracking.py). See [its README](input/README.md) for input file documentation.
 
 - `tests/` has all of the unit tests for the project. See [its README](tests/README.md).
