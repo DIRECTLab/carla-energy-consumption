@@ -15,6 +15,8 @@ When in doubt, opt for [multitracking.py](multitracking.py). This program is the
     - Much like the average driver, the vehicle does not stop at stop signs.
     - Unlike the average driver, the vehicle brakes frequently instead of reducing throttle.
 
+- [coordinates.py](coordinates.py) highlights the x- and y-axes at the origin for use in understanding the coordinate system of the simulation.
+
 - [loading.py](loading.py) is a module for loading input files.
 
 - [multitracking.py](multitracking.py) tracks multiple vehicles at once. These vehicles can be controlled by the Traffic Manager or one of the agents under `agents/navigation/`.
