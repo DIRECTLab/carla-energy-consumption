@@ -17,16 +17,24 @@ def get_elevation(location:carla.Location, world:carla.World):
 def show_coordinates(world:carla.World, time=0.1):
     """
     Highlights x- and y-axes at (0,0).
+    Each square is 1m x 1m.
     """
     debug = world.debug
     height = get_elevation(carla.Location(), world) + 20
     length = 20
-    x_end = carla.Location(length,0,height)
-    debug.draw_arrow(carla.Location(0,0,height), x_end, thickness=1, arrow_size=2.5, color=carla.Color(255,200,0), life_time=time)
-    debug.draw_string(x_end + carla.Vector3D(0,2,0), 'x', life_time=time)
-    y_end = carla.Location(0,length,height)
-    debug.draw_arrow(carla.Location(0,0,height), y_end, thickness=1, arrow_size=2.5, color=carla.Color(255,200,0), life_time=time)
-    debug.draw_string(y_end + carla.Vector3D(0,2,0), 'y', life_time=time)
+    thickness = 1
+    space = 1
+    begin = 0
+    end = space - thickness
+    for i in range(begin, length, space * 2):
+        debug.draw_line(carla.Location(begin,0,height), carla.Location(end,0,height), thickness, color=carla.Color(255,200,0), life_time=time)
+        debug.draw_line(carla.Location(0,begin,height), carla.Location(0,end,height), thickness, color=carla.Color(255,200,0), life_time=time)
+        begin += space * 2
+        end += space * 2
+    debug.draw_arrow(carla.Location(begin,0,height), carla.Location(end+0.01,0,height), thickness, arrow_size=2, color=carla.Color(255,200,0), life_time=time)
+    debug.draw_string(carla.Location(end,2,height), 'x', life_time=time)
+    debug.draw_arrow(carla.Location(0,begin,height), carla.Location(0,end+.01,height), thickness, arrow_size=2, color=carla.Color(255,200,0), life_time=time)
+    debug.draw_string(carla.Location(2,end,height), 'y', life_time=time)
 
 
 if __name__ == '__main__':
