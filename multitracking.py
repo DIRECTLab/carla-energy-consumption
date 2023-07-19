@@ -19,6 +19,8 @@ class Simulation:
         self.__actor_list = list()
         self.__ticking = False
         self.__world = None
+        self.__spawn_points = None
+        self.__available_spawn_points = None
 
         client = carla.Client(args.host, args.port)
         client.set_timeout(20.0)
@@ -58,6 +60,10 @@ class Simulation:
                 random.seed(self.__args.seed)
                 traffic_manager.set_random_device_seed(self.__args.seed)
 
+            map = self.__world.get_map()
+            self.__spawn_points = map.get_spawn_points()
+            self.__reset_available_spawn_points()
+
             self.__simulate()
 
         finally:
@@ -71,7 +77,11 @@ class Simulation:
                 client.apply_batch([carla.command.DestroyActor(sv.vehicle) for sv in self.__actor_list])
                 print('done.')
 
-    def __spawn_vehicle(self, blueprint:carla.ActorBlueprint, spawn_points:list):
+    def __reset_available_spawn_points(self):
+        self.__available_spawn_points = list(self.__spawn_points)
+        random.shuffle(self.__available_spawn_points)
+
+    def __spawn_vehicle(self, blueprint:carla.ActorBlueprint):
         """
         Tries every spawn point given until one is successful.
         
@@ -82,28 +92,27 @@ class Simulation:
         vehicle = None
         while vehicle is None:
             try:
-                transform = spawn_points.pop()
+                transform = self.__available_spawn_points.pop()
             except IndexError:
-                print('All spawn points have been filled.')
                 return None
             vehicle = self.__world.try_spawn_actor(blueprint, transform)
         return vehicle
 
-    def __wait(self, time:float, ticking:bool):
+    def __wait(self, seconds:float):
         """
-        Waits until `time` simulation seconds have passed.
+        Waits until `seconds` simulation seconds have passed.
         """
         begin = self.__world.get_snapshot().timestamp.elapsed_seconds
         elapsed = 0
-        while elapsed < time:
-            if ticking:
+        while elapsed < seconds:
+            if self.__ticking:
                 self.__world.tick()
                 snapshot = self.__world.get_snapshot()
             else:
                 snapshot = self.__world.wait_for_tick()
             elapsed = snapshot.timestamp.elapsed_seconds - begin
 
-    def __spawn_agent_class(self, agent_class:dict, spawn_points:list) -> list:
+    def __spawn_agent_class(self, agent_class:dict) -> list:
         """
         Parses a single dict from the list returned by `get_agents`.
         """
@@ -114,15 +123,21 @@ class Simulation:
             bp.set_attribute('color', agent_class['color'])
 
         for _ in range(agent_class['number']):
-            vehicle = self.__spawn_vehicle(bp, spawn_points)
+            vehicle = self.__spawn_vehicle(bp)
             if vehicle is None:
-                break
+                print('All spawn points have been filled. Pausing vehicle spawns.')
+                self.__wait(seconds=5)
+                self.__reset_available_spawn_points()
+                vehicle = self.__spawn_vehicle(bp)
+                if vehicle is None:
+                    # Give up
+                    break
             sv = SuperVehicle(vehicle, agent_class['agent_type'], agent_class['ev_params'], agent_class['init_soc'], agent_class['hvac'])
             supervehicles.append(sv)
 
         return supervehicles
 
-    def __respawn(self, supervehicle:SuperVehicle, spawn_points:list):
+    def __respawn(self, supervehicle:SuperVehicle):
         """
         Respawns a vehicle.
         """
@@ -130,35 +145,30 @@ class Simulation:
         blueprint_library = self.__world.get_blueprint_library()
         bp = blueprint_library.find(vehicle.type_id)
         bp.set_attribute('color', vehicle.attributes['color'])
-        vehicle = self.__spawn_vehicle(bp, spawn_points)
+        vehicle = self.__spawn_vehicle(bp)
         if vehicle is not None:
             supervehicle.reset_vehicle(vehicle)
             print(f'Respawned {vehicle.type_id}')
 
     def __simulate(self):
         try:
-            map = self.__world.get_map()
-            spawn_points = map.get_spawn_points()
-            remaining_spawn_points = list(spawn_points)
-            random.shuffle(remaining_spawn_points)
-
             tracked = list()
             for agent_class in self.__args.tracked:
-                aclass_parsed = self.__spawn_agent_class(agent_class, remaining_spawn_points)
+                aclass_parsed = self.__spawn_agent_class(agent_class)
                 self.__actor_list += aclass_parsed
                 tracked += aclass_parsed
 
             for agent_class in self.__args.untracked:
-                aclass_parsed = self.__spawn_agent_class(agent_class, remaining_spawn_points)
+                aclass_parsed = self.__spawn_agent_class(agent_class)
                 self.__actor_list += aclass_parsed
 
             print(f"Total number of vehicles: {len(self.__actor_list)}")
 
             for supervehicle in self.__actor_list:
-                supervehicle.choose_route(spawn_points)
+                supervehicle.choose_route(self.__spawn_points)
 
             # The first couple seconds of simulation are less reliable as the vehicles are dropped onto the ground.
-            self.__wait(2, self.__ticking)
+            self.__wait(2)
 
             for supervehicle in tracked:
                 supervehicle.initialize_trackers(self.__args.wireless_chargers)
@@ -172,10 +182,9 @@ class Simulation:
 
                 for supervehicle in self.__actor_list:
                     if not supervehicle.vehicle.is_alive:
-                        respawn_points = list(spawn_points)
-                        random.shuffle(respawn_points)
-                        self.__respawn(supervehicle, respawn_points)
-                    supervehicle.run_step(spawn_points)
+                        self.__reset_available_spawn_points()
+                        self.__respawn(supervehicle)
+                    supervehicle.run_step(self.__spawn_points)
 
         except KeyboardInterrupt:
             pass
