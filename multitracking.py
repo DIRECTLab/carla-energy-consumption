@@ -32,6 +32,21 @@ def spawn_vehicle(blueprint:carla.ActorBlueprint, world:carla.World, spawn_point
     return vehicle
 
 
+def wait(time:float, world:carla.World, ticking:bool):
+    """
+    Waits until `time` simulation seconds have passed.
+    """
+    begin = world.get_snapshot().timestamp.elapsed_seconds
+    elapsed = 0
+    while elapsed < time:
+        if ticking:
+            world.tick()
+            snapshot = world.get_snapshot()
+        else:
+            snapshot = world.wait_for_tick()
+        elapsed = snapshot.timestamp.elapsed_seconds - begin
+
+
 def spawn_agent_class(agent_class:dict, world:carla.World, spawn_points:list) -> list:
     """
     Parses a single dict from the list returned by `get_agents`.
@@ -132,12 +147,7 @@ def simulate(args):
             supervehicle.choose_route(spawn_points)
 
         # The first couple seconds of simulation are less reliable as the vehicles are dropped onto the ground.
-        tracked[-1].initialize_trackers(args.wireless_chargers)
-        while tracked[-1].time_tracker.time <= 2:
-            if ticking:
-                world.tick()
-            else:
-                world.wait_for_tick()
+        wait(2, world, ticking)
 
         for supervehicle in tracked:
             supervehicle.initialize_trackers(args.wireless_chargers)
