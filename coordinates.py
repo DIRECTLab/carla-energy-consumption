@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import argparse
 import time
 import carla
@@ -10,7 +12,7 @@ def get_elevation(location:carla.Location, world:carla.World):
     max_height = 99_999    # Max height (meters)
     location.z = max_height
     point = world.ground_projection(location, max_height * 2)
-    if point is None: return
+    if point is None: return None
     return point.location.z
 
 
@@ -26,7 +28,7 @@ def show_coordinates(world:carla.World, time=0.1):
     space = 1
     begin = 0
     end = space - thickness
-    for i in range(begin, length, space * 2):
+    for _ in range(begin, length, space * 2):
         debug.draw_line(carla.Location(begin,0,height), carla.Location(end,0,height), thickness, color=carla.Color(255,200,0), life_time=time)
         debug.draw_line(carla.Location(0,begin,height), carla.Location(0,end,height), thickness, color=carla.Color(255,200,0), life_time=time)
         begin += space * 2
