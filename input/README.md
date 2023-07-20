@@ -2,7 +2,7 @@
 Example input files for [automatic_control.py](../automatic_control.py), [unitracking.py](../unitracking.py) and [multitracking.py](../multitracking.py).
 
 
-- [chargers.csv](chargers.csv) is an example CSV file for loading wireless chargers. It demonstrates the following fields, required for all files of this type:
+<!-- - [chargers.csv](chargers.csv) is an example CSV file for loading wireless chargers. It demonstrates the following fields, required for all files of this type:
     - `x`: global x coordinate for center of charger (meters).
     - `y`: global y coordinate for center of charger (meters).
     - `z`: global z coordinate for center of charger (meters).
@@ -11,7 +11,7 @@ Example input files for [automatic_control.py](../automatic_control.py), [unitra
     - `height`: z-axis dimension for charging area (meters).
     - `roll`: rotation about the global x-axis (degrees).
     - `pitch`: rotation about the global y-axis (degrees).
-    - `yaw`: rotation about the global z-axis (degrees).
+    - `yaw`: rotation about the global z-axis (degrees). -->
 
 - [directions.csv](directions.csv) is an example CSV file for loading predetermined directions in [unitracking.py](../unitracking.py). It demonstrates the `direction` field and accepted values.
 
