@@ -182,6 +182,26 @@ def test_power_to_vehicle4():
     return True
 
 
+def test_power_to_vehicle5():
+    front_left = Location(-1,0,0)
+    front_right = Location(0,0,0)
+    back_right = Location(0,3,0)
+    charger = Charger(front_left, front_right, back_right, 30_000, 0.85)
+    point = Location(-0.25,1.5,0)
+    power = charger.power_to_vehicle(point)
+    try:
+        assert power == 19_125.0
+    except AssertionError:
+        traceback.print_exc()
+        print(f"{power=}")
+        print()
+        return False
+    return True
+
+
+# TODO: Test power when charger is tilted
+
+
 if __name__ == "__main__":
     tests = (
         test_transform_in1,
@@ -194,6 +214,7 @@ if __name__ == "__main__":
         test_power_to_vehicle2,
         test_power_to_vehicle3,
         test_power_to_vehicle4,
+        test_power_to_vehicle5,
     )
     success = 0
     total = 0
