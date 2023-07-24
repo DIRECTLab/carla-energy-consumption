@@ -1,0 +1,113 @@
+import sys
+import os
+import traceback
+from carla import Location
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from trackers.charger import Charger
+
+
+def test_transform_in1():
+    front_left = Location(-1,0,0)
+    front_right = Location(0,0,0)
+    back_right = Location(0,3,0)
+    charger = Charger(front_left, front_right, back_right, 0, 0)
+    point = Location(1,0,0)
+    transformed = charger.transform_in(point)
+    try:
+        assert transformed == Location(1.5, -1.5, 0.0)
+    except AssertionError:
+        traceback.print_exc()
+        print(f"transformed=({transformed.x}, {transformed.y}, {transformed.z})")
+        print()
+        return False
+    return True
+
+
+def test_transform_in2():
+    front_left = Location(0,-1,0)
+    front_right = Location(0,0,0)
+    back_right = Location(-3,0,0)
+    charger = Charger(front_left, front_right, back_right, 0, 0)
+    point = Location(1,0,0)
+    transformed = charger.transform_in(point)
+    try:
+        assert transformed == Location(0.5, -2.5, 0.0)
+    except AssertionError:
+        traceback.print_exc()
+        print(f"transformed=({transformed.x}, {transformed.y}, {transformed.z})")
+        print()
+        return False
+    return True
+
+
+def test_transform_in3():
+    front_left = Location(0,-1,0)
+    front_right = Location(0,0,0)
+    back_right = Location(-3,0,0)
+    charger = Charger(front_left, front_right, back_right, 0, 0)
+    point = Location(0,1,1)
+    transformed = charger.transform_in(point)
+    try:
+        assert transformed == Location(1.5, -1.5, 1.0)
+    except AssertionError:
+        traceback.print_exc()
+        print(f"transformed=({transformed.x}, {transformed.y}, {transformed.z})")
+        print()
+        return False
+    return True
+
+
+def test_transform_in4():
+    # Rotated 45 degrees
+    front_left = Location(0, -1, 0)
+    front_right = Location(1, 0, 0)
+    back_right = Location(0, 1, 0)
+    charger = Charger(front_left, front_right, back_right, 0, 0)
+    point = Location(-1, 0, 0)   # the missing corner
+    transformed = charger.transform_in(point)
+    try:
+        assert transformed.distance(Location(-0.70710678, 0.70710678, 0.0)) < 0.0001
+    except AssertionError:
+        traceback.print_exc()
+        print(f"transformed=({transformed.x}, {transformed.y}, {transformed.z})")
+        print()
+        return False
+    return True
+
+
+def test_transform_in5():
+    # Length=2, width=2, 30% grade rotated 45 degrees
+    # I don't know for sure, but I think this is an accuracy problem
+    front_left = Location(0, -1.38202749611, 0.3)
+    front_right = Location(1.38202749611, 0, 0.3)
+    back_right = Location(0, 1.38202749611, -0.3)
+    charger = Charger(front_left, front_right, back_right, 0, 0)
+    point = Location(-1.38202749611, 0, -0.3)   # the missing corner
+    print(point.x, point.y, point.z)
+    transformed = charger.transform_in(point)
+    try:
+        assert transformed.distance(Location(-1.0, 1.0, 0.0)) < 0.01
+    except AssertionError:
+        traceback.print_exc()
+        print(f"transformed=({transformed.x}, {transformed.y}, {transformed.z})")
+        print()
+        return False
+    return True
+
+
+if __name__ == "__main__":
+    tests = (
+        test_transform_in1,
+        test_transform_in2,
+        test_transform_in3,
+        test_transform_in4,
+        test_transform_in5,
+    )
+    success = 0
+    total = 0
+    for test in tests:
+        if test():
+            success += 1
+        total += 1
+    print(f"Passed {success} out of {total} tests.")
