@@ -2,16 +2,12 @@
 Example input files for [automatic_control.py](../automatic_control.py), [unitracking.py](../unitracking.py) and [multitracking.py](../multitracking.py).
 
 
-<!-- - [chargers.csv](chargers.csv) is an example CSV file for loading wireless chargers. It demonstrates the following fields, required for all files of this type:
-    - `x`: global x coordinate for center of charger (meters).
-    - `y`: global y coordinate for center of charger (meters).
-    - `z`: global z coordinate for center of charger (meters).
-    - `width`: x-axis dimension for charging area (meters).
-    - `length`: y-axis dimension for charging area (meters).
-    - `height`: z-axis dimension for charging area (meters).
-    - `roll`: rotation about the global x-axis (degrees).
-    - `pitch`: rotation about the global y-axis (degrees).
-    - `yaw`: rotation about the global z-axis (degrees). -->
+- [chargers.csv](chargers.csv) is an example CSV file for loading wireless chargers. It demonstrates the following fields, required for all files of this type:
+    - `front_left`: Coordinates of the front left corner of the effective charging range of this charger as it appears when driving towards it or looking down from above. This point is part of the boundary of the effective charge range which is furthest from the vehicle as it is driving toward the charger and closest to the vehicle after it passes the charger. This boundary is represented as a rectangle. 
+    - `front_right`: Coordinates of the front right corner of the effective charging range of this charger.
+    - `back_right`: Coordinates of the back right corner of the effective charging range of this charger.
+    - `power`: Power used by charger in Watts.
+    - `efficiency`: Maximum charger-vehicle efficiency as a fraction assuming perfect alignment.
 
 - [directions.csv](directions.csv) is an example CSV file for loading predetermined directions in [unitracking.py](../unitracking.py). It demonstrates the `direction` field and accepted values.
 

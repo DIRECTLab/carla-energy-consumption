@@ -12,8 +12,9 @@ class Charger:
         """
         `front_left`: Location of the front left corner of the effective charging range of this charger 
             as it appears when driving towards it or looking down from above. 
-            This point is part of the effective charge range which is furthest from the vehicle as it is driving toward the charger 
-            and closest to the vehicle after it passes the charger.
+            This point is part of the boundary of the effective charge range which is furthest from 
+            the vehicle as it is driving toward the charger and closest to the vehicle after it passes the charger. 
+            This boundary is represented as a rectangle. 
 
         `front_right`: Location of the front right corner of the effective charging range of this charger.
 

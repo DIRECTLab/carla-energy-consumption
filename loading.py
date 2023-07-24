@@ -1,7 +1,7 @@
 import csv
-# import carla
+import carla
 
-# from trackers.charger import Charger
+from trackers.charger import Charger
 
 
 def yes_no(string: str):
@@ -16,19 +16,32 @@ def yes_no(string: str):
     return None
 
 
+def parse_location(location_string:str) -> carla.Location:
+    """
+    Parses a string of the format
+    `(X,Y,Z)`
+    where `X`, `Y` and `Z` are numbers.
+    """
+    stripped = location_string[1:-1]
+    listed = stripped.split(',')
+    numbers = [float(n) for n in listed]
+    return carla.Location(numbers[0], numbers[1], numbers[2])
+
+
 def get_chargers(path) -> list:
     """
     Loads chargers from the CSV at `path`.
     """
     chargers = list()
-    # with open(path, 'r') as file:
-    #     reader = csv.DictReader(file)
-    #     for charger in reader:
-    #         location = carla.Location(float(charger['x']), float(charger['y']), float(charger['z']))
-    #         rotation = carla.Rotation(float(charger['pitch']), float(charger['yaw']), float(charger['roll']))
-    #         transform = carla.Transform(location, rotation)
-    #         dimensions = carla.Vector3D(float(charger['width']), float(charger['length']), float(charger['height']))
-    #         chargers.append(Charger(transform, dimensions / 2))
+    with open(path, 'r') as file:
+        reader = csv.DictReader(file)
+        for charger in reader:
+            front_left = parse_location(charger['front_left'])
+            front_right = parse_location(charger['front_right'])
+            back_right = parse_location(charger['back_right'])
+            power = float(charger['power'])
+            efficiency = float(charger['efficiency'])
+            chargers.append(Charger(front_left, front_right, back_right, power, efficiency))
     return chargers
 
 
