@@ -47,6 +47,12 @@ When in doubt, opt for [multitracking.py](multitracking.py). This program is the
 
 - `input/` contains example input files for  [automatic_control.py](automatic_control.py), [unitracking.py](unitracking.py) and [multitracking.py](multitracking.py). See [its README](input/README.md) for input file documentation.
 
+- `navegation/` contains some functions for getting oriented to the CARLA maps. They are intended to be run from the command line. Use the `-h` option for usage.
+
+    - [coordinates.py](navegation/coordinates.py) highlights the x- and y-axes at (0,0). Each square drawn is 1m x 1m.
+
+    - [draw_chargers.py](navegation/draw_chargers.py) highlights the wireless chargers specified. Navigate beneath the ground to view wireless chargers placed there, or place them at ground level as recommended.
+
 - `tests/` has all of the unit tests for the project. See [its README](tests/README.md).
 
 - `trackers/` contains code for tracking vehicle energy consumption as well as many other statistics. It also contains [unitracking.py](trackers/unitracking.py) demonstrating its usage. See [its README](trackers/README.md).
