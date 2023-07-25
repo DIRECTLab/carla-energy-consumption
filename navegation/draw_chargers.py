@@ -11,6 +11,11 @@ from loading import get_chargers
 
 
 def draw_chargers(chargers:list, debug:carla.DebugHelper, time:float):
+    """
+    Highlights the wireless chargers specified. 
+    Navigate beneath the ground to view wireless chargers placed there, 
+    or place them at ground level as recommended.
+    """
     for charger in chargers:
         charger.draw(debug, time)
 
