@@ -1,5 +1,5 @@
 import numpy as np
-from carla import Location
+from carla import Location, DebugHelper
 
 
 class Charger:
@@ -24,6 +24,9 @@ class Charger:
 
         `efficiency`: Maximum charger-vehicle efficiency as a fraction assuming perfect alignment.
         """
+        self.front_right = front_right
+        self.front_left = front_left
+        self.back_right = back_right
         self.length = front_right.distance(back_right)
         self.width = front_right.distance(front_left)
         self.center = (front_left + back_right) / 2
@@ -80,3 +83,15 @@ class Charger:
             return self.a * y_misalignment**2 + self.max_power
         else:
             return 0.0
+        
+    def draw(self, debug:DebugHelper, life_time:float=0.0):
+        """
+        Draws the charging area.
+        """
+        length = self.back_right - self.front_right
+        back_left = self.front_left + length
+        debug.draw_point(self.center, life_time=life_time)
+        debug.draw_line(self.front_left, self.front_right, life_time=life_time)
+        debug.draw_line(self.front_right, self.back_right, life_time=life_time)
+        debug.draw_line(self.back_right, back_left, life_time=life_time)
+        debug.draw_line(back_left, self.front_left, life_time=life_time)
