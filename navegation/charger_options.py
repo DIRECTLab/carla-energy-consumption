@@ -19,12 +19,17 @@ def get_charger_options(world:carla.World, length:float, width:float) -> list:
     the_map = world.get_map()
     spawn_points = the_map.get_spawn_points()
     for spawn_point in spawn_points:
-        center = spawn_point.location
         rotation = spawn_point.rotation
+        down_unit = carla.Location() - rotation.get_up_vector()
+        center = world.project_point(spawn_point.location, down_unit, 5.0).location
+        if center is None:
+            center = spawn_point.location
+
         forward_unit = rotation.get_forward_vector()
         forward = forward_unit * length / 2
         right_unit = rotation.get_right_vector()
         right = right_unit * width / 2
+
         front_left = center + forward - right
         front_right = center + forward + right
         back_right = center + right - forward
