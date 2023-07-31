@@ -9,7 +9,7 @@ import time
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from trackers.charger import Charger
-# from loading import parse_location
+from loading import parse_location
 
 
 def get_charger_options(world:carla.World, length:float, width:float) -> list:
@@ -67,12 +67,12 @@ if __name__ == '__main__':
         type=float,
         help='width of the charger'
     )
-    # argparser.add_argument(
-    #     '-p', '--point',
-    #     metavar='(X,Y,Z)',
-    #     type=parse_location,
-    #     help='approximate charger center location'
-    # )
+    argparser.add_argument(
+        '-p', '--point',
+        metavar='(X,Y,Z)',
+        type=parse_location,
+        help='approximate charger center location'
+    )
     argparser.add_argument(
         '-i', '--interval',
         metavar='I',
@@ -99,8 +99,12 @@ if __name__ == '__main__':
     client.set_timeout(20.0)
     world = client.get_world()
 
-    # if args.point is None:
-    options = get_charger_options(world, args.length, args.width)
-    random.shuffle(options)
+    if args.point is None:
+        options = get_charger_options(world, args.length, args.width)
+        random.shuffle(options)
+    else:
+        waypoint = world.get_map().get_waypoint(args.point)
+        charger = create_charger(args.length, args.width, waypoint.transform)
+        options = [charger]
 
     display_options(options, args.interval)
