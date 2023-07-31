@@ -6,7 +6,6 @@ class Charger:
     """
     Wireless chargers
     """
-    # TODO: Create a system for highlighting wireless charging areas.
 
     def __init__(self, front_left:Location, front_right:Location, back_right:Location, power:float, efficiency:float) -> None:
         """

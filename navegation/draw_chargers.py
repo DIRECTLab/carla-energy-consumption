@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 
+import sys
+import os
 import argparse
 import time
 import carla
-import sys
-import os
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from loading import get_chargers
