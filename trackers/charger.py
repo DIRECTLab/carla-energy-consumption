@@ -79,7 +79,7 @@ class Charger:
         y_misalignment = abs(transformed.x)
         x_misalignment = abs(transformed.y)
         if y_misalignment < self.width and x_misalignment <= self.length:
-            power = self.a * y_misalignment**2 + self.max_power
+            power = max(self.a * y_misalignment**2 + self.max_power, 0.0)
         else:
             power = 0.0
         return power
