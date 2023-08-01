@@ -43,13 +43,19 @@ def create_charger(length:float, width:float, center_transform:carla.Transform) 
     return Charger(front_left, front_right, back_right, power=0.0, efficiency=0.0)
 
 
-def display_options(options:list, interval:float):
-    print('front_left,front_right,back_right')
+def display_options(options:list, interval:float, power=None, efficiency=None):
+    print(f'front_left,front_right,back_right{",power" if power is not None else ""}{",efficiency" if efficiency is not None else ""}')
+    power_str = ''
+    if power is not None:
+        power_str = f',{power}'
+    efficiency_str = ''
+    if efficiency is not None:
+        efficiency_str = f',{efficiency}'
     for charger in options:
         charger.draw(world.debug, interval)
         print(f'"({charger.front_left.x},{charger.front_left.y},{charger.front_left.z})",', end='')
         print(f'"({charger.front_right.x},{charger.front_right.y},{charger.front_right.z})",', end='')
-        print(f'"({charger.back_right.x},{charger.back_right.y},{charger.back_right.z})"')
+        print(f'"({charger.back_right.x},{charger.back_right.y},{charger.back_right.z})"{power_str}{efficiency_str}')
         time.sleep(interval)
 
 
@@ -81,6 +87,16 @@ if __name__ == '__main__':
         help='wait time between charger demonstrations'
     )
     argparser.add_argument(
+        '--power',
+        type=float,
+        help='add power field to output'
+    )
+    argparser.add_argument(
+        '--efficiency',
+        type=float,
+        help='add efficiency field to output'
+    )
+    argparser.add_argument(
         '--host',
         metavar='H',
         default='127.0.0.1',
@@ -107,4 +123,4 @@ if __name__ == '__main__':
         charger = create_charger(args.length, args.width, waypoint.transform)
         options = [charger]
 
-    display_options(options, args.interval)
+    display_options(options, args.interval, args.power, args.efficiency)
