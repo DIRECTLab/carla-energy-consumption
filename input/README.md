@@ -2,12 +2,15 @@
 Example input files for [automatic_control.py](../automatic_control.py), [unitracking.py](../unitracking.py) and [multitracking.py](../multitracking.py).
 
 
+## Contents
 - [chargers.csv](chargers.csv) is an example CSV file for loading wireless chargers. It demonstrates the following fields, required for all files of this type:
     - `front_left`: Coordinates of the front left corner of the effective charging range of this charger as it appears when driving towards it or looking down from above. This point is part of the boundary of the effective charge range which is furthest from the vehicle as it is driving toward the charger and closest to the vehicle after it passes the charger. This boundary is represented as a rectangle. 
     - `front_right`: Coordinates of the front right corner of the effective charging range of this charger.
     - `back_right`: Coordinates of the back right corner of the effective charging range of this charger.
     - `power`: Power used by charger in Watts.
     - `efficiency`: Maximum charger-vehicle efficiency as a fraction assuming perfect alignment.
+
+    To automatically generate a file of this type, see [charger_options.py](../navegation/charger_options.py).
 
 - [directions.csv](directions.csv) is an example CSV file for loading predetermined directions in [unitracking.py](../unitracking.py). It demonstrates the `direction` field and accepted values.
 
@@ -36,7 +39,7 @@ Example input files for [automatic_control.py](../automatic_control.py), [unitra
     - `init_soc`: initial state of charge of the vehicle as a fraction of full capacity.
         - Example: `init_soc = 0.80` with `capacity = 50.0` means that the battery currently has 40.0 (`0.80 * 50.0`) kWh of energy.
         - Default: `0.80`.
-    - `lane_offset`: vehicle offset from center of lane, given in meters right of center and applicable only to vehicles with `agent_type = traffic_manager`.
+    - `lane_offset`: vehicle offset from center of lane, given in meters right of center. Applicable only to vehicles with `agent_type = traffic_manager`.
         - Default: `0.0`.
 
     These power consumption parameters are also optional, and descriptions can be found in [this article](https://doi.org/10.1016/j.apenergy.2016.01.097):

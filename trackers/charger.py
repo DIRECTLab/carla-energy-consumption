@@ -4,7 +4,14 @@ from carla import Location, DebugHelper
 
 class Charger:
     """
-    Wireless chargers
+    Model for wireless charging.
+
+    Chargers are assumed to have an effective charge range which is represented as a rectangle. 
+    Alignment with the center line of the charger running from back to front results in the highest power transfer 
+    (given by `power * efficiency`), while power transfer decreases parabolically to `0` at the far left and right 
+    of the effective charge range.
+
+    For real-life results reflecting this implementation, see https://doi.org/10.3390/en10030315 - especially Figure 5.
     """
 
     def __init__(self, front_left:Location, front_right:Location, back_right:Location, power:float, efficiency:float) -> None:
