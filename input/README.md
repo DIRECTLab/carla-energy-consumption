@@ -36,6 +36,8 @@ Example input files for [automatic_control.py](../automatic_control.py), [unitra
     - `init_soc`: initial state of charge of the vehicle as a fraction of full capacity.
         - Example: `init_soc = 0.80` with `capacity = 50.0` means that the battery currently has 40.0 (`0.80 * 50.0`) kWh of energy.
         - Default: `0.80`.
+    - `lane_offset`: vehicle offset from center of lane, given in meters right of center and applicable only to vehicles with `agent_type = traffic_manager`.
+        - Default: `0.0`.
 
     These power consumption parameters are also optional, and descriptions can be found in [this article](https://doi.org/10.1016/j.apenergy.2016.01.097):
     - `A_f`

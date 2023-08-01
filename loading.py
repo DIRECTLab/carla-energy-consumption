@@ -49,7 +49,7 @@ def get_agents(path) -> list:
     """
     Loads the agents from the CSV at `path`.
     """
-    regular_params = ['vehicle', 'agent_type', 'number', 'color', 'hvac', 'init_soc',]
+    regular_params = ['vehicle', 'agent_type', 'number', 'color', 'hvac', 'init_soc', 'lane_offset',]
     # EV params are used to create an EV object
     ev_params = ['capacity', 'A_f', 'gravity', 'C_r', 'c_1', 'c_2', 'rho_Air', 'C_D', 'motor_efficiency', 'driveline_efficiency', 'braking_alpha',]
     defaults = {
@@ -57,6 +57,7 @@ def get_agents(path) -> list:
         'hvac': 0.0,
         'capacity': 50.0,
         'init_soc': 0.80,
+        'lane_offset': 0.0,
         'A_f': 2.3316,
         'gravity': 9.8066, 
         'C_r': 1.75, 

@@ -40,8 +40,8 @@ class Simulation:
 
         # Set traffic manager to normal speed (140% instead of default 70%). 
         # This kicks the default speed up to about 25 mph.
-        traffic_manager = client.get_trafficmanager()
-        traffic_manager.global_percentage_speed_difference(-40)
+        self.__traffic_manager = client.get_trafficmanager()
+        self.__traffic_manager.global_percentage_speed_difference(-40)
 
         settings = self.__world.get_settings()
         try:
@@ -51,14 +51,14 @@ class Simulation:
                     settings.synchronous_mode = True
                     self.__ticking = True
             if self.__ticking:
-                traffic_manager.set_synchronous_mode(True)
+                self.__traffic_manager.set_synchronous_mode(True)
             if self.__args.render:
                 settings.no_rendering_mode = not settings.no_rendering_mode
             self.__world.apply_settings(settings)
 
             if self.__args.seed is not None:
                 random.seed(self.__args.seed)
-                traffic_manager.set_random_device_seed(self.__args.seed)
+                self.__traffic_manager.set_random_device_seed(self.__args.seed)
 
             map = self.__world.get_map()
             self.__spawn_points = map.get_spawn_points()
@@ -70,7 +70,7 @@ class Simulation:
             if self.__ticking:
                 settings.synchronous_mode = False
                 self.__world.apply_settings(settings)
-                traffic_manager.set_synchronous_mode(False)
+                self.__traffic_manager.set_synchronous_mode(False)
 
             if len(self.__actor_list) > 0:
                 print('destroying actors . . .')
@@ -116,6 +116,7 @@ class Simulation:
         """
         Parses a single dict from the list returned by `get_agents`.
         """
+        # TODO: Set lane offsets
         supervehicles = list()
         blueprint_library = self.__world.get_blueprint_library()
         bp = blueprint_library.find(agent_class['vehicle'])
@@ -133,6 +134,8 @@ class Simulation:
                     # Give up
                     break
             sv = SuperVehicle(vehicle, agent_class['agent_type'], agent_class['ev_params'], agent_class['init_soc'], agent_class['hvac'])
+            if agent_class['agent_type'] == 'traffic_manager':
+                self.__traffic_manager.vehicle_lane_offset(vehicle, agent_class['lane_offset'])
             supervehicles.append(sv)
 
         return supervehicles
