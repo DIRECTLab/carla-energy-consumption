@@ -26,13 +26,13 @@ class Charger:
         self.front_right = front_right
         self.front_left = front_left
         self.back_right = back_right
-        self.length = front_right.distance(back_right)
-        self.width = front_right.distance(front_left)
+        self.half_length = front_right.distance(back_right) / 2
+        self.half_width = front_right.distance(front_left) / 2
         self.center = (front_left + back_right) / 2
         self.transformation = self.__get_transformation(front_left, front_right, back_right)
 
         self.max_power = efficiency * power
-        self.a = - self.max_power / (self.width/2)**2
+        self.a = - self.max_power / self.half_width**2
 
     def __get_transformation(self, front_left:Location, front_right:Location, back_right:Location) -> np.ndarray:
         """
@@ -78,7 +78,7 @@ class Charger:
         transformed = self.transform_in(point)
         y_misalignment = abs(transformed.x)
         x_misalignment = abs(transformed.y)
-        if y_misalignment < self.width and x_misalignment <= self.length:
+        if y_misalignment < self.half_width and x_misalignment <= self.half_length:
             power = max(self.a * y_misalignment**2 + self.max_power, 0.0)
         else:
             power = 0.0
