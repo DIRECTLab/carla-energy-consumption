@@ -1,5 +1,5 @@
 import numpy as np
-from carla import Location, DebugHelper
+from carla import Location, DebugHelper, Color
 
 
 class Charger:
@@ -95,10 +95,12 @@ class Charger:
         """
         Draws the charging area.
         """
+        center = Color(255,0,1)
+        edges = Color(30,255,0)
         length = self.back_right - self.front_right
         back_left = self.front_left + length
-        debug.draw_point(self.center, life_time=life_time)
-        debug.draw_line(self.front_left, self.front_right, life_time=life_time)
-        debug.draw_line(self.front_right, self.back_right, life_time=life_time)
-        debug.draw_line(self.back_right, back_left, life_time=life_time)
-        debug.draw_line(back_left, self.front_left, life_time=life_time)
+        debug.draw_point(self.center, color=center, life_time=life_time)
+        debug.draw_line(self.front_left, self.front_right, color=edges, life_time=life_time)
+        debug.draw_line(self.front_right, self.back_right, color=edges, life_time=life_time)
+        debug.draw_line(self.back_right, back_left,color=edges, life_time=life_time)
+        debug.draw_line(back_left, self.front_left, color=edges, life_time=life_time)
