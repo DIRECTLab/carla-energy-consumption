@@ -38,7 +38,7 @@ class Charger:
         self.center = (front_left + back_right) / 2
         self.transformation = self.__get_transformation(front_left, front_right, back_right)
 
-        # Power delivery follows the equation a*x^2+b, where a is negative, 
+        # Power delivery follows the equation a*x^2+b, where a is a negative constant, 
         # x is misalignment from the charger's y-axis and b is the maximum power
         self.max_power = efficiency * power
         self.a = - self.max_power / self.half_width**2
@@ -84,7 +84,7 @@ class Charger:
         """
         Determine the power delivered to the vehicle in Watts, assuming the center of the vehicle is at `point`.
 
-        Power delivery follows the equation `a*x^2+b`, where `a` is negative, 
+        Power delivery follows the equation `a*x^2+b`, where `a` is a negative constant, 
         `x` is misalignment from the charger's y-axis and `b` is the maximum power.
         """
         transformed = self.transform_in(point)
