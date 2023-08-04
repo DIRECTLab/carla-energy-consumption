@@ -8,7 +8,7 @@ import pygame
 import carla
 from carla import ColorConverter as cc
 
-from wheel.hud import get_actor_display_name
+from .hud import get_actor_display_name
 
 
 def find_weather_presets():

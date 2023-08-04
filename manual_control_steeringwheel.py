@@ -24,8 +24,8 @@ import logging
 
 import pygame
 
-from wheel.hud import HUD
-from world import World
+from world.hud import HUD
+from world.world import World
 from wheel.carla_control import CarlaControl
 
 
