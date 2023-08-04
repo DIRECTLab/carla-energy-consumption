@@ -1,5 +1,5 @@
 vehicle,agent_type,number
-vehicle.tesla.model3,traffic_manager,1
+vehicle.tesla.model3,traffic_manager,99
 vehicle.tesla.model3,cautious_behavior,0
 vehicle.tesla.model3,normal_behavior,0
 vehicle.tesla.model3,aggressive_behavior,0
