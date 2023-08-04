@@ -2,7 +2,7 @@ import math
 import pygame
 import carla
 
-from control import Control
+from wheel.control import Control
 
 
 class CarlaControl(Control):
