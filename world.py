@@ -204,11 +204,15 @@ class CameraManager(object):
         self._parent = parent_actor
         self.hud = hud
         self.recording = False
+        bound_x = 0.5 + self._parent.bounding_box.extent.x
+        bound_y = 0.5 + self._parent.bounding_box.extent.y
+        bound_z = 0.5 + self._parent.bounding_box.extent.z
         self._camera_transforms = [
-            carla.Transform(carla.Location(x=-5.5, z=2.8), carla.Rotation(pitch=-15)),
-            carla.Transform(carla.Location(x=1.6, z=1.7)),
+            carla.Transform(carla.Location(x=-(5.0+bound_x), y=0.0, z=2.0+bound_z), carla.Rotation(pitch=-15.0)),
+            carla.Transform(carla.Location(x=0.8*bound_x, y=0.0, z=0.8*bound_z)),
+            carla.Transform(carla.Location(x=0.9*bound_x, y=-0.5*bound_y, z=0.9*bound_z)),
         ]
-        self.transform_index = 1
+        self.transform_index = -1
         self.sensors = [
             ['sensor.camera.rgb', cc.Raw, 'Camera RGB'],
             ['sensor.camera.depth', cc.Raw, 'Camera Depth (Raw)'],
