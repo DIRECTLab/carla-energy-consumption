@@ -8,7 +8,7 @@ import pygame
 import carla
 from carla import ColorConverter as cc
 
-from .hud import get_actor_display_name
+from hud import get_actor_display_name
 
 
 def find_weather_presets():
@@ -70,6 +70,8 @@ class World(object):
         actor_type = get_actor_display_name(self.player)
         self.hud.notification(actor_type)
 
+        # TODO: wait right here?
+
     def next_weather(self, reverse=False):
         self._weather_index += -1 if reverse else 1
         self._weather_index %= len(self._weather_presets)
@@ -83,6 +85,16 @@ class World(object):
     def render(self, display):
         self.camera_manager.render(display)
         self.hud.render(display)
+
+    def wait(self, seconds:float):
+        """
+        Waits until `seconds` simulation seconds have passed.
+        """
+        begin = self.world.get_snapshot().timestamp.elapsed_seconds
+        elapsed = 0
+        while elapsed < seconds:
+            snapshot = self.world.wait_for_tick()
+            elapsed = snapshot.timestamp.elapsed_seconds - begin
 
     def destroy(self):
         sensors = [
