@@ -12,12 +12,18 @@ class CarlaControl(Control):
         world.player.set_autopilot(self._autopilot_enabled)
         self._reverse = False
 
+    def _init_indices(self):
+        parser = super()._init_indices()
+        self._brake_a = float(parser.get('Brake', 'a'))
+        self._brake_b = float(parser.get('Brake', 'b'))
+        self._brake_c = float(parser.get('Brake', 'c'))
+
     @property
     def brake(self):
         """
         In order for this value to change, you must call a function from `pygame.event`.
         """
-        brake = -0.2951958561021155 * math.e ** (1.4235477698527201 * super().brake) + 1.1014918223893806
+        brake = self._brake_a * math.e ** (self._brake_b * super().brake) + self._brake_c
         return max(0., min(1., brake))
 
     @property
