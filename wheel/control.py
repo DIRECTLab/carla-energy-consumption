@@ -6,7 +6,7 @@ import pygame
 class Control:
     def __init__(self) -> None:
         self._init_wheel()
-        self._init_presets()
+        self._init_indices()
 
     def _init_wheel(self):
         pygame.joystick.init()
@@ -20,14 +20,19 @@ class Control:
         self._joystick = pygame.joystick.Joystick(0)
         self._joystick.init()
 
-    def _init_presets(self):
-        self._parser = ConfigParser()
-        self._parser.read(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'wheel_config.ini'))
-        self._steer_idx = int(self._parser.get('G29 Racing Wheel', 'steering_wheel'))
-        self._throttle_idx = int(self._parser.get('G29 Racing Wheel', 'throttle'))
-        self._brake_idx = int(self._parser.get('G29 Racing Wheel', 'brake'))
-        self._reverse_idx = int(self._parser.get('G29 Racing Wheel', 'reverse'))
-        self._handbrake_idx = int(self._parser.get('G29 Racing Wheel', 'handbrake'))
+    def _init_indices(self):
+        parser = ConfigParser()
+        parser.read(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'wheel_config.ini'))
+        self._steer_idx = int(parser.get('Wheel', 'steering_wheel'))
+        self._throttle_idx = int(parser.get('Wheel', 'throttle'))
+        self._brake_idx = int(parser.get('Wheel', 'brake'))
+        self._reverse_idx = int(parser.get('Wheel', 'reverse'))
+        self._handbrake_idx = int(parser.get('Wheel', 'handbrake'))
+        self._restart_idx = int(parser.get('Wheel', 'restart'))
+        self._info_idx = int(parser.get('Wheel', 'info'))
+        self._view_idx = int(parser.get('Wheel', 'view'))
+        self._weather_idx = int(parser.get('Wheel', 'weather'))
+        self._sensor_idx = int(parser.get('Wheel', 'sensor'))
 
     @property
     def steer(self):
