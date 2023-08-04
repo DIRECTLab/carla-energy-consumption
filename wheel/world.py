@@ -207,9 +207,6 @@ class CameraManager(object):
         self._camera_transforms = [
             carla.Transform(carla.Location(x=-5.5, z=2.8), carla.Rotation(pitch=-15)),
             carla.Transform(carla.Location(x=1.6, z=1.7)),
-            carla.Transform(carla.Location(x=1.6, z=1.7), carla.Rotation(yaw=270)),
-            carla.Transform(carla.Location(x=1.6, z=1.7), carla.Rotation(yaw=90)),
-            carla.Transform(carla.Location(x=1.6, z=1.7), carla.Rotation(yaw=180)),
         ]
         self.transform_index = 1
         self.sensors = [
@@ -236,6 +233,16 @@ class CameraManager(object):
     def toggle_camera(self):
         self.transform_index = (self.transform_index + 1) % len(self._camera_transforms)
         self.sensor.set_transform(self._camera_transforms[self.transform_index])
+
+    def look_forward(self):
+        transform = self._camera_transforms[self.transform_index]
+        self.sensor.set_transform(transform)
+
+    def set_yaw(self, degrees):
+        transform = self._camera_transforms[self.transform_index]
+        rotation = carla.Rotation(transform.rotation.pitch, degrees, transform.rotation.roll)
+        transform = carla.Transform(transform.location, rotation)
+        self.sensor.set_transform(transform)
 
     def set_sensor(self, index, notify=True):
         index = index % len(self.sensors)

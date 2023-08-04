@@ -54,6 +54,12 @@ class CarlaControl(Control):
                     self._reverse = not self._reverse
                 elif event.button == self._sensor_idx:
                     world.camera_manager.next_sensor()
+            elif event.type == pygame.JOYHATMOTION:
+                if event.value == (0, 0):
+                    world.camera_manager.look_forward()
+                else:
+                    degrees = math.degrees(math.atan2(*event.value))
+                    world.camera_manager.set_yaw(degrees)
 
         if not self._autopilot_enabled:
             control.steer = self.steer
