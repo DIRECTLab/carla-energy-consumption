@@ -17,10 +17,10 @@ class SocTracker(EnergyTracker):
         """
         super().__init__(ev, hvac)
         self.soc = init_soc
-        self.soc_series = []
+        self.soc_series = list()
+        self.charge_power = list()
         self.wireless_chargers = wireless_chargers
-        location = ev.vehicle.get_location()
-        self.is_charging = self.energy_from_chargers(location, dt=1) > 0
+        self.is_charging = False
 
     def _update(self, snapshot: WorldSnapshot, vehicle) -> None:
         # EnergyTracker functionality
@@ -44,4 +44,5 @@ class SocTracker(EnergyTracker):
         power = 0
         for charger in self.wireless_chargers:
             power += charger.power_to_vehicle(location)
+        self.charge_power.append(power)
         return self.energy_from_power(power, dt)

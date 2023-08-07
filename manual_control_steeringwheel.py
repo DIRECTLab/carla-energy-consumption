@@ -75,6 +75,7 @@ class Simulation:
         self.__world.wait(2.0)
         try:
             self.__world.initialize_trackers()
+            self.__world.wait(1.0)
 
             clock = pygame.time.Clock()
             while True:

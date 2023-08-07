@@ -44,13 +44,13 @@ class HUD(object):
         self._notifications.tick(world, clock)
         if not self._show_info:
             return
-        t = world.player.get_transform()
-        v = world.player.get_velocity()
-        c = world.player.get_control()
-        heading = 'N' if abs(t.rotation.yaw) < 89.5 else ''
-        heading += 'S' if abs(t.rotation.yaw) > 90.5 else ''
-        heading += 'E' if 179.5 > t.rotation.yaw > 0.5 else ''
-        heading += 'W' if -0.5 > t.rotation.yaw > -179.5 else ''
+        transform = world.player.get_transform()
+        velocity = world.player.get_velocity()
+        control = world.player.get_control()
+        heading = 'N' if abs(transform.rotation.yaw) < 89.5 else ''
+        heading += 'S' if abs(transform.rotation.yaw) > 90.5 else ''
+        heading += 'E' if 179.5 > transform.rotation.yaw > 0.5 else ''
+        heading += 'W' if -0.5 > transform.rotation.yaw > -179.5 else ''
         colhist = world.collision_sensor.get_collision_history()
         collision = [colhist[x + self.frame - 200] for x in range(0, 200)]
         max_col = max(1.0, max(collision))
@@ -64,34 +64,42 @@ class HUD(object):
             'Map:     % 20s' % world.world.get_map().name.split('/')[-1],
             'Simulation time: % 12s' % datetime.timedelta(seconds=int(self.simulation_time)),
             '',
-            'Speed:   % 15.0f km/h' % (3.6 * math.sqrt(v.x**2 + v.y**2 + v.z**2)),
-            u'Heading:% 16.0f\N{DEGREE SIGN} % 2s' % (t.rotation.yaw, heading),
-            'Location:% 20s' % ('(% 5.1f, % 5.1f)' % (t.location.x, t.location.y)),
+            'Speed:   % 15.0f km/h' % (3.6 * math.sqrt(velocity.x**2 + velocity.y**2 + velocity.z**2)),
+            u'Heading:% 16.0f\N{DEGREE SIGN} % 2s' % (transform.rotation.yaw, heading),
+            'Location:% 20s' % ('(% 5.1f, % 5.1f)' % (transform.location.x, transform.location.y)),
             'GNSS:% 24s' % ('(% 2.6f, % 3.6f)' % (world.gnss_sensor.lat, world.gnss_sensor.lon)),
-            'Height:  % 18.0f m' % t.location.z,
-            '']
-        if isinstance(c, carla.VehicleControl):
+            'Height:  % 18.0f m' % transform.location.z,
+            ''
+        ]
+        if isinstance(control, carla.VehicleControl):
             self._info_text += [
-                ('Throttle:', c.throttle, 0.0, 1.0),
-                ('Steer:', c.steer, -1.0, 1.0),
-                ('Brake:', c.brake, 0.0, 1.0),
-                ('Reverse:', c.reverse),
-                ('Hand brake:', c.hand_brake),
-                ('Manual:', c.manual_gear_shift),
-                'Gear:        %s' % {-1: 'R', 0: 'N'}.get(c.gear, c.gear)]
-        elif isinstance(c, carla.WalkerControl):
+                ('Throttle:', control.throttle, 0.0, 1.0),
+                ('Steer:', control.steer, -1.0, 1.0),
+                ('Brake:', control.brake, 0.0, 1.0),
+                ('Reverse:', control.reverse),
+                ('Hand brake:', control.hand_brake),
+                ('Manual:', control.manual_gear_shift),
+                'Gear:        %s' % {-1: 'R', 0: 'N'}.get(control.gear, control.gear),
+                '',
+                f'Battery Charge:  {world.soc_tracker.soc*100 : 10.1f} %',
+                f'Charge Power:    {world.soc_tracker.charge_power[-1] : 10.0f} W',
+                f'Power to Wheels: {world.soc_tracker.power_series[-1] : 10.0f} W',
+            ]
+        elif isinstance(control, carla.WalkerControl):
             self._info_text += [
-                ('Speed:', c.speed, 0.0, 5.556),
-                ('Jump:', c.jump)]
+                ('Speed:', control.speed, 0.0, 5.556),
+                ('Jump:', control.jump)
+            ]
         self._info_text += [
             '',
             'Collision:',
             collision,
             '',
-            'Number of vehicles: % 8d' % len(vehicles)]
+            'Number of vehicles: % 8d' % len(vehicles)
+        ]
         if len(vehicles) > 1:
             self._info_text += ['Nearby vehicles:']
-            distance = lambda l: math.sqrt((l.x - t.location.x)**2 + (l.y - t.location.y)**2 + (l.z - t.location.z)**2)
+            distance = lambda l: math.sqrt((l.x - transform.location.x)**2 + (l.y - transform.location.y)**2 + (l.z - transform.location.z)**2)
             vehicles = [(distance(x.get_location()), x) for x in vehicles if x.id != world.player.id]
             for d, vehicle in sorted(vehicles):
                 if d > 200.0:
