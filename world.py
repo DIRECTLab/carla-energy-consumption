@@ -10,6 +10,11 @@ from carla import ColorConverter as cc
 
 from hud import get_actor_display_name
 
+from trackers.ev import EV
+from trackers.time_tracker import TimeTracker
+from trackers.kinematics_tracker import KinematicsTracker
+from trackers.soc_tracker import SocTracker
+
 
 def find_weather_presets():
     rgx = re.compile('.+?(?:(?<=[a-z])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])|$)')
@@ -23,8 +28,8 @@ def find_weather_presets():
 # ==============================================================================
 
 
-class World(object):
-    def __init__(self, carla_world, hud, actor_filter):
+class World:
+    def __init__(self, carla_world, hud, actor_filter, ev_params, chargers, init_soc, init_hvac):
         self.world = carla_world
         self.hud = hud
         self.player = None
@@ -32,9 +37,17 @@ class World(object):
         self.lane_invasion_sensor = None
         self.gnss_sensor = None
         self.camera_manager = None
+        self.trackers = list()
+        self.time_tracker = None
+        self.kinematics_tracker = None
+        self.soc_tracker = None
         self._weather_presets = find_weather_presets()
         self._weather_index = 0
         self._actor_filter = actor_filter
+        self.ev_params = ev_params
+        self.chargers = chargers
+        self.init_soc = init_soc
+        self.hvac = init_hvac
         self.restart()
         self.world.on_tick(hud.on_world_tick)
 
@@ -60,6 +73,7 @@ class World(object):
             spawn_points = self.world.get_map().get_spawn_points()
             spawn_point = random.choice(spawn_points) if spawn_points else carla.Transform()
             self.player = self.world.try_spawn_actor(blueprint, spawn_point)
+        self.ev = EV(self.player, **self.ev_params)
         # Set up the sensors.
         self.collision_sensor = CollisionSensor(self.player, self.hud)
         self.lane_invasion_sensor = LaneInvasionSensor(self.player, self.hud)
@@ -71,6 +85,8 @@ class World(object):
         self.hud.notification(actor_type)
 
         # TODO: wait right here?
+        for tracker in self.trackers:
+            tracker.vehicle_id = self.player.id
 
     def next_weather(self, reverse=False):
         self._weather_index += -1 if reverse else 1
@@ -95,6 +111,22 @@ class World(object):
         while elapsed < seconds:
             snapshot = self.world.wait_for_tick()
             elapsed = snapshot.timestamp.elapsed_seconds - begin
+
+    def initialize_trackers(self):
+        """
+        `wireless_chargers`: Chargers to pass to `SocTracker`.
+        """
+        for tracker in self.trackers:
+            tracker.stop()
+        self.time_tracker = TimeTracker(self.player)
+        self.kinematics_tracker = KinematicsTracker(self.player)
+        if self.soc_tracker is None:
+            self.soc_tracker = SocTracker(self.ev, self.hvac, self.init_soc, self.chargers)
+        else:
+            self.soc_tracker = SocTracker(self.ev, self.hvac, self.soc_tracker.soc, self.chargers)
+        self.trackers = [self.time_tracker, self.kinematics_tracker, self.soc_tracker]
+        for tracker in self.trackers:
+            tracker.start()
 
     def destroy(self):
         sensors = [

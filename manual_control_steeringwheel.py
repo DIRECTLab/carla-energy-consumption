@@ -24,48 +24,69 @@ import logging
 
 import pygame
 
-from world.hud import HUD
-from world.world import World
+from hud import HUD
+from world import World
+from loading import get_agents, get_chargers
+from reporting import save_data
 from wheel.carla_control import CarlaControl
 
 
-# ==============================================================================
-# -- game_loop() ---------------------------------------------------------------
-# ==============================================================================
+class Simulation:
+    def __init__(self, args) -> None:
+        """
+        Runs the simulation and saves the data collected.
 
+        `args`: See `main()` below.
+        """
+        pygame.init()
+        pygame.font.init()
+        world = None
 
-def game_loop(args):
-    pygame.init()
-    pygame.font.init()
-    world = None
+        try:
+            client = carla.Client(args.host, args.port)
+            client.set_timeout(2.0)
 
-    try:
-        client = carla.Client(args.host, args.port)
-        client.set_timeout(2.0)
+            self.__display = pygame.display.set_mode(
+                (args.width, args.height),
+                pygame.HWSURFACE | pygame.DOUBLEBUF)
 
-        display = pygame.display.set_mode(
-            (args.width, args.height),
-            pygame.HWSURFACE | pygame.DOUBLEBUF)
+            self.__hud = HUD(args.width, args.height, help=__doc__)
+            self.__world = World(
+                client.get_world(), 
+                self.__hud, args.filter, 
+                args.tracked[0]['ev_params'], 
+                args.wireless_chargers, 
+                args.tracked[0]['init_soc'], 
+                args.tracked[0]['hvac']
+            )
+            self.__controller = CarlaControl(self.__world, args.autopilot)
 
-        hud = HUD(args.width, args.height, help=__doc__)
-        world = World(client.get_world(), hud, args.filter)
-        controller = CarlaControl(world, args.autopilot)
+            self.__simulate(args.outfolder)
 
-        clock = pygame.time.Clock()
-        while True:
-            clock.tick_busy_loop(60)
-            if controller.parse_events(world):
-                return
-            world.tick(clock)
-            world.render(display)
-            pygame.display.flip()
+        finally:
 
-    finally:
+            if world is not None:
+                world.destroy()
 
-        if world is not None:
-            world.destroy()
+            pygame.quit()
 
-        pygame.quit()
+    def __simulate(self, outfolder):
+        # The first couple seconds of simulation are less reliable as the vehicles are dropped onto the ground.
+        self.__world.wait(2.0)
+        try:
+            self.__world.initialize_trackers()
+
+            clock = pygame.time.Clock()
+            while True:
+                clock.tick_busy_loop(60)
+                if self.__controller.parse_events(self.__world):
+                    return
+                self.__world.tick(clock)
+                self.__world.render(self.__display)
+                pygame.display.flip()
+        finally:
+            print('Saving data . . .')
+            save_data(self.__world.trackers, outfolder)
 
 
 # ==============================================================================
@@ -74,8 +95,18 @@ def game_loop(args):
 
 
 def main():
-    argparser = argparse.ArgumentParser(
-        description='CARLA Manual Control Client')
+    argparser = argparse.ArgumentParser(description='CARLA Manual Control Client')
+    argparser.add_argument(
+        'tracked',
+        metavar='TRACKEDFILE',
+        type=get_agents,
+        help="CSV file for this agent's parameters"
+    )
+    argparser.add_argument(
+        'outfolder',
+        metavar='OUTFOLDER',
+        help='directory to write tracking data to'
+    )
     argparser.add_argument(
         '-v', '--verbose',
         action='store_true',
@@ -106,6 +137,13 @@ def main():
         metavar='PATTERN',
         default='vehicle.*',
         help='actor filter (default: "vehicle.*")')
+    argparser.add_argument(
+        '-w', '--wireless-chargers',
+        metavar='CHARGEFILE',
+        type=get_chargers,
+        default=list(),
+        help='CSV file to read wireless charging data from'
+    )
     args = argparser.parse_args()
 
     args.width, args.height = [int(x) for x in args.res.split('x')]
@@ -119,7 +157,7 @@ def main():
 
     try:
 
-        game_loop(args)
+        Simulation(args)
 
     except KeyboardInterrupt:
         print('\nCancelled by user. Bye!')
