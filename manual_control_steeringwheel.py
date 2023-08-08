@@ -53,7 +53,8 @@ class Simulation:
             self.__hud = HUD(args.width, args.height, help=__doc__)
             self.__world = World(
                 client.get_world(), 
-                self.__hud, args.filter, 
+                self.__hud, 
+                args.tracked[0]['vehicle'], 
                 args.tracked[0]['ev_params'], 
                 args.wireless_chargers, 
                 args.tracked[0]['init_soc'], 
@@ -132,11 +133,6 @@ def main():
         metavar='WIDTHxHEIGHT',
         default='1280x720',
         help='window resolution (default: 1280x720; maintain the ratio)')
-    argparser.add_argument(
-        '--filter',
-        metavar='PATTERN',
-        default='vehicle.*',
-        help='actor filter (default: "vehicle.*")')
     argparser.add_argument(
         '-w', '--wireless-chargers',
         metavar='CHARGEFILE',
