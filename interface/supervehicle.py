@@ -2,14 +2,14 @@ import random
 import networkx
 from carla import Vehicle
 
-from agents.navigation.behavior_agent import BehaviorAgent
-from agents.navigation.basic_agent import BasicAgent
-from agents.navigation.constant_velocity_agent import ConstantVelocityAgent
+from .agents.behavior_agent import BehaviorAgent
+from .agents.basic_agent import BasicAgent
+from .agents.constant_velocity_agent import ConstantVelocityAgent
 
-from trackers.ev import EV
-from trackers.time_tracker import TimeTracker
-from trackers.soc_tracker import SocTracker
-from trackers.kinematics_tracker import KinematicsTracker
+from .trackers.ev import EV
+from .trackers.time_tracker import TimeTracker
+from .trackers.soc_tracker import SocTracker
+from .trackers.kinematics_tracker import KinematicsTracker
 
 
 def choose_route(agent, choices, tries=5) -> bool:

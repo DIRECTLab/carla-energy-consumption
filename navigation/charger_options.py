@@ -8,8 +8,8 @@ import random
 import time
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from trackers.charger import Charger
-from loading import parse_location
+from interface.trackers.charger import Charger
+from interface.loading import parse_location
 
 
 def get_charger_options(world:carla.World, length:float, width:float) -> list:

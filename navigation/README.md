@@ -1,4 +1,4 @@
-# navegation
+# navigation
 Help with understanding CARLA's coordinate system and wireless charger placement within that system.
 
 These scripts are intended to be run from the command line. Use the `-h` option for usage.

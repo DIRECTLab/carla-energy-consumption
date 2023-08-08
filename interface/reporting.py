@@ -6,10 +6,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.ticker import PercentFormatter
 
-from trackers.time_tracker import TimeTracker
-from trackers.kinematics_tracker import KinematicsTracker
-from trackers.energy_tracker import EnergyTracker
-from trackers.soc_tracker import SocTracker
+from .trackers.time_tracker import TimeTracker
+from .trackers.kinematics_tracker import KinematicsTracker
+from .trackers.energy_tracker import EnergyTracker
+from .trackers.soc_tracker import SocTracker
 
 
 def print_update(time_tracker:TimeTracker, kinematics_tracker:KinematicsTracker, soc_tracker:SocTracker):

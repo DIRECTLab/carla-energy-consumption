@@ -5,7 +5,7 @@ import traceback
 from carla_test_classes import TestVehicle
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from supervehicle import SuperVehicle
+from interface.supervehicle import SuperVehicle
 
 
 def test_ev1():

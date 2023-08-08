@@ -6,8 +6,8 @@ from carla import Vector3D
 from carla_test_classes import TestVehicle
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from trackers.energy_tracker import EnergyTracker
-from trackers.ev import EV
+from interface.trackers.energy_tracker import EnergyTracker
+from interface.trackers.ev import EV
 
 
 def test_power_1():

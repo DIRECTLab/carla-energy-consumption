@@ -24,11 +24,11 @@ import logging
 
 import pygame
 
-from hud import HUD
-from world import World
-from loading import get_agents, get_chargers
-from reporting import save_data
-from wheel.carla_control import CarlaControl
+from interface.hud import HUD
+from interface.world import World
+from interface.loading import get_agents, get_chargers
+from interface.reporting import save_data
+from interface.wheel.carla_control import CarlaControl
 
 
 class Simulation:

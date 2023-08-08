@@ -4,9 +4,9 @@ import argparse
 import random
 import carla
 
-from loading import get_agents, get_chargers
-from supervehicle import SuperVehicle
-from reporting import save_all
+from interface.loading import get_agents, get_chargers
+from interface.supervehicle import SuperVehicle
+from interface.reporting import save_all
 
 class Simulation:
     def __init__(self, args) -> None:

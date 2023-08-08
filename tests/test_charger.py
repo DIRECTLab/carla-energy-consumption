@@ -4,7 +4,7 @@ import traceback
 from carla import Location
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from trackers.charger import Charger
+from interface.trackers.charger import Charger
 
 
 def test_transform_in1():

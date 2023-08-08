@@ -15,9 +15,7 @@ When in doubt, opt for [multitracking.py](multitracking.py). This program is the
     - Much like the average driver, the vehicle does not stop at stop signs.
     - Unlike the average driver, the vehicle brakes frequently instead of reducing throttle.
 
-- [coordinates.py](coordinates.py) highlights the x- and y-axes at the origin for use in understanding the coordinate system of the simulation.
-
-- [loading.py](loading.py) is a module for loading input files.
+- [manual_control_steeringwheel.py](./manual_control_steeringwheel.py) tracks power usage of a vehicle which the user drives using a steering wheel controller.
 
 - [multitracking.py](multitracking.py) tracks multiple vehicles at once. These vehicles can be controlled by the Traffic Manager or one of the agents under `agents/navigation/`.
 
@@ -29,10 +27,6 @@ When in doubt, opt for [multitracking.py](multitracking.py). This program is the
     2. Run `python multitracking.py input/tracked_agents.csv output/`.
         - This will save all data to the `output/` directory, potentially overwriting data that is already there. `output/` can be replaced by any path to a directory or potential directory.
 
-- [reporting.py](reporting.py) is a module for reporting tracking data.
-
-- [supervehicle.py](supervehicle.py) combines `EV`, `Agent`, and `Tracker` functionality.
-
 - [unitracking.py](unitracking.py) shows a usage example allowing greater control over a single vehicle. This spawns traffic and tracks energy usage and other data about a simulated Tesla Model 3, displaying updates every second. At the end, it graphs the power consumed as compared with velocity, acceleration and road grade, then plots a heatmap of the areas the vehicle travelled to. 
 
     - Run `python unitracking.py -h` to get all options. The `-t` option is strongly recommended.
@@ -41,17 +35,13 @@ When in doubt, opt for [multitracking.py](multitracking.py). This program is the
     1. Start the CARLA server.
     2. Run `python unitracking.py`.
 
-- `agents/` is copied over from `PythonAPI/carla/agents/`. See [its README](agents/README.md).
-
 - `docs/` contains additional software documentation.
 
 - `input/` contains example input files for  [automatic_control.py](automatic_control.py), [unitracking.py](unitracking.py) and [multitracking.py](multitracking.py). See [its README](input/README.md) for input file documentation.
 
-- `navegation/` contains some functions for getting oriented to CARLA maps and wireless chargers. See [its README](navegation/README.md). 
+- `navigation/` contains some functions for getting oriented to CARLA maps and wireless chargers. See [its README](navigation/README.md). 
 
 - `tests/` has all of the unit tests for the project. See [its README](tests/README.md).
-
-- `trackers/` contains code for tracking vehicle energy consumption as well as many other statistics. It also contains [unitracking.py](trackers/unitracking.py) demonstrating its usage. See [its README](trackers/README.md).
 
 
 ## Requirements

@@ -6,9 +6,9 @@ from carla import Vector3D, Rotation, Transform
 from carla_test_classes import TestVehicle
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from trackers.soc_tracker import SocTracker
-from trackers.ev import EV
-from trackers.charger import Charger
+from interface.trackers.soc_tracker import SocTracker
+from interface.trackers.ev import EV
+from interface.trackers.charger import Charger
 
 
 """

@@ -7,7 +7,7 @@ import time
 import carla
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from loading import get_chargers
+from interface.loading import get_chargers
 
 
 def draw_chargers(chargers:list, debug:carla.DebugHelper, time:float):

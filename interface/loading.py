@@ -1,7 +1,7 @@
 import csv
 import carla
 
-from trackers.charger import Charger
+from .trackers.charger import Charger
 
 
 def yes_no(string: str):

@@ -8,12 +8,12 @@ import pygame
 import carla
 from carla import ColorConverter as cc
 
-from hud import get_actor_display_name
+from .hud import get_actor_display_name
 
-from trackers.ev import EV
-from trackers.time_tracker import TimeTracker
-from trackers.kinematics_tracker import KinematicsTracker
-from trackers.soc_tracker import SocTracker
+from .trackers.ev import EV
+from .trackers.time_tracker import TimeTracker
+from .trackers.kinematics_tracker import KinematicsTracker
+from .trackers.soc_tracker import SocTracker
 
 
 def find_weather_presets():

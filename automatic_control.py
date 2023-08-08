@@ -28,18 +28,18 @@ import numpy as np
 import carla
 from carla import ColorConverter as cc
 
-from agents.navigation.behavior_agent import BehaviorAgent
-from agents.navigation.basic_agent import BasicAgent
-from agents.navigation.constant_velocity_agent import ConstantVelocityAgent
+from interface.agents.behavior_agent import BehaviorAgent
+from interface.agents.basic_agent import BasicAgent
+from interface.agents.constant_velocity_agent import ConstantVelocityAgent
 
-from loading import get_chargers
-from reporting import print_update, save_data
-from supervehicle import choose_route
+from interface.loading import get_chargers
+from interface.reporting import print_update, save_data
+from interface.supervehicle import choose_route
 
-from trackers.ev import EV
-from trackers.time_tracker import TimeTracker
-from trackers.kinematics_tracker import KinematicsTracker
-from trackers.soc_tracker import SocTracker
+from interface.trackers.ev import EV
+from interface.trackers.time_tracker import TimeTracker
+from interface.trackers.kinematics_tracker import KinematicsTracker
+from interface.trackers.soc_tracker import SocTracker
 
 
 # ==============================================================================

@@ -3,7 +3,7 @@ import os
 import traceback
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from loading import get_agents
+from interface.loading import get_agents
 
 
 def test_get_agents1():
