@@ -82,9 +82,9 @@ class World:
         actor_type = get_actor_display_name(self.player)
         self.hud.notification(actor_type)
 
-        # TODO: wait right here?
         for tracker in self.trackers.values():
             tracker.vehicle_id = self.player.id
+            tracker.start()
 
     def next_weather(self, reverse=False):
         self._weather_index += -1 if reverse else 1
