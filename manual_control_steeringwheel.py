@@ -40,7 +40,7 @@ class Simulation:
         """
         pygame.init()
         pygame.font.init()
-        world = None
+        self.__world = None
 
         try:
             client = carla.Client(args.host, args.port)
@@ -64,10 +64,8 @@ class Simulation:
             self.__simulate(args.outfolder)
 
         finally:
-
-            if world is not None:
-                world.destroy()
-
+            if self.__world is not None:
+                self.__world.destroy()
             pygame.quit()
 
     def __simulate(self, outfolder):
@@ -86,8 +84,9 @@ class Simulation:
                 self.__world.render(self.__display)
                 pygame.display.flip()
         finally:
+            self.__world.destroy()
             print('Saving data . . .')
-            save_data(self.__world.trackers, outfolder)
+            save_data(self.__world.trackers.values(), outfolder)
 
 
 # ==============================================================================

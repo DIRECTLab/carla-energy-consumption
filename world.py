@@ -37,9 +37,7 @@ class World:
         self.lane_invasion_sensor = None
         self.gnss_sensor = None
         self.camera_manager = None
-        self.trackers = list()
-        self.time_tracker = None
-        self.kinematics_tracker = None
+        self.trackers = dict()
         self.soc_tracker = None
         self._weather_presets = find_weather_presets()
         self._weather_index = 0
@@ -85,7 +83,7 @@ class World:
         self.hud.notification(actor_type)
 
         # TODO: wait right here?
-        for tracker in self.trackers:
+        for tracker in self.trackers.values():
             tracker.vehicle_id = self.player.id
 
     def next_weather(self, reverse=False):
@@ -116,30 +114,34 @@ class World:
         """
         `wireless_chargers`: Chargers to pass to `SocTracker`.
         """
-        for tracker in self.trackers:
+        for tracker in self.trackers.values():
             tracker.stop()
-        self.time_tracker = TimeTracker(self.player)
-        self.kinematics_tracker = KinematicsTracker(self.player)
-        if self.soc_tracker is None:
-            self.soc_tracker = SocTracker(self.ev, self.hvac, self.init_soc, self.chargers)
+        self.trackers['time_tracker'] = TimeTracker(self.player)
+        self.trackers['kinematics_tracker'] = KinematicsTracker(self.player)
+        if 'soc_tracker' in self.trackers:
+            self.trackers['soc_tracker'] = SocTracker(self.ev, self.hvac, self.soc_tracker.soc, self.chargers)
         else:
-            self.soc_tracker = SocTracker(self.ev, self.hvac, self.soc_tracker.soc, self.chargers)
-        self.trackers = [self.time_tracker, self.kinematics_tracker, self.soc_tracker]
-        for tracker in self.trackers:
+            self.trackers['soc_tracker'] = SocTracker(self.ev, self.hvac, self.init_soc, self.chargers)
+        for tracker in self.trackers.values():
             tracker.start()
 
     def destroy(self):
+        for tracker in self.trackers.values():
+            tracker.stop()
         sensors = [
-            self.camera_manager.sensor,
-            self.collision_sensor.sensor,
-            self.lane_invasion_sensor.sensor,
-            self.gnss_sensor.sensor]
+            self.camera_manager,
+            self.collision_sensor,
+            self.lane_invasion_sensor,
+            self.gnss_sensor
+        ]
         for sensor in sensors:
-            if sensor is not None:
-                sensor.stop()
-                sensor.destroy()
+            if sensor.sensor is not None:
+                sensor.sensor.stop()
+                sensor.sensor.destroy()
+                sensor.sensor = None
         if self.player is not None:
             self.player.destroy()
+            self.player = None
 
 
 # ==============================================================================

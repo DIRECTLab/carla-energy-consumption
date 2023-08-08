@@ -72,6 +72,7 @@ class HUD(object):
             ''
         ]
         if isinstance(control, carla.VehicleControl):
+            soc_tracker = world.trackers['soc_tracker']
             self._info_text += [
                 ('Throttle:', control.throttle, 0.0, 1.0),
                 ('Steer:', control.steer, -1.0, 1.0),
@@ -81,9 +82,9 @@ class HUD(object):
                 ('Manual:', control.manual_gear_shift),
                 'Gear:        %s' % {-1: 'R', 0: 'N'}.get(control.gear, control.gear),
                 '',
-                f'Battery Charge:  {world.soc_tracker.soc*100 : 10.1f} %',
-                f'Charge Power:    {world.soc_tracker.charge_power[-1] : 10.0f} W',
-                f'Power to Wheels: {world.soc_tracker.power_series[-1] : 10.0f} W',
+                f'Battery Charge:  {soc_tracker.soc*100 : 10.1f} %',
+                f'Charge Power:    {soc_tracker.charge_power[-1] : 10.0f} W',
+                f'Power to Wheels: {soc_tracker.power_series[-1] : 10.0f} W',
             ]
         elif isinstance(control, carla.WalkerControl):
             self._info_text += [
