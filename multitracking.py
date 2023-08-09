@@ -116,29 +116,31 @@ class Simulation:
         """
         Parses a single dict from the list returned by `get_agents`.
         """
-        # TODO: Set lane offsets
         supervehicles = list()
-        blueprint_library = self.__world.get_blueprint_library()
-        bp = blueprint_library.find(agent_class['vehicle'])
-        if 'color' in agent_class.keys() and agent_class['color'] != '':
-            bp.set_attribute('color', agent_class['color'])
+        vehicle = None
+        try:
+            blueprint_library = self.__world.get_blueprint_library()
+            bp = blueprint_library.find(agent_class['vehicle'])
+            if 'color' in agent_class.keys() and agent_class['color'] != '':
+                bp.set_attribute('color', agent_class['color'])
 
-        for _ in range(agent_class['number']):
-            vehicle = self.__spawn_vehicle(bp)
-            if vehicle is None:
-                print('All spawn points have been filled. Pausing vehicle spawns.')
-                self.__wait(seconds=5)
-                self.__reset_available_spawn_points()
+            for _ in range(agent_class['number']):
                 vehicle = self.__spawn_vehicle(bp)
                 if vehicle is None:
-                    # Give up
-                    break
-            sv = SuperVehicle(vehicle, agent_class['agent_type'], agent_class['ev_params'], agent_class['init_soc'], agent_class['hvac'])
-            if agent_class['agent_type'] == 'traffic_manager':
-                self.__traffic_manager.vehicle_lane_offset(vehicle, agent_class['lane_offset'])
-            supervehicles.append(sv)
+                    print('All spawn points have been filled. Pausing vehicle spawns.')
+                    self.__wait(seconds=5)
+                    self.__reset_available_spawn_points()
+                    vehicle = self.__spawn_vehicle(bp)
+                    if vehicle is None:
+                        # Give up
+                        break
+                sv = SuperVehicle(vehicle, agent_class['agent_type'], agent_class['ev_params'], agent_class['init_soc'], agent_class['hvac'])
+                if agent_class['agent_type'] == 'traffic_manager':
+                    self.__traffic_manager.vehicle_lane_offset(vehicle, agent_class['lane_offset'])
+                supervehicles.append(sv)
 
-        return supervehicles
+        finally:
+            return supervehicles
 
     def __respawn(self, supervehicle:SuperVehicle):
         """
@@ -154,8 +156,8 @@ class Simulation:
             print(f'Respawned {vehicle.type_id}')
 
     def __simulate(self):
+        tracked = list()
         try:
-            tracked = list()
             for agent_class in self.__args.tracked:
                 aclass_parsed = self.__spawn_agent_class(agent_class)
                 self.__actor_list += aclass_parsed
