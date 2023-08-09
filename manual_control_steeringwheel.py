@@ -44,7 +44,7 @@ class Simulation:
 
         try:
             client = carla.Client(args.host, args.port)
-            client.set_timeout(2.0)
+            client.set_timeout(60.0)
 
             self.__display = pygame.display.set_mode(
                 (args.width, args.height),
@@ -62,14 +62,14 @@ class Simulation:
             )
             self.__controller = CarlaControl(self.__world, args.autopilot)
 
-            self.__simulate(args.outfolder)
+            self.__simulate(args.out)
 
         finally:
             if self.__world is not None:
                 self.__world.destroy()
             pygame.quit()
 
-    def __simulate(self, outfolder):
+    def __simulate(self, file=None):
         # The first couple seconds of simulation are less reliable as the vehicles are dropped onto the ground.
         self.__world.wait(2.0)
         try:
@@ -85,9 +85,10 @@ class Simulation:
                 self.__world.render(self.__display)
                 pygame.display.flip()
         finally:
-            self.__world.destroy()
-            print('Saving data . . .')
-            save_data(self.__world.trackers.values(), outfolder)
+            if file is not None:
+                self.__world.destroy()
+                print('Saving data . . .')
+                save_data(self.__world.trackers.values(), file)
 
 
 # ==============================================================================
@@ -104,9 +105,10 @@ def main():
         help="CSV file for this agent's parameters"
     )
     argparser.add_argument(
-        'outfolder',
-        metavar='OUTFOLDER',
-        help='directory to write tracking data to'
+        '-o', '--out',
+        metavar='FILE',
+        default=None,
+        help='CSV file to write tracking data to'
     )
     argparser.add_argument(
         '-v', '--verbose',
