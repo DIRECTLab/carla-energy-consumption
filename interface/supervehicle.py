@@ -45,15 +45,11 @@ class SuperVehicle(EV):
         super().__init__(vehicle, **ev_params)
         self.init_soc = init_soc
         self.hvac = init_hvac
+        self.trackers = dict()
 
         self.__agent_type = None
         self.agent = None
         self.set_agent_type(agent_type)
-
-        self.trackers = list()
-        self.time_tracker = None
-        self.kinematics_tracker = None
-        self.soc_tracker = None
 
     def get_agent_type(self):
         return self.__agent_type
@@ -107,18 +103,24 @@ class SuperVehicle(EV):
         """
         self.vehicle = vehicle
         self.set_agent_type(self.__agent_type)
-        for tracker in self.trackers:
+        for tracker in self.trackers.values():
             tracker.vehicle_id = vehicle.id
 
     def initialize_trackers(self, wireless_chargers):
         """
         `wireless_chargers`: Chargers to pass to `SocTracker`.
         """
-        for tracker in self.trackers:
-            tracker.stop()
-        self.time_tracker = TimeTracker(self.vehicle)
-        self.kinematics_tracker = KinematicsTracker(self.vehicle)
-        self.soc_tracker = SocTracker(self, hvac=self.hvac, init_soc=self.init_soc, wireless_chargers=wireless_chargers)
-        self.trackers = [self.time_tracker, self.kinematics_tracker, self.soc_tracker]
-        for tracker in self.trackers:
+        self.stop_tracking()
+        self.trackers['time_tracker'] = TimeTracker(self.vehicle)
+        self.trackers['kinematics_tracker'] = KinematicsTracker(self.vehicle)
+        soc_tracker = self.trackers.get('soc_tracker')
+        if soc_tracker is None:
+            self.trackers['soc_tracker'] = SocTracker(self, self.hvac, self.init_soc, wireless_chargers)
+        else:
+            self.trackers['soc_tracker'] = SocTracker(self, self.hvac, soc_tracker.soc, wireless_chargers)
+        for tracker in self.trackers.values():
             tracker.start()
+
+    def stop_tracking(self):
+        for tracker in self.trackers.values():
+            tracker.stop()

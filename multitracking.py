@@ -179,7 +179,7 @@ class Simulation:
                 supervehicle.initialize_trackers(self.__args.wireless_chargers)
 
             print(f'Tracking for {self.__args.time} seconds. Press Ctrl-C to interrupt.')
-            while tracked[-1].time_tracker.time <= self.__args.time:
+            while tracked[-1].trackers['time_tracker'].time <= self.__args.time:
                 if self.__ticking:
                     self.__world.tick()
                 else:
@@ -196,8 +196,7 @@ class Simulation:
 
         finally:
             for supervehicle in tracked:
-                for tracker in supervehicle.trackers:
-                    tracker.stop()
+                supervehicle.stop_tracking()
 
             if len(self.__actor_list) > 0:
                 print('Saving data . . .')

@@ -38,7 +38,6 @@ class World:
         self.gnss_sensor = None
         self.camera_manager = None
         self.trackers = dict()
-        self.soc_tracker = None
         self._weather_presets = find_weather_presets()
         self._weather_index = 0
         self._actor_filter = actor_filter
@@ -118,10 +117,11 @@ class World:
             tracker.stop()
         self.trackers['time_tracker'] = TimeTracker(self.player)
         self.trackers['kinematics_tracker'] = KinematicsTracker(self.player)
-        if 'soc_tracker' in self.trackers:
-            self.trackers['soc_tracker'] = SocTracker(self.ev, self.hvac, self.soc_tracker.soc, self.chargers)
-        else:
+        soc_tracker = self.trackers.get('soc_tracker')
+        if soc_tracker is None:
             self.trackers['soc_tracker'] = SocTracker(self.ev, self.hvac, self.init_soc, self.chargers)
+        else:
+            self.trackers['soc_tracker'] = SocTracker(self.ev, self.hvac, soc_tracker.soc, self.chargers)
         for tracker in self.trackers.values():
             tracker.start()
 
