@@ -111,13 +111,13 @@ class SuperVehicle(EV):
         `wireless_chargers`: Chargers to pass to `SocTracker`.
         """
         self.stop_tracking()
-        self.trackers['time_tracker'] = TimeTracker(self.vehicle)
-        self.trackers['kinematics_tracker'] = KinematicsTracker(self.vehicle)
-        soc_tracker = self.trackers.get('soc_tracker')
+        self.trackers['time'] = TimeTracker(self.vehicle)
+        self.trackers['kinematics'] = KinematicsTracker(self.vehicle)
+        soc_tracker = self.trackers.get('soc')
         if soc_tracker is None:
-            self.trackers['soc_tracker'] = SocTracker(self, self.hvac, self.init_soc, wireless_chargers)
+            self.trackers['soc'] = SocTracker(self, self.hvac, self.init_soc, wireless_chargers)
         else:
-            self.trackers['soc_tracker'] = SocTracker(self, self.hvac, soc_tracker.soc, wireless_chargers)
+            self.trackers['soc'] = SocTracker(self, self.hvac, soc_tracker.soc, wireless_chargers)
         for tracker in self.trackers.values():
             tracker.start()
 
