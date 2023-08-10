@@ -132,8 +132,8 @@ def save_all(supervehicles:list, outfolder):
 
     save_metadata(supervehicles, os.path.join(outfolder, 'meta.csv'))
     for supervehicle in supervehicles:
-        if len(supervehicle.trackers) > 0:
-            save_data(supervehicle.trackers, os.path.join(outfolder, f'{supervehicle.vehicle.id}.csv'))
+        if supervehicle.trackers:
+            save_data(supervehicle.trackers.values(), os.path.join(outfolder, f'{supervehicle.vehicle.id}.csv'))
 
 
 def plot_power(ax, time_series, power_series):
