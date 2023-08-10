@@ -100,10 +100,13 @@ class SuperVehicle(EV):
                     control.manual_gear_shift = False
                     self.vehicle.apply_control(control)
             else:
-                if self.agent is None:
-                    self.vehicle.set_autopilot(False)
-                self.vehicle.apply_control(VehicleControl(gear=1))
+                # if self.agent is None:
+                #     self.vehicle.set_autopilot(False)
+                # self.vehicle.apply_control(VehicleControl(gear=1))
+                self.vehicle.set_autopilot(True)
                 self.running = False
+        else:
+            self.vehicle.set_target_velocity(Vector3D())
 
     def reset_vehicle(self, vehicle:Vehicle):
         """
