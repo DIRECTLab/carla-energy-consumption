@@ -1,6 +1,6 @@
 import random
 import networkx
-from carla import Vehicle
+from carla import Vehicle, VehicleControl
 
 from .agents.behavior_agent import BehaviorAgent
 from .agents.basic_agent import BasicAgent
@@ -46,6 +46,7 @@ class SuperVehicle(EV):
         self.init_soc = init_soc
         self.hvac = init_hvac
         self.trackers = dict()
+        self.running = False
 
         self.__agent_type = None
         self.agent = None
@@ -73,6 +74,7 @@ class SuperVehicle(EV):
             self.agent = BasicAgent(self.vehicle, target_speed=30)
         elif agent_type == 'constant':
             self.agent = ConstantVelocityAgent(self.vehicle, target_speed=30)
+        self.running = True
         self.__agent_type = agent_type
 
     def choose_route(self, choices, tries=5) -> bool:
@@ -86,14 +88,22 @@ class SuperVehicle(EV):
         return choose_route(self.agent, choices, tries)
 
     def run_step(self, choices):
+        soc_tracker = self.trackers.get('soc')
+        has_charge = soc_tracker == None or soc_tracker.soc > 0.0
         if self.agent is None:
-            return
-        if self.agent.done():
-            self.choose_route(choices)
+            if not has_charge and self.running:
+                self.vehicle.set_autopilot(False)
+                self.running = False
+        elif self.running:
+            if has_charge:
+                if self.agent.done():
+                    self.choose_route(choices)
 
-        control = self.agent.run_step()
-        control.manual_gear_shift = False
-        self.vehicle.apply_control(control)
+                control = self.agent.run_step()
+                control.manual_gear_shift = False
+                self.vehicle.apply_control(control)
+            else:
+                self.vehicle.apply_control(VehicleControl())
 
     def reset_vehicle(self, vehicle:Vehicle):
         """
