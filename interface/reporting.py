@@ -101,9 +101,10 @@ def compile_data(trackers:list) -> pd.DataFrame:
             data['power'] = tracker.power_series
             if isinstance(tracker, SocTracker):
                 data['SOC'] = tracker.soc_series
-    data_len = min([len(series) for series in data.values()])
-    for label, series in data.items():
-        data[label] = series[:data_len]
+    if data:
+        data_len = min([len(series) for series in data.values()])
+        for label, series in data.items():
+            data[label] = series[:data_len]
 
     return pd.DataFrame(data)
 
