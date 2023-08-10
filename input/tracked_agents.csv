@@ -1,5 +1,5 @@
 vehicle,agent_type,number,color,lane_offset
-vehicle.tesla.model3,traffic_manager,3,"204,255,11",0.25
+vehicle.tesla.model3,traffic_manager,1,"204,255,11",0.25
 vehicle.tesla.model3,cautious_behavior,0,"204,255,11",
 vehicle.tesla.model3,normal_behavior,0,"204,255,11",
 vehicle.tesla.model3,aggressive_behavior,0,"204,255,11",
