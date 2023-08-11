@@ -43,6 +43,8 @@ class Charger:
         self.max_power = efficiency * power
         self.a = - self.max_power / self.half_width**2
 
+        self.events = list()
+
     def __get_transformation(self, front_left:Location, front_right:Location, back_right:Location) -> np.ndarray:
         """
         Returns a matrix for transforming a point to the local coordinate system of this charger.
@@ -67,7 +69,7 @@ class Charger:
             [0,1,0,-self.center.y],
             [0,0,1,-self.center.z],
         ])
-        # Since we are multiplying on the left, this will translate the vector, then rotate it.
+        # Since we are multiplying on the left of the vector, this will translate the vector, then rotate it.
         transformation = np.matmul(rotation, translation)
         return transformation
 
@@ -95,6 +97,19 @@ class Charger:
         else:
             power = 0.0
         return power
+    
+    def charge(self, point:Location, dt:float):
+        """
+        Same as `power_to_vehicle`, but updates the charger's energy consumption.
+        """
+        delivery = self.power_to_vehicle(point)
+        if delivery > 0:
+            self.events.append({
+                'loc': f"{point.x}, {point.y}, {point.z}",
+                'dt': dt,
+                'power_delivered': delivery,
+            })
+        return delivery
 
     def draw(self, debug:DebugHelper, life_time:float=0.0):
         """
