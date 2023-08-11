@@ -13,7 +13,7 @@ import argparse
 import carla
 
 from interface.loading import yes_no, get_chargers
-from interface.reporting import print_update, save_data
+from interface.reporting import print_update, save_vehicle_data
 from interface.trackers.time_tracker import TimeTracker
 from interface.trackers.soc_tracker import SocTracker
 from interface.trackers.kinematics_tracker import KinematicsTracker
@@ -232,7 +232,7 @@ def main():
             tracker.stop()
 
         if args.output is not None:
-            save_data(trackers, args.output)
+            save_vehicle_data(trackers, args.output)
 
     finally:
         if trackers is not None:

@@ -27,7 +27,7 @@ import pygame
 from interface.hud import HUD
 from interface.world import World
 from interface.loading import get_agents, get_chargers
-from interface.reporting import save_data
+from interface.reporting import save_vehicle_data
 from interface.wheel.carla_control import CarlaControl
 
 
@@ -88,7 +88,7 @@ class Simulation:
             if file is not None:
                 self.__world.destroy()
                 print('Saving data . . .')
-                save_data(self.__world.trackers.values(), file)
+                save_vehicle_data(self.__world.trackers.values(), file)
 
 
 # ==============================================================================

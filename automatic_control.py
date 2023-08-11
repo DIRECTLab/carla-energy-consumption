@@ -33,7 +33,7 @@ from interface.agents.basic_agent import BasicAgent
 from interface.agents.constant_velocity_agent import ConstantVelocityAgent
 
 from interface.loading import get_chargers
-from interface.reporting import print_update, save_data
+from interface.reporting import print_update, save_vehicle_data
 from interface.supervehicle import choose_route
 
 from interface.trackers.ev import EV
@@ -805,7 +805,7 @@ def game_loop(args):
                 for tracker in trackers:
                     tracker.stop()
                 if args.output is not None:
-                    save_data(trackers, args.output)
+                    save_vehicle_data(trackers, args.output)
 
             settings = world.world.get_settings()
             settings.synchronous_mode = False

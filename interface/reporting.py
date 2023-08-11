@@ -79,11 +79,7 @@ def save_metadata(supervehicles:list, file):
             })
 
 
-def compile_data(trackers:list) -> pd.DataFrame:
-    """
-    Note that this may throw exceptions if different trackers had different amounts of updates. 
-    This can be avoided via synchronous mode.
-    """
+def compile_vehicle_data(trackers:list) -> pd.DataFrame:
     data = dict()
     for tracker in trackers:
         if isinstance(tracker, TimeTracker):
@@ -109,16 +105,12 @@ def compile_data(trackers:list) -> pd.DataFrame:
     return pd.DataFrame(data)
 
 
-def save_data(trackers:list, file):
-    """
-    Note that this may throw exceptions if different trackers had different amounts of updates. 
-    This can be avoided via synchronous mode.
-    """
-    df = compile_data(trackers)
+def save_vehicle_data(trackers:list, file):
+    df = compile_vehicle_data(trackers)
     df.to_csv(file)
 
 
-def save_all(supervehicles:list, outfolder):
+def save_all_vehicles(supervehicles:list, outfolder):
     """
     Saves all tracking and metadata from a list of supervehicles.
     Removes any old CSV files.
@@ -133,7 +125,7 @@ def save_all(supervehicles:list, outfolder):
     save_metadata(supervehicles, os.path.join(outfolder, 'meta.csv'))
     for supervehicle in supervehicles:
         if supervehicle.trackers:
-            save_data(supervehicle.trackers.values(), os.path.join(outfolder, f'{supervehicle.vehicle.id}.csv'))
+            save_vehicle_data(supervehicle.trackers.values(), os.path.join(outfolder, f'{supervehicle.vehicle.id}.csv'))
 
 
 def plot_power(ax, time_series, power_series):
