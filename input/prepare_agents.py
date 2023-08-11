@@ -1,4 +1,5 @@
 import argparse
+import pathlib
 import sys
 import random
 import csv
@@ -61,15 +62,25 @@ if __name__ == "__main__":
         help='fields to randomize values for'
     )
     argparser.add_argument(
+        '--seed',
+        metavar='SEED',
+        help='random seed'
+    )
+    argparser.add_argument(
         '-o', '--out',
-        type=argparse.FileType('w'),
-        default=sys.stdout,
+        type=pathlib.Path,
         help='file to write agents to (default: stdout)'
     )
     args = argparser.parse_args()
     args.constants = agent_fields(args.constants)
+    if args.seed is not None:
+        random.seed(args.seed)
 
     agents = prepare_agents(args.number, args.vehicle, args.agent_type, args.randomize, **args.constants)
-    writer = csv.DictWriter(args.out, agents[0].keys())
+    
+    outfile = sys.stdout if args.out is None else open(args.out, 'w', newline='')
+    writer = csv.DictWriter(outfile, agents[0].keys())
     writer.writeheader()
     writer.writerows(agents)
+    if outfile is not sys.stdout:
+        outfile.close()
