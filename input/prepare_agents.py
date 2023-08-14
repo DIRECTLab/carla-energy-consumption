@@ -23,8 +23,10 @@ def prepare_agents(number, vehicle, agent_type, randomized_fields=list(), **kwar
         agent['vehicle'] = vehicle
         agent['agent_type'] = agent_type
         for field in randomized_fields:
-            if field == 'init_soc':
-                agent['init_soc'] = random.random()
+            if field == 'lane_offset':
+                agent[field] = random.gauss(mu=0.0, sigma=0.25)
+            else:
+                agent[field] = random.random()
         agents.append(agent)
     return agents
 
