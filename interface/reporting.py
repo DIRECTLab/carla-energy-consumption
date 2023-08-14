@@ -31,52 +31,41 @@ def print_update(time_tracker:TimeTracker, kinematics_tracker:KinematicsTracker,
     print(f"\tThe vehicle is {'not ' if not soc_tracker.is_charging else ''}charging.")
 
 
-def save_metadata(supervehicles:list, file):
+def save_csv(data:list, path):
+    """
+    `data`: The list of `dict`s to save.
+    """
+    if data:
+        with open(path, 'w', newline='') as file:
+            writer = csv.DictWriter(file, data[0].keys())
+            writer.writeheader()
+            writer.writerows(data)
+
+
+def save_vehicle_metadata(supervehicles:list, path):
     """
     Save metadata about the vehicles, simlar to `input/tracked_agents.py`.
     """
-    with open(file, 'w', newline='') as csvfile:
-        fieldnames = [
-            'id', 
-            'vehicle', 
-            'agent_type', 
-            'color', 
-            'hvac', 
-            'capacity', 
-            'init_soc',
-            'A_f',
-            'gravity',
-            'C_r',
-            'c_1',
-            'c_2',
-            'rho_Air',
-            'C_D',
-            'motor_efficiency',
-            'driveline_efficiency',
-            'braking_alpha',
-        ]
-        writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-        writer.writeheader()
-        for supervehicle in supervehicles:
-            writer.writerow({
-                'id': supervehicle.vehicle.id,
-                'vehicle': supervehicle.vehicle.type_id,
-                'agent_type': supervehicle.get_agent_type(),
-                'color': supervehicle.vehicle.attributes['color'], 
-                'hvac': supervehicle.hvac, 
-                'capacity': supervehicle.capacity, 
-                'init_soc': supervehicle.init_soc,
-                'A_f': supervehicle.A_f,
-                'gravity': supervehicle.gravity,
-                'C_r': supervehicle.C_r,
-                'c_1': supervehicle.c_1,
-                'c_2': supervehicle.c_2,
-                'rho_Air': supervehicle.rho_Air,
-                'C_D': supervehicle.C_D,
-                'motor_efficiency': supervehicle.motor_efficiency,
-                'driveline_efficiency': supervehicle.driveline_efficiency,
-                'braking_alpha': supervehicle.braking_alpha,
-            })
+    metadata = [{
+        'id': supervehicle.vehicle.id,
+        'vehicle': supervehicle.vehicle.type_id,
+        'agent_type': supervehicle.get_agent_type(),
+        'color': supervehicle.vehicle.attributes['color'], 
+        'hvac': supervehicle.hvac, 
+        'capacity': supervehicle.capacity, 
+        'init_soc': supervehicle.init_soc,
+        'A_f': supervehicle.A_f,
+        'gravity': supervehicle.gravity,
+        'C_r': supervehicle.C_r,
+        'c_1': supervehicle.c_1,
+        'c_2': supervehicle.c_2,
+        'rho_Air': supervehicle.rho_Air,
+        'C_D': supervehicle.C_D,
+        'motor_efficiency': supervehicle.motor_efficiency,
+        'driveline_efficiency': supervehicle.driveline_efficiency,
+        'braking_alpha': supervehicle.braking_alpha,
+    } for supervehicle in supervehicles]
+    save_csv(metadata, path)
 
 
 def compile_vehicle_data(trackers:list) -> pd.DataFrame:
@@ -122,10 +111,30 @@ def save_all_vehicles(supervehicles:list, outfolder):
     else:
         os.makedirs(outfolder)
 
-    save_metadata(supervehicles, os.path.join(outfolder, 'meta.csv'))
+    save_vehicle_metadata(supervehicles, os.path.join(outfolder, 'vehicles.csv'))
     for supervehicle in supervehicles:
         if supervehicle.trackers:
-            save_vehicle_data(supervehicle.trackers.values(), os.path.join(outfolder, f'{supervehicle.vehicle.id}.csv'))
+            save_vehicle_data(supervehicle.trackers.values(), os.path.join(outfolder, f'vehicle{supervehicle.vehicle.id}.csv'))
+
+
+def save_charger_metadata(chargers:list, path):
+    charger_data = [{
+        'id': idx,
+        'front_left': charger.front_left,
+        'front_right': charger.front_right,
+        'back_right': charger.back_right,
+        'power': charger.power,
+        'efficiency': charger.efficiency,
+        'center': charger.center,
+        'a': charger.a,
+    } for idx, charger in enumerate(chargers)]
+    save_csv(charger_data, path)
+
+
+def save_all_chargers(chargers:list, outfolder):
+    save_charger_metadata(chargers, os.path.join(outfolder, 'chargers.csv'))
+    for idx, charger in enumerate(chargers):
+        save_csv(charger.events, os.path.join(outfolder, f'charger{idx}.csv'))
 
 
 def plot_power(ax, time_series, power_series):

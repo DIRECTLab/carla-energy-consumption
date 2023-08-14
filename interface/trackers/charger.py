@@ -33,6 +33,8 @@ class Charger:
         self.front_right = front_right
         self.front_left = front_left
         self.back_right = back_right
+        self.power = power
+        self.efficiency = efficiency
         self.half_length = front_right.distance(back_right) / 2
         self.half_width = front_right.distance(front_left) / 2
         self.center = (front_left + back_right) / 2

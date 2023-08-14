@@ -43,6 +43,6 @@ class SocTracker(EnergyTracker):
     def energy_from_chargers(self, location:Location, dt) -> float:
         power = 0
         for charger in self.wireless_chargers:
-            power += charger.power_to_vehicle(location)
+            power += charger.charge(location, dt)
         self.charge_power.append(power)
         return self.energy_from_power(power, dt)

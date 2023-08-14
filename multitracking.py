@@ -6,7 +6,7 @@ import carla
 
 from interface.loading import get_agents, get_chargers
 from interface.supervehicle import SuperVehicle
-from interface.reporting import save_all_vehicles
+from interface.reporting import save_all_vehicles, save_all_chargers
 
 class Simulation:
     def __init__(self, args) -> None:
@@ -201,6 +201,7 @@ class Simulation:
             if len(self.__actor_list) > 0:
                 print('Saving data . . .')
                 save_all_vehicles(self.__actor_list, self.__args.outfolder)
+                save_all_chargers(self.__args.wireless_chargers, self.__args.outfolder)
 
 
 def main():
