@@ -4,7 +4,6 @@ Vehicle physics tracking for CARLA simulator.
 
 ## Contents
 - [charger.py](charger.py) is a class for wireless chargers.
-- [consumption.md](consumption.md) contains notes from research.
 - [energy_tracker.py](energy_tracker.py) tracks EV energy consumption.
     - Verification: Run [../tests/test_energy_tracker.py](../tests/test_energy_tracker.py).
 - [ev.py](ev.py) contains a data class with info about a specific EV.
