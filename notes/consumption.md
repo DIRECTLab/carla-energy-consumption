@@ -5,3 +5,5 @@ On avg: about 0.20 kWh/km (sources: https://www.virta.global/blog/ev-charging-10
 USDE provides per-vehicle estimates: https://afdc.energy.gov/calc/ or https://www.fueleconomy.gov/feg/PowerSearch.do?action=noform&path=1&year1=2020&year2=2022&vtype=Electric&pageno=1&rowLimit=50
 
 Slightly more complicated models we may want to use: https://doi.org/10.1016/j.apenergy.2016.01.097 or https://doi.org/10.1016/j.energy.2022.123657
+
+"Estimating the HVAC energy consumption of plug-in electric vehicles:" https://doi.org/10.1016/j.jpowsour.2014.02.033

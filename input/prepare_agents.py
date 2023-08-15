@@ -25,6 +25,9 @@ def prepare_agents(number, vehicle, agent_type, randomized_fields=list(), **kwar
         for field in randomized_fields:
             if field == 'lane_offset':
                 agent[field] = random.gauss(mu=0.0, sigma=0.25)
+            elif field == 'hvac':
+                # Right-skewed beta distribution between 0 and 6000
+                agent[field] = 6000 * random.betavariate(1.2, 4)
             else:
                 agent[field] = random.random()
         agents.append(agent)
