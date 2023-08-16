@@ -87,6 +87,12 @@ if __name__ == '__main__':
         help='wait time between charger demonstrations'
     )
     argparser.add_argument(
+        '-n', '--number',
+        metavar='N',
+        type=int,
+        help='maximum number of options to display'
+    )
+    argparser.add_argument(
         '--power',
         type=float,
         help='add power field to output'
@@ -144,5 +150,6 @@ if __name__ == '__main__':
         waypoint = world.get_map().get_waypoint(args.point)
         charger = create_charger(args.length, args.width, waypoint.transform)
         options = [charger]
+    options = options[:args.number]
 
     display_options(options, args.interval, args.power, args.efficiency)
