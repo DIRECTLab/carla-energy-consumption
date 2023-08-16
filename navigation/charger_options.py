@@ -97,6 +97,11 @@ if __name__ == '__main__':
         help='add efficiency field to output'
     )
     argparser.add_argument(
+        '--seed',
+        metavar='SEED',
+        help='random seed'
+    )
+    argparser.add_argument(
         '--host',
         metavar='H',
         default='127.0.0.1',
@@ -110,6 +115,7 @@ if __name__ == '__main__':
         help='TCP port to listen to (default: 2000)'
     )
     args = argparser.parse_args()
+    random.seed(args.seed)
 
     client = carla.Client(args.host, args.port)
     client.set_timeout(20.0)
