@@ -20,8 +20,8 @@ def print_update(time_tracker:TimeTracker, kinematics_tracker:KinematicsTracker,
     km_per_h = m_per_s * 60 * 60 / 1000
     mph = km_per_h / 1.60934
     print(f"\tAverage speed: {m_per_s:G} m/s ({km_per_h:G} km/h) ({mph:G} mph)")
-    print(f"\tSpeed: {kinematics_tracker.speed} m/s")
-    print(f"\tAcceleration: {kinematics_tracker.acceleration} m/s^2")
+    print(f"\tSpeed: {kinematics_tracker.speed_series[-1]} m/s")
+    print(f"\tAcceleration: {kinematics_tracker.acceleration_series[-1]} m/s^2")
     print(f"\tEnergy consumed: {soc_tracker.total_energy:G} kWh")
     kWh_per_m = soc_tracker.total_energy / kinematics_tracker.distance_travelled
     kWh_per_100km = kWh_per_m * 1000 * 100
@@ -75,6 +75,7 @@ def compile_vehicle_data(trackers:list) -> pd.DataFrame:
             data['time'] = tracker.time_series
             data['dt'] = tracker.interval_series
         elif isinstance(tracker, KinematicsTracker):
+            data['time'] = tracker.time_series
             data['x'] = [loc.x for loc in tracker.location_series]
             data['y'] = [loc.y for loc in tracker.location_series]
             data['z'] = [loc.z for loc in tracker.location_series]

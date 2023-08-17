@@ -7,7 +7,6 @@ from .agents.basic_agent import BasicAgent
 from .agents.constant_velocity_agent import ConstantVelocityAgent
 
 from .trackers.ev import EV
-from .trackers.time_tracker import TimeTracker
 from .trackers.soc_tracker import SocTracker
 from .trackers.kinematics_tracker import KinematicsTracker
 
@@ -123,7 +122,6 @@ class SuperVehicle(EV):
         `wireless_chargers`: Chargers to pass to `SocTracker`.
         """
         self.stop_tracking()
-        self.trackers['time'] = TimeTracker(self.vehicle)
         self.trackers['kinematics'] = KinematicsTracker(self.vehicle)
         soc_tracker = self.trackers.get('soc')
         if soc_tracker is None:
