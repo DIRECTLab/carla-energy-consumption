@@ -32,7 +32,7 @@ class EnergyTracker(Tracker):
         `dt`: Time interval in s.
         """
         kilowatt = power / 1000
-        energy = kilowatt * dt / (60 * 60)
+        energy = kilowatt * dt / 3600
         return energy
 
     def power(self, vehicle):
@@ -54,7 +54,7 @@ class EnergyTracker(Tracker):
 
             wheel_power = self._wheel_power(a_mag, speed, grade_angle)
             if wheel_power >= 0:
-                traction_power = wheel_power / (self.ev.motor_to_wheels_efficiency)
+                traction_power = wheel_power / self.ev.motor_to_wheels_efficiency
             else:
                 traction_power = wheel_power * self._braking_efficiency(a_mag)
             return traction_power + self.hvac
@@ -75,11 +75,11 @@ class EnergyTracker(Tracker):
         https://doi.org/10.1016/j.apenergy.2016.01.097
         """
         term1 = self.ev.mass * acceleration
-        term2 = self.ev.mass * self.ev.gravity * math.cos(theta) * self.ev.C_r * (self.ev.c_1 * velocity + self.ev.c_2) / 1000
-        term3 = self.ev.rho_Air * self.ev.A_f * self.ev.C_D * (velocity ** 2) / 2
-        term4 = self.ev.mass * self.ev.gravity * math.sin(theta)
+        term2 = self.ev.term2_constants * math.cos(theta) * (self.ev.c_1 * velocity + self.ev.c_2)
+        term3 = self.ev.term3_constants * (velocity ** 2)
+        term4 = self.ev.mg * math.sin(theta)
         return (term1 + term2 + term3 + term4) * velocity
-    
+
     def _braking_efficiency(self, acceleration:float):
         """
         Calculate the braking efficiency for a given acceleration.

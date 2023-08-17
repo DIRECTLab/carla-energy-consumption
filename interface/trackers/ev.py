@@ -36,3 +36,7 @@ class EV:
         self.driveline_efficiency = driveline_efficiency
         self.motor_to_wheels_efficiency = motor_efficiency * driveline_efficiency
         self.braking_alpha = braking_alpha
+
+        self.mg = self.mass * self.gravity
+        self.term2_constants = self.mg * self.C_r / 1000
+        self.term3_constants = self.rho_Air * self.A_f * self.C_D / 2
