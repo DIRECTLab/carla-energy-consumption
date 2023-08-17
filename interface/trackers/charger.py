@@ -39,6 +39,8 @@ class Charger:
         self.half_width = front_right.distance(front_left) / 2
         self.center = (front_left + back_right) / 2
         self.transformation = self.__get_transformation(front_left, front_right, back_right)
+        # A somewhat arbitrary value that filters vehicles which obviously aren't charging
+        self.max_range = 2 * (self.half_length + self.half_width)
 
         # Power delivery follows the equation a*x^2+b, where a is a negative constant, 
         # x is misalignment from the charger's y-axis and b is the maximum power
@@ -91,26 +93,28 @@ class Charger:
         Power delivery follows the equation `a*x^2+b`, where `a` is a negative constant, 
         `x` is misalignment from the charger's y-axis and `b` is the maximum power.
         """
-        transformed = self.transform_in(point)
-        y_misalignment = abs(transformed.x)
-        x_misalignment = abs(transformed.y)
-        if y_misalignment < self.half_width and x_misalignment <= self.half_length:
-            power = max(self.a * y_misalignment**2 + self.max_power, 0.0)
-        else:
-            power = 0.0
+        power = 0.0
+        if self.center.distance(point) < self.max_range:    # Filter 99% of points
+            transformed = self.transform_in(point)
+            y_misalignment = abs(transformed.x)
+            x_misalignment = abs(transformed.y)
+            if y_misalignment < self.half_width and x_misalignment <= self.half_length:
+                power = max(self.a * y_misalignment**2 + self.max_power, 0.0)
         return power
-    
+
     def charge(self, point:Location, dt:float):
         """
         Same as `power_to_vehicle`, but updates the charger's energy consumption.
         """
-        delivery = self.power_to_vehicle(point)
-        if delivery > 0:
-            self.events.append({
-                'loc': f"{point.x}, {point.y}, {point.z}",
-                'dt': dt,
-                'power_delivered': delivery,
-            })
+        delivery = 0.0
+        if self.center.distance(point) < self.max_range:    # Filter 99% of points
+            delivery = self.power_to_vehicle(point)
+            if delivery > 0:
+                self.events.append({
+                    'loc': f"{point.x}, {point.y}, {point.z}",
+                    'dt': dt,
+                    'power_delivered': delivery,
+                })
         return delivery
 
     def draw(self, debug:DebugHelper, life_time:float=0.0):
