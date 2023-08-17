@@ -9,6 +9,8 @@ from .tracker import Tracker
 class KinematicsTracker(Tracker):
     def __init__(self, vehicle: Vehicle) -> None:
         super().__init__(vehicle)
+        self.init_time = vehicle.get_world().get_snapshot().elapsed_seconds
+        self.elapsed_time = 0
         self.time_series = list()
         self.location_series = list()
         self.speed_series = list()
@@ -21,6 +23,7 @@ class KinematicsTracker(Tracker):
 
     def _update(self, snapshot: WorldSnapshot, vehicle) -> None:
         with self.update_lock:
+            self.elapsed_time = snapshot.elapsed_seconds - self.init_time
             self.time_series.append(snapshot.elapsed_seconds)
             self.location_series.append(vehicle.get_transform().location)
 
