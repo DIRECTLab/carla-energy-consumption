@@ -62,7 +62,7 @@ def main(args):
     invalid_lanetypes = (
         carla.LaneType.Sidewalk,
         carla.LaneType.Tram,
-        carla.Lanetype.Rail,
+        carla.LaneType.Rail,
     )
     vehicle_waypoints_junctions = list()
     vehicle_waypoints_no_junctions = list()
@@ -82,14 +82,17 @@ def main(args):
     }
 
     settings = world.get_settings()
-    settings.no_rendering_mode = True
-    world.apply_settings(settings)
+    was_rendering = not settings.no_rendering_mode
+    if was_rendering:
+        settings.no_rendering_mode = True
+        world.apply_settings(settings)
     start = time.time()
-    labels = junction_labels(list(junctions.values()))
+    labels = junction_labels(world, list(junctions.values()))
     label_counts = junction_label_counts(labels)
     end = time.time()
-    settings.no_rendering_mode = False
-    world.apply_settings(settings)
+    if was_rendering:
+        settings.no_rendering_mode = False
+        world.apply_settings(settings)
 
     print(f'Time: {end-start} s')
     print(f'{len(labels)} junction points searched')
