@@ -16,9 +16,19 @@ def lane_area(waypoints, separation) -> float:
     return area
 
 
+def area_sums(bounding_boxes:list):
+    area = 0.0
+    for bounding_box in bounding_boxes:
+        area += bounding_box.extent.x*bounding_box.extent.y*4
+    return area
+
+
 def junction_labels(world:carla.World, junction_bbs:list):
+    search_area = area_sums(junction_bbs)
+    area_searched = 0.0
     labeled_points = list()
     for junction_bb in junction_bbs:
+        print(f'Searching junctions: {(area_searched/search_area)*100:.1f}%', end='\r')
         vertices = junction_bb.get_world_vertices(carla.Transform(rotation=junction_bb.rotation))
         min_x = min([vertex.x for vertex in vertices])
         max_x = max([vertex.x for vertex in vertices])
@@ -36,6 +46,8 @@ def junction_labels(world:carla.World, junction_bbs:list):
                 labeled_points.append(proj)
                 # if proj is None:
                 #     debug.draw_point(loc, life_time=15)
+        area_searched += area_sums([junction_bb])
+    print(f'Searching junctions: {(area_searched/search_area)*100:.1f}%')
     return labeled_points
 
 
