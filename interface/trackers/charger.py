@@ -6,25 +6,25 @@ class Charger:
     """
     Model for wireless charging.
 
-    Chargers are assumed to have an effective charge range which is represented as a rectangle. 
-    Alignment with the center line of the charger running from back to front results in the highest power transfer 
-    (given by `power * efficiency`), while power transfer decreases parabolically to `0` at the far left and right 
-    of the effective charge range.
+    Receivers and transmitters are assumed to be double-D coils with the same dimensions. 
+    Dimensions are those of the transmitter's coils. Maximum power transferred is `power * efficiency`, 
+    which occurs when the receiver and the transmitter are perfectly aligned. 
+    Power transfer decreases linearly to 0 in the direction of travel (treated as the y-axis) 
+    and parabolically to 0 in the lane width direction (treated as the x-axis).
 
-    For real-life results reflecting this implementation, see https://doi.org/10.3390/en10030315 - especially Figure 5.
+    See `notes` directory for papers about wireless power transfer justifying this model.
     """
 
     def __init__(self, front_left:Location, front_right:Location, back_right:Location, power:float, efficiency:float) -> None:
         """
-        `front_left`: Location of the front left corner of the effective charging range of this charger 
-            as it appears when driving towards it or looking down from above. 
-            This point is part of the boundary of the effective charge range which is furthest from 
-            the vehicle as it is driving toward the charger and closest to the vehicle after it passes the charger. 
-            This boundary is represented as a rectangle. 
+        `front_left`: Location of the front left corner of this charger 
+            as it appears when driving towards it and looking down from above. 
+            "Front" means furthest from the vehicle as it is driving toward the charger 
+            and closest to the vehicle after it passes the charger. 
 
-        `front_right`: Location of the front right corner of the effective charging range of this charger.
+        `front_right`: Location of the front right corner of this charger.
 
-        `back_right`: Location of the back right corner of the effective charging range of this charger.
+        `back_right`: Location of the back right corner of this charger.
 
         `power`: Maximum power used by charger in Watts.
 
@@ -83,10 +83,8 @@ class Charger:
 
     def power_to_vehicle(self, point:Location) -> float:
         """
-        Determine the power delivered to the vehicle in Watts, assuming the center of the vehicle is at `point`.
-
-        Power delivery follows the equation `a*x^2+b`, where `a` is a negative constant, 
-        `x` is misalignment from the charger's y-axis and `b` is the maximum power.
+        Determine the power delivered to the vehicle in Watts, 
+        assuming the center of the receiver is at `point`.
         """
         power = 0.0
         if self.center.distance(point) < self.max_range:    # Filter 99% of points
@@ -102,7 +100,7 @@ class Charger:
 
     def charge(self, point:Location, dt:float):
         """
-        Same as `power_to_vehicle`, but updates the charger's energy consumption.
+        Same as `power_to_vehicle`, but logs a charge event.
         """
         delivery = 0.0
         if self.center.distance(point) < self.max_range:    # Filter 99% of points

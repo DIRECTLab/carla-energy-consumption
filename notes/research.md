@@ -33,3 +33,7 @@
 - [Double-D coil models](https://ieeexplore.ieee.org/document/7802607)
     - Notes that voltage due to the vehicle moving relative to the transmitter is ignored - we should do the same
     - Trapezoidal in direction of travel, with equations for different sizes
+
+- [Wireless charging with experimental results](https://doi.org/10.3390/en10030315)
+    - Angular misalignment doesn't matter
+    - Lateral misalignment is parabolic
