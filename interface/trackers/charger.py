@@ -26,7 +26,7 @@ class Charger:
 
         `back_right`: Location of the back right corner of the effective charging range of this charger.
 
-        `power`: Power used by charger in Watts.
+        `power`: Maximum power used by charger in Watts.
 
         `efficiency`: Maximum charger-vehicle efficiency as a fraction assuming perfect alignment.
         """
@@ -35,19 +35,14 @@ class Charger:
         self.back_right = back_right
         self.power = power
         self.efficiency = efficiency
-        self.half_length = front_right.distance(back_right) / 2
-        self.half_width = front_right.distance(front_left) / 2
+        self.max_power = efficiency * power
+        self.length = front_right.distance(back_right)
+        self.width = front_right.distance(front_left)
         self.center = (front_left + back_right) / 2
         self.transformation = self.__get_transformation(front_left, front_right, back_right)
-        # A somewhat arbitrary value that filters vehicles which obviously aren't charging
-        self.max_range = 2 * (self.half_length + self.half_width)
-
-        # Power delivery follows the equation a*x^2+b, where a is a negative constant, 
-        # x is misalignment from the charger's y-axis and b is the maximum power
-        self.max_power = efficiency * power
-        self.a = - self.max_power / self.half_width**2
-
         self.events = list()
+        # A somewhat arbitrary value that filters vehicles which obviously aren't charging
+        self.max_range = 2 * (self.length + self.width)
 
     def __get_transformation(self, front_left:Location, front_right:Location, back_right:Location) -> np.ndarray:
         """
@@ -98,8 +93,12 @@ class Charger:
             transformed = self.transform_in(point)
             y_misalignment = abs(transformed.x)
             x_misalignment = abs(transformed.y)
-            if y_misalignment < self.half_width and x_misalignment <= self.half_length:
-                power = max(self.a * y_misalignment**2 + self.max_power, 0.0)
+            if y_misalignment < self.width and x_misalignment < self.length:
+                x_scaling = 1 - x_misalignment / self.length
+                y_scaling = 1 - (y_misalignment / self.width)**2
+                scaling = x_scaling * y_scaling
+                power = scaling * self.max_power
+                print(f'In range: {power=}')
         return power
 
     def charge(self, point:Location, dt:float):
@@ -107,6 +106,7 @@ class Charger:
         Same as `power_to_vehicle`, but updates the charger's energy consumption.
         """
         delivery = 0.0
+        print('Checking charge')
         if self.center.distance(point) < self.max_range:    # Filter 99% of points
             delivery = self.power_to_vehicle(point)
             if delivery > 0:
