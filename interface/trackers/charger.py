@@ -98,7 +98,6 @@ class Charger:
                 y_scaling = 1 - (y_misalignment / self.width)**2
                 scaling = x_scaling * y_scaling
                 power = scaling * self.max_power
-                print(f'In range: {power=}')
         return power
 
     def charge(self, point:Location, dt:float):
@@ -106,7 +105,6 @@ class Charger:
         Same as `power_to_vehicle`, but updates the charger's energy consumption.
         """
         delivery = 0.0
-        print('Checking charge')
         if self.center.distance(point) < self.max_range:    # Filter 99% of points
             delivery = self.power_to_vehicle(point)
             if delivery > 0:
