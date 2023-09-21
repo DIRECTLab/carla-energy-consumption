@@ -115,11 +115,12 @@ def test_transform_in6():
 
 
 def test_power_to_vehicle1():
+    """0 power"""
     front_left = Location(-1,0,0)
     front_right = Location(0,0,0)
-    back_right = Location(0,3,0)
-    charger = Charger(front_left, front_right, back_right, 0, 0.85)
-    point = Location(-0.5,1.5,0)
+    back_right = Location(0,2,0)
+    charger = Charger(front_left, front_right, back_right, 0, 0.90)
+    point = Location(-0.5,1,0)
     power = charger.power_to_vehicle(point)
     try:
         assert power == 0.0
@@ -132,11 +133,12 @@ def test_power_to_vehicle1():
 
 
 def test_power_to_vehicle2():
+    """0 efficiency"""
     front_left = Location(-1,0,0)
     front_right = Location(0,0,0)
-    back_right = Location(0,3,0)
+    back_right = Location(0,2,0)
     charger = Charger(front_left, front_right, back_right, 30_000, 0)
-    point = Location(-0.5,1.5,0)
+    point = Location(-0.5,1,0)
     power = charger.power_to_vehicle(point)
     try:
         assert power == 0.0
@@ -149,11 +151,12 @@ def test_power_to_vehicle2():
 
 
 def test_power_to_vehicle3():
+    """Corner of charge range"""
     front_left = Location(-1,0,0)
     front_right = Location(0,0,0)
-    back_right = Location(0,3,0)
-    charger = Charger(front_left, front_right, back_right, 30_000, 0.85)
-    point = Location(-1,1.5,0)
+    back_right = Location(0,2,0)
+    charger = Charger(front_left, front_right, back_right, 30_000, 0.90)
+    point = Location(-1.5,3,0)
     power = charger.power_to_vehicle(point)
     try:
         assert power == 0
@@ -166,14 +169,15 @@ def test_power_to_vehicle3():
 
 
 def test_power_to_vehicle4():
+    """Perfect alignment"""
     front_left = Location(-1,0,0)
     front_right = Location(0,0,0)
-    back_right = Location(0,3,0)
-    charger = Charger(front_left, front_right, back_right, 30_000, 0.85)
-    point = Location(-0.5,1.5,0)
+    back_right = Location(0,2,0)
+    charger = Charger(front_left, front_right, back_right, 30_000, 0.90)
+    point = Location(-0.5,1,0)
     power = charger.power_to_vehicle(point)
     try:
-        assert power == 25_500.0
+        assert power == 27_000.0
     except AssertionError:
         traceback.print_exc()
         print(f"{power=}")
@@ -183,14 +187,51 @@ def test_power_to_vehicle4():
 
 
 def test_power_to_vehicle5():
+    """Offset from travel axis"""
     front_left = Location(-1,0,0)
     front_right = Location(0,0,0)
-    back_right = Location(0,3,0)
-    charger = Charger(front_left, front_right, back_right, 30_000, 0.85)
-    point = Location(-0.25,1.5,0)
+    back_right = Location(0,2,0)
+    charger = Charger(front_left, front_right, back_right, 30_000, 0.90)
+    point = Location(0,1,0)
     power = charger.power_to_vehicle(point)
     try:
-        assert power == 19_125.0
+        assert power == 20_250.0
+    except AssertionError:
+        traceback.print_exc()
+        print(f"{power=}")
+        print()
+        return False
+    return True
+
+
+def test_power_to_vehicle6():
+    """Offset from lane width axis"""
+    front_left = Location(-1,0,0)
+    front_right = Location(0,0,0)
+    back_right = Location(0,2,0)
+    charger = Charger(front_left, front_right, back_right, 30_000, 0.90)
+    point = Location(-0.5,2,0)
+    power = charger.power_to_vehicle(point)
+    try:
+        assert power == 13_500.0
+    except AssertionError:
+        traceback.print_exc()
+        print(f"{power=}")
+        print()
+        return False
+    return True
+
+
+def test_power_to_vehicle7():
+    """Offset from both axes: receiver aligned with corner of transmitter"""
+    front_left = Location(-1,0,0)
+    front_right = Location(0,0,0)
+    back_right = Location(0,2,0)
+    charger = Charger(front_left, front_right, back_right, 30_000, 0.90)
+    point = Location(0,0,0)
+    power = charger.power_to_vehicle(point)
+    try:
+        assert power == 10_125.0
     except AssertionError:
         traceback.print_exc()
         print(f"{power=}")
@@ -215,6 +256,8 @@ if __name__ == "__main__":
         test_power_to_vehicle3,
         test_power_to_vehicle4,
         test_power_to_vehicle5,
+        test_power_to_vehicle6,
+        test_power_to_vehicle7,
     )
     success = 0
     total = 0
