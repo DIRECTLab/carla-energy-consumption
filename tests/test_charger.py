@@ -78,18 +78,18 @@ def test_transform_in4():
 
 def test_transform_in5():
     # Length=2, width=2, 30% grade
-    # I don't know for sure, but I think this is an accuracy problem
-    front_left = Location(-0.977241014286, -0.977241014286, 0.3)
-    front_right = Location(0.977241014286, -0.977241014286, 0.3)
-    back_right = Location(0.977241014286, 0.977241014286, -0.3)
+    front_left = Location(-1, -0.957826285221, 0.287347885566)
+    front_right = Location(1, -0.957826285221, 0.287347885566)
+    back_right = Location(1, 0.957826285221, -0.287347885566)
     charger = Charger(front_left, front_right, back_right, 0, 0)
-    point = Location(-0.977241014286, 0.977241014286, -0.3)   # the missing corner
+    point = Location(-1, 0.957826285221, -0.287347885566)   # the missing corner
     transformed = charger.transform_in(point)
     try:
-        assert transformed.distance(Location(-1.0, 1.0, 0.0)) < 0.01
+        assert transformed.distance(Location(-1.0, 1.0, 0.0)) < 0.001
     except AssertionError:
         traceback.print_exc()
         print(f"transformed=({transformed.x}, {transformed.y}, {transformed.z})")
+        print(f"{transformed.distance(Location(-1.0, 1.0, 0.0))=}")
         print()
         return False
     return True
@@ -97,12 +97,11 @@ def test_transform_in5():
 
 def test_transform_in6():
     # Length=2, width=2, 30% grade rotated 45 degrees
-    # I don't know for sure, but I think this is an accuracy problem
-    front_left = Location(0, -1.38202749611, 0.3)
-    front_right = Location(1.38202749611, 0, 0.3)
-    back_right = Location(0, 1.38202749611, -0.3)
+    front_left = Location(-1.38439224267, 0.029821319708, 0.287347885566)
+    front_right = Location(0.029821319708, -1.38439224267, 0.287347885566)
+    back_right = Location(1.38439224267, -0.029821319708, -0.287347885566)
     charger = Charger(front_left, front_right, back_right, 0, 0)
-    point = Location(-1.38202749611, 0, -0.3)   # the missing corner
+    point = Location(-0.029821319708, 1.38439224267, -0.287347885566)   # the missing corner
     transformed = charger.transform_in(point)
     try:
         assert transformed.distance(Location(-1.0, 1.0, 0.0)) < 0.01
