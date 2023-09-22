@@ -1,4 +1,3 @@
-import numpy as np
 from carla import Location, DebugHelper, Color
 
 
@@ -39,47 +38,24 @@ class Charger:
         self.length = front_right.distance(back_right)
         self.width = front_right.distance(front_left)
         self.center = (front_left + back_right) / 2
-        self.transformation = self.__get_transformation(front_left, front_right, back_right)
+        self.i_hat = (front_right - front_left).make_unit_vector()
+        self.j_hat = (back_right - front_right).make_unit_vector()
+        self.k_hat = self.i_hat.cross(self.j_hat).make_unit_vector()
         self.events = list()
         # A somewhat arbitrary value that filters vehicles which obviously aren't charging
         self.max_range = 2 * (self.length + self.width)
-
-    def __get_transformation(self, front_left:Location, front_right:Location, back_right:Location) -> np.ndarray:
-        """
-        Returns a matrix for transforming a point to the local coordinate system of this charger.
-        This matrix should be multiplied on the left of the point.
-        The input point should be represented as a vector of the form `[x,y,z,1]`,
-        whereupon the resulting point will be a vector of the form `[x,y,z]`.
-        """
-        mid_right = (front_right + back_right) / 2
-        X_ax = (mid_right - self.center).make_unit_vector()
-        length = front_right - back_right
-        mid_front = (front_right + front_left) / 2
-        mid_back = mid_front - length
-        Y_ax = (mid_back - self.center).make_unit_vector()
-        Z_ax = X_ax.cross(Y_ax)
-        rotation = np.array([
-            [X_ax.x, X_ax.y, X_ax.z],
-            [Y_ax.x, Y_ax.y, Y_ax.z],
-            [Z_ax.x, Z_ax.y, Z_ax.z]
-        ])
-        translation = np.array([
-            [1,0,0,-self.center.x],
-            [0,1,0,-self.center.y],
-            [0,0,1,-self.center.z],
-        ])
-        # Since we are multiplying on the left of the vector, this will translate the vector, then rotate it.
-        transformation = np.matmul(rotation, translation)
-        return transformation
 
     def transform_in(self, point:Location) -> Location:
         """
         Transforms `point` from global coordinates to this `Charger`'s coordinates.
         """
-        point_np = np.array([point.x, point.y, point.z, 1])
-        translated_np = np.matmul(self.transformation, point_np)
-        translated = Location(translated_np[0], translated_np[1], translated_np[2])
-        return translated
+        # Get the vector from the charger's center to `point`
+        point_translated = point - self.center
+        # Get the magnitude of the projection of that vector onto the charger's axis vectors
+        x = point_translated.dot(self.i_hat)
+        y = point_translated.dot(self.j_hat)
+        z = point_translated.dot(self.k_hat)
+        return Location(x, y, z)
 
     def power_to_vehicle(self, point:Location) -> float:
         """
