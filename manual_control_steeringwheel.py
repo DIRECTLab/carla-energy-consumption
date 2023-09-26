@@ -8,7 +8,7 @@
 """
 Welcome to CARLA manual control with steering wheel Logitech G29.
 
-To drive start by preshing the brake pedal.
+To drive start by pressing the brake pedal.
 Change your wheel_config.ini according to your steering wheel.
 
 To find out the values of your steering wheel use jstest-gtk in Ubuntu.
