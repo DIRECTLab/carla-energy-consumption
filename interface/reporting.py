@@ -42,6 +42,21 @@ def save_csv(data:list, path):
             writer.writerows(data)
 
 
+def prepare_outfolder(outfolder):
+    """
+    Removes any old CSV files.
+    Creates the directory if it does not exist.
+    """
+    if os.path.exists(outfolder):
+        for file in glob.iglob(os.path.join(outfolder, '*.csv')):
+            try:
+                os.remove(file)
+            except IsADirectoryError:
+                pass
+    else:
+        os.makedirs(outfolder)
+
+
 def save_vehicle_metadata(supervehicles:list, path):
     """
     Save metadata about the vehicles, simlar to `input/tracked_agents.py`.
@@ -103,15 +118,8 @@ def save_vehicle_data(trackers:list, file):
 def save_all_vehicles(supervehicles:list, outfolder):
     """
     Saves all tracking and metadata from a list of supervehicles.
-    Removes any old CSV files.
-    Creates the directory if it does not exist.
     """
-    if os.path.exists(outfolder):
-        for file in glob.iglob(os.path.join(outfolder, '*.csv')):
-            os.remove(file)
-    else:
-        os.makedirs(outfolder)
-
+    prepare_outfolder(outfolder)
     save_vehicle_metadata(supervehicles, os.path.join(outfolder, 'vehicles.csv'))
     for supervehicle in supervehicles:
         if supervehicle.trackers:
@@ -127,7 +135,9 @@ def save_charger_metadata(chargers:list, path):
         'power': charger.power,
         'efficiency': charger.efficiency,
         'center': charger.center,
-        'a': charger.a,
+        'i_hat': charger.i_hat,
+        'j_hat': charger.j_hat,
+        'k_hat': charger.k_hat,
     } for idx, charger in enumerate(chargers)]
     save_csv(charger_data, path)
 
@@ -135,6 +145,8 @@ def save_charger_metadata(chargers:list, path):
 def save_all_chargers(chargers:list, outfolder):
     save_charger_metadata(chargers, os.path.join(outfolder, 'chargers.csv'))
     for idx, charger in enumerate(chargers):
+        for event in charger.events:
+            event['power_consumed'] = event['power_delivered'] / charger.efficiency
         save_csv(charger.events, os.path.join(outfolder, f'charger{idx}.csv'))
 
 

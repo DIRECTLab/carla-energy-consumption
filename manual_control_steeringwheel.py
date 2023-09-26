@@ -21,13 +21,14 @@ import carla
 
 import argparse
 import logging
+import os
 
 import pygame
 
 from interface.hud import HUD
 from interface.world import World
 from interface.loading import get_agents, get_chargers
-from interface.reporting import save_vehicle_data
+from interface.reporting import prepare_outfolder, save_vehicle_data, save_all_chargers
 from interface.wheel.carla_control import CarlaControl
 
 
@@ -62,14 +63,14 @@ class Simulation:
             )
             self.__controller = CarlaControl(self.__world, args.autopilot)
 
-            self.__simulate(args.out)
+            self.__simulate(args.outfolder)
 
         finally:
             if self.__world is not None:
                 self.__world.destroy()
             pygame.quit()
 
-    def __simulate(self, file=None):
+    def __simulate(self, outfolder=None):
         # The first couple seconds of simulation are less reliable as the vehicles are dropped onto the ground.
         self.__world.wait(2.0)
         try:
@@ -85,10 +86,13 @@ class Simulation:
                 self.__world.render(self.__display)
                 pygame.display.flip()
         finally:
-            if file is not None:
+            if outfolder is not None:
                 self.__world.destroy()
                 print('Saving data . . .')
-                save_vehicle_data(self.__world.trackers.values(), file)
+                prepare_outfolder(outfolder)
+                save_vehicle_data(self.__world.trackers.values(), os.path.join(outfolder, 'vehicle.csv'))
+                if self.__world.chargers:
+                    save_all_chargers(self.__world.chargers, outfolder)
 
 
 # ==============================================================================
@@ -105,10 +109,10 @@ def main():
         help="CSV file for this agent's parameters"
     )
     argparser.add_argument(
-        '-o', '--out',
-        metavar='FILE',
+        '-o', '--outfolder',
+        metavar='OUTFOLDER',
         default=None,
-        help='CSV file to write tracking data to'
+        help='directory to write tracking data to'
     )
     argparser.add_argument(
         '-v', '--verbose',
