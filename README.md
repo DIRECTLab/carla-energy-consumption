@@ -17,6 +17,12 @@ When in doubt, opt for [multitracking.py](multitracking.py). This program is the
 
 - [manual_control_steeringwheel.py](./manual_control_steeringwheel.py) tracks power usage of a vehicle which the user drives using a steering wheel controller.
 
+    - Run `python manual_control_steeringwheel.py -h` to get all options.
+
+    Basic Usage
+    1. Start the CARLA server.
+    2. Run `python manual_control_steeringwheel.py input/tracked_agents.csv`.
+
 - [multitracking.py](multitracking.py) tracks multiple vehicles at once. These vehicles can be controlled by the Traffic Manager or one of the agents under `agents/navigation/`.
 
     - Run `python multitracking.py -h` to get all options. The `-d` option is strongly recommended.
