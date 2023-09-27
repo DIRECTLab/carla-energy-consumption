@@ -25,13 +25,13 @@ class SocTracker(EnergyTracker):
     def _update(self, snapshot: WorldSnapshot, vehicle) -> None:
         # EnergyTracker functionality
         power = self.power(vehicle)
-        self.power_series.append(power)
+        self.power_consumed.append(power)
         energy_spent = self.energy_from_power(power, snapshot.delta_seconds)
         self.total_energy += energy_spent
 
         # Wireless charging
         location = vehicle.get_transform().location
-        charging_energy = self.energy_from_chargers(location, snapshot.delta_seconds)
+        charging_energy = self.energy_from_chargers(location, snapshot.elapsed_seconds, snapshot.delta_seconds)
         self.is_charging = charging_energy > 0
 
         # Extra SocTracker functionality
@@ -40,9 +40,9 @@ class SocTracker(EnergyTracker):
         self.soc = min(1.0, self.soc + pct_gain)
         self.soc_series.append(self.soc)
 
-    def energy_from_chargers(self, location:Location, dt) -> float:
+    def energy_from_chargers(self, location:Location, time:float, dt:float) -> float:
         power = 0
         for charger in self.wireless_chargers:
-            power += charger.charge(location, dt)
+            power += charger.charge(location, self.vehicle_id, time, dt)
         self.charge_power.append(power)
         return self.energy_from_power(power, dt)

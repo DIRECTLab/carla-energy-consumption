@@ -74,7 +74,7 @@ class Charger:
                 power = scaling * self.max_power
         return power
 
-    def charge(self, point:Location, dt:float):
+    def charge(self, point:Location, vehicle, time:float, dt:float):
         """
         Same as `power_to_vehicle`, but logs a charge event.
         """
@@ -83,7 +83,8 @@ class Charger:
             delivery = self.power_to_vehicle(point)
             if delivery > 0:
                 self.events.append({
-                    'loc': f"{point.x}, {point.y}, {point.z}",
+                    'time': time,
+                    'vehicle': vehicle,
                     'dt': dt,
                     'power_delivered': delivery,
                 })

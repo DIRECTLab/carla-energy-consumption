@@ -99,8 +99,9 @@ def compile_vehicle_data(trackers:list) -> pd.DataFrame:
             data['acceleration'] = tracker.acceleration_series
             data['road_grade'] = tracker.grade_series
         elif isinstance(tracker, EnergyTracker):
-            data['power'] = tracker.power_series
+            data['power_consumed'] = tracker.power_consumed
             if isinstance(tracker, SocTracker):
+                data['charge_power'] = tracker.charge_power
                 data['SOC'] = tracker.soc_series
     if data:
         data_len = min([len(series) for series in data.values()])

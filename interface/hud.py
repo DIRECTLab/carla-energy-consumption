@@ -84,7 +84,7 @@ class HUD(object):
                 '',
                 f'Battery Charge:  {soc_tracker.soc*100 : 10.1f} %',
                 f'Charge Power:    {soc_tracker.charge_power[-1] / 1000 : 9.1f} kW',
-                f'Power to Wheels: {soc_tracker.power_series[-1] / 1000 : 9.1f} kW',
+                f'Power to Wheels: {soc_tracker.power_consumed[-1] / 1000 : 9.1f} kW',
             ]
         elif isinstance(control, carla.WalkerControl):
             self._info_text += [
