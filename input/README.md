@@ -3,10 +3,19 @@ Example input files for [automatic_control.py](../automatic_control.py), [unitra
 
 
 ## Contents
-- [chargers.csv](chargers.csv) is an example CSV file for loading wireless chargers. It demonstrates the following fields, required for all files of this type:
-    - `front_left`: Coordinates of the front left corner of the effective charging range of this charger as it appears when driving towards it or looking down from above. This point is part of the boundary of the effective charge range which is furthest from the vehicle as it is driving toward the charger and closest to the vehicle after it passes the charger. This boundary is represented as a rectangle. 
-    - `front_right`: Coordinates of the front right corner of the effective charging range of this charger.
-    - `back_right`: Coordinates of the back right corner of the effective charging range of this charger.
+- [chargers.csv](chargers.csv) is an example CSV file for loading wireless chargers. 
+    Receivers and transmitters are assumed to be double-D coils with the same dimensions, 
+    which means that every entry in this file should have the same dimensions. 
+    Dimensions and coordinates are those of the transmitter's coils. Maximum power transferred is `power * efficiency`, 
+    which occurs when the receiver and the transmitter are perfectly aligned. 
+    Power transfer decreases linearly to 0 in the direction of travel and parabolically to 0 in the lane width direction.
+
+    See [notes](/notes/research.md) for papers about wireless power transfer justifying this model.
+
+    The following fields are required for all files of this type:
+    - `front_left`: Coordinates of the front left corner of this charger as it appears when driving towards it and looking down from above. "Front" means furthest from the vehicle as it is driving toward the charger and closest to the vehicle after it passes the charger. 
+    - `front_right`: Coordinates of the front right corner of this charger.
+    - `back_right`: Coordinates of the back right corner of this charger.
     - `power`: Power used by charger in Watts.
     - `efficiency`: Maximum charger-vehicle efficiency as a fraction assuming perfect alignment.
 

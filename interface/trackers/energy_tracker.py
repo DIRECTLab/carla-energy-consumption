@@ -16,11 +16,11 @@ class EnergyTracker(Tracker):
         self.hvac = hvac
 
         self.total_energy = 0
-        self.power_series = list()  # No, this is not calculus
+        self.power_consumed = list()  # No, this is not calculus
 
     def _update(self, snapshot:WorldSnapshot, vehicle) -> None:
         power = self.power(vehicle)
-        self.power_series.append(power)
+        self.power_consumed.append(power)
         energy = self.energy_from_power(power, snapshot.delta_seconds)
         self.total_energy += energy
 

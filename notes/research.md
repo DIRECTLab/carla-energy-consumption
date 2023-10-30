@@ -35,3 +35,7 @@
     - Notes that voltage due to the vehicle moving relative to the transmitter is ignored - we should do the same
     - Trapezoidal in direction of travel, with equations for different sizes
         - See Equation 8, supported by Figure 12 and Figure 1
+
+- [Wireless charging with experimental results](https://doi.org/10.3390/en10030315)
+    - Angular misalignment doesn't matter
+    - Lateral misalignment is parabolic
