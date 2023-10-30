@@ -15,6 +15,7 @@
 
 - [Fixed-route DWPT case study](https://www.sciencedirect.com/science/article/pii/S0306261920315476?via%3Dihub)
     - Confirms parabolic nature with respect to lane alignment
+    - Trapezoidal with respect to travel direction
     - 100 kW, 5 m chargers
 
 - [Optimal wireless charger for both heavy- and light-duty vehicles](https://ieeexplore.ieee.org/abstract/document/8450095)
@@ -33,3 +34,4 @@
 - [Double-D coil models](https://ieeexplore.ieee.org/document/7802607)
     - Notes that voltage due to the vehicle moving relative to the transmitter is ignored - we should do the same
     - Trapezoidal in direction of travel, with equations for different sizes
+        - See Equation 8, supported by Figure 12 and Figure 1
