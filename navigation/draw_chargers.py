@@ -47,11 +47,10 @@ if __name__ == '__main__':
     client.set_timeout(20.0)
     world = client.get_world()
 
-    tick_id = world.on_tick(lambda snapshot: draw_chargers(args.wireless_chargers, world.debug, time=0.1))
     try:
         print('Waiting for Ctrl-C')
-        time.sleep(3600)
+        while True:
+            draw_chargers(args.wireless_chargers, world.debug, time=2.0)
+            time.sleep(1)
     except KeyboardInterrupt:
         pass
-    finally:
-        world.remove_on_tick(tick_id)
