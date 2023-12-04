@@ -47,10 +47,14 @@ if __name__ == '__main__':
     client.set_timeout(20.0)
     world = client.get_world()
 
+    print('Waiting for Ctrl-C')
     try:
-        print('Waiting for Ctrl-C')
         while True:
             draw_chargers(args.wireless_chargers, world.debug, time=2.0)
-            time.sleep(1)
+            settings = world.get_settings()
+            if settings.fixed_delta_seconds:
+                time.sleep(settings.fixed_delta_seconds / 4)
+            else:
+                time.sleep(1)
     except KeyboardInterrupt:
         pass
