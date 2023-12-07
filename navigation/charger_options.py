@@ -84,7 +84,7 @@ if __name__ == '__main__':
         metavar='I',
         default=5.0,
         type=float,
-        help='wait time between charger demonstrations'
+        help='wait time between charger demonstrations, or 0 to keep demonstrations active'
     )
     argparser.add_argument(
         '-n', '--number',
