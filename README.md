@@ -51,6 +51,8 @@ See also [QUICKSTART.MD](./QUICKSTART.md).
 
 - `navigation/` contains some functions for getting oriented to CARLA maps and wireless chargers. See [its README](navigation/README.md). 
 
+- `plots` contains code for example plots based on simulation data.
+
 - `tests/` has all of the unit tests for the project. See [its README](tests/README.md).
 
 
