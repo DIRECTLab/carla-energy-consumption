@@ -48,8 +48,8 @@ for attr, ax in zip(attrs, axs):
 plt.show()
 
 fig, axs = plt.subplots(2, layout='constrained')
-vInfoSlice.plot('Elapsed Time (s)', 'Power Consumed (W)', ax=axs[0])
-vInfoSlice.plot('Elapsed Time (s)', 'Charge Power (W)', ax=axs[0])
+vInfoSlice.plot('Elapsed Time (s)', 'Power Consumed (W)', ax=axs[0], xlabel='')
+vInfoSlice.plot('Elapsed Time (s)', 'Charge Power (W)', ax=axs[0], xlabel='')
 vInfoSlice.plot('Elapsed Time (s)', 'State of Charge', ax=axs[1])
 axs[0].set_title('Example Plot of Simulation Data')
 axs[1].yaxis.set_major_formatter(PercentFormatter(decimals=3))
