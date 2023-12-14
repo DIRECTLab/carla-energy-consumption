@@ -1,7 +1,7 @@
 """
 Data for these plots was generated using the command
 ```
-python multitracking.py input/tracked_agents.csv output/Town06_lap -w input/Town06_intersection_chargers.csv --seed 0 -t 230 -d 0.05 -m Town06
+python multitracking.py input/tracked_agent.csv output/Town06_lap -w input/Town06_intersection_chargers.csv --seed 0 -t 230 -d 0.05 -m Town06
 ```
 """
 
