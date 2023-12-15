@@ -65,7 +65,7 @@ def save_vehicle_metadata(supervehicles:list, path):
         'id': supervehicle.vehicle.id,
         'vehicle': supervehicle.vehicle.type_id,
         'agent_type': supervehicle.get_agent_type(),
-        'color': supervehicle.vehicle.attributes['color'], 
+        'color': supervehicle.vehicle.attributes.get('color'), 
         'hvac': supervehicle.hvac, 
         'capacity': supervehicle.capacity, 
         'init_soc': supervehicle.init_soc,
