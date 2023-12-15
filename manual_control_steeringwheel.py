@@ -138,7 +138,7 @@ def main():
         '--res',
         metavar='WIDTHxHEIGHT',
         default='1280x720',
-        help='window resolution (default: 1280x720; maintain the ratio)')
+        help='window resolution (default: 1280x720; maintain the ratio on Windows OS)')
     argparser.add_argument(
         '-w', '--wireless-chargers',
         metavar='CHARGEFILE',
