@@ -7,6 +7,7 @@ These scripts are intended to be run from the command line. Use the `-h` option 
 ## Contents
 
 - [charger_options.py](charger_options.py) suggests parameters for wireless chargers in the current Map. It can provide many suggestions for the entire Map or a single suggestion near a specific point. The charging areas are displayed in the simulation, and parameters are printed to the screen. 
+    - The command `python charger_options.py --number 10 --power 40000 --efficiency 0.95` will select 10 random locations on lanes within the current CARLA map and print the specifications of a charger CSV file for those transmitters. The power will be 40 kW, and the efficiency will be 95%. On UNIX systems, use `>> chargers.csv` to save the output to a file for use in simulation.
 
 - [coordinates.py](coordinates.py) highlights the x- and y-axes at (0,0). Each square drawn is 1m x 1m.
 
