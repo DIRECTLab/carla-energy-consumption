@@ -43,7 +43,7 @@ def create_charger(length:float, width:float, center_transform:carla.Transform) 
     return Charger(front_left, front_right, back_right, power=0.0, efficiency=0.0)
 
 
-def display_options(options:list, interval:float, power=None, efficiency=None):
+def display_options(world:carla.World, options:list, interval:float, power=None, efficiency=None):
     print(f'front_left,front_right,back_right{",power" if power is not None else ""}{",efficiency" if efficiency is not None else ""}')
     power_str = ''
     if power is not None:
@@ -152,4 +152,4 @@ if __name__ == '__main__':
         options = [charger]
     options = options[:args.number]
 
-    display_options(options, args.interval, args.power, args.efficiency)
+    display_options(world, options, args.interval, args.power, args.efficiency)
