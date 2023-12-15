@@ -13,6 +13,8 @@ These scripts are intended to be run from the command line. Use the `-h` option 
 
 - [draw_chargers.py](draw_chargers.py) highlights the wireless chargers specified. Navigate beneath the ground to view wireless chargers placed there, or place them at ground level as recommended.
 
+- [junction_chargers.py](./junction_chargers.py) gives parameters for wireless chargers near junctions.
+
 - [road_area.py](./road_area.py) approximates the  driveable road area within the current Map.
 
 
