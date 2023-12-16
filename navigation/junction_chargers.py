@@ -4,7 +4,7 @@ import os
 import sys
 import carla
 
-from charger_options import create_charger
+from charger_stuff import create_charger
 from draw_chargers import draw_chargers
 
 
