@@ -1,9 +1,43 @@
+import argparse
 import time
 import os
+import sys
 import carla
 
 from charger_options import create_charger
 from draw_chargers import draw_chargers
+
+
+granularity = 1.0
+
+
+def get_junction_chargers(world:carla.World, length:float, width:float) -> dict:
+    """
+    Creates chargers near the entrance to junctions.
+
+    `world`: CARLA world
+    `length`: Length of charger to create, in meters
+    `width`: Width of charger to create, in meters
+
+    Returns a dictionary whose keys are junction IDs and values are lists of chargers near those junctions.
+    """
+    waypoints = world.get_map().generate_waypoints(granularity)
+
+    junctions = set()
+    for wp in waypoints:
+        if wp.is_junction:
+            junctions.add(wp.get_junction().id)
+
+    junction_chargers = {
+        junction: list()
+        for junction in junctions
+    }
+    for wp in waypoints:
+        if not wp.is_junction:
+            next_wp = wp.next(granularity)
+            if next_wp and next_wp[0].is_junction:
+                junction_chargers[next_wp[0].get_junction().id].append(create_charger(length, width, wp.transform))
+    return junction_chargers
 
 
 def save_chargers(path, chargers, power=None, efficiency=None):
@@ -29,37 +63,81 @@ def save_chargers(path, chargers, power=None, efficiency=None):
 
 
 if __name__ == "__main__":
-    client = carla.Client('127.0.0.1', 2000)
+    argparser = argparse.ArgumentParser()
+    argparser.add_argument(
+        'length',
+        metavar='L',
+        type=float,
+        help='length of the charger'
+    )
+    argparser.add_argument(
+        'width',
+        metavar='W',
+        type=float,
+        help='width of the charger'
+    )
+    argparser.add_argument(
+        'outfolder',
+        help='directory to save data to'
+    )
+    argparser.add_argument(
+        '-i', '--interval',
+        metavar='I',
+        default=5.0,
+        type=float,
+        help='wait time between charger demonstrations, or 0 to keep demonstrations active'
+    )
+    argparser.add_argument(
+        '--power',
+        type=float,
+        help='add power field to output'
+    )
+    argparser.add_argument(
+        '--efficiency',
+        type=float,
+        help='add efficiency field to output'
+    )
+    argparser.add_argument(
+        '-m', '--map',
+        help='name of map to load, or "list" to list choices'
+    )
+    argparser.add_argument(
+        '--host',
+        metavar='H',
+        default='127.0.0.1',
+        help='IP of the host server (default: 127.0.0.1)'
+    )
+    argparser.add_argument(
+        '--port',
+        metavar='P',
+        default=2000,
+        type=int,
+        help='TCP port to listen to (default: 2000)'
+    )
+    args = argparser.parse_args()
+
+    client = carla.Client(args.host, args.port)
     client.set_timeout(20.0)
-    world = client.get_world()
 
-    granularity = 1.0
-    length = 2.0
-    width = 1.0
-    out = 'chargertest/'
-    interval = 5.0
+    if args.map is None:
+        world = client.get_world()
+    else:
+        available_maps = [path.split('/')[-1] for path in client.get_available_maps()]
+        if args.map == "list":
+            print(available_maps)
+            sys.exit()
+        elif args.map in available_maps:
+            world = client.load_world(args.map)
+        else:
+            print("Error: This map is not available.")
+            sys.exit()
 
-    waypoints = world.get_map().generate_waypoints(granularity)
+    junction_chargers = get_junction_chargers(world, args.length, args.width)
 
-    junctions = set()
-    for wp in waypoints:
-        if wp.is_junction:
-            junctions.add(wp.get_junction().id)
-
-    junction_chargers = {
-        junction: list()
-        for junction in junctions
-    }
-    for wp in waypoints:
-        if not wp.is_junction:
-            next_wp = wp.next(granularity)
-            if next_wp and next_wp[0].is_junction:
-                junction_chargers[next_wp[0].get_junction().id].append(create_charger(length, width, wp.transform))
-
-    os.makedirs(out, exist_ok=True)
+    os.makedirs(args.outfolder, exist_ok=True)
 
     for junction, chargers in junction_chargers.items():
         print(junction)
-        save_chargers(os.path.join(out, f'junction{junction}.csv'), chargers)
-        draw_chargers(chargers, world.debug, interval)
-        time.sleep(interval)
+        save_chargers(os.path.join(args.outfolder, f'junction{junction}.csv'), chargers, args.power, args.efficiency)
+        draw_chargers(chargers, world.debug, args.interval)
+        time.sleep(args.interval)
