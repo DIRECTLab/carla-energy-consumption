@@ -15,6 +15,8 @@ These scripts are intended to be run from the command line. Use the `-h` option 
 
 - [junction_chargers.py](./junction_chargers.py) gives parameters for wireless chargers near junctions.
 
+- [propagate_chargers.py](./propagate_chargers.py) propagates chargers backwards through lanes.
+
 - [road_area.py](./road_area.py) approximates the  driveable road area within the current Map.
 
 
