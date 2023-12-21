@@ -29,6 +29,10 @@ if __name__ == '__main__':
         help='CSV file to read wireless charging data from'
     )
     argparser.add_argument(
+        '-m', '--map',
+        help='name of map to load, or "list" to list choices'
+    )
+    argparser.add_argument(
         '--host',
         metavar='H',
         default='127.0.0.1',
@@ -45,7 +49,19 @@ if __name__ == '__main__':
 
     client = carla.Client(args.host, args.port)
     client.set_timeout(20.0)
-    world = client.get_world()
+
+    if args.map is None:
+        world = client.get_world()
+    else:
+        available_maps = [path.split('/')[-1] for path in client.get_available_maps()]
+        if args.map == "list":
+            print(available_maps)
+            sys.exit()
+        elif args.map in available_maps:
+            world = client.load_world(args.map)
+        else:
+            print("Error: This map is not available.")
+            sys.exit()
 
     print('Waiting for Ctrl-C')
     try:
