@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import argparse
-import time
+import sys
 import carla
 
 
@@ -68,7 +68,19 @@ def junction_label_counts(junction_labels):
 def main(args):
     client = carla.Client(args.host, args.port)
     client.set_timeout(20.0)
-    world = client.get_world()
+
+    if args.map is None:
+        world = client.get_world()
+    else:
+        available_maps = [path.split('/')[-1] for path in client.get_available_maps()]
+        if args.map == "list":
+            print(available_maps)
+            sys.exit()
+        elif args.map in available_maps:
+            world = client.load_world(args.map)
+        else:
+            print("Error: This map is not available.")
+            sys.exit()
 
     waypoints = world.get_map().generate_waypoints(args.lane_granularity)
     invalid_lanetypes = (
@@ -98,17 +110,14 @@ def main(args):
     if was_rendering:
         settings.no_rendering_mode = True
         world.apply_settings(settings)
-    start = time.time()
     labels = junction_labels(world, list(junctions.values()))
     label_counts = junction_label_counts(labels)
-    end = time.time()
     if was_rendering:
         settings.no_rendering_mode = False
         world.apply_settings(settings)
 
-    print(f'Time: {end-start} s')
-    print(f'{len(labels)} junction points searched')
-    print(label_counts)
+    print(f'{len(labels)} junction points searched:')
+    print(label_counts, '\n')
 
     unknown_area = label_counts.get(carla.CityObjectLabel.NONE, 0) + label_counts.get(None, 0)
     min_road_area = lane_area_no_junctions + label_counts.get(carla.CityObjectLabel.Roads, 0) + label_counts.get(carla.CityObjectLabel.RoadLines, 0)
@@ -123,6 +132,10 @@ if __name__ == '__main__':
         default=0.01,
         type=float,
         help='distance between points sampled on lanes outside of junctions'
+    )
+    argparser.add_argument(
+        '-m', '--map',
+        help='name of map to load, or "list" to list choices'
     )
     argparser.add_argument(
         '--host',
