@@ -64,6 +64,11 @@ if __name__ == "__main__":
         help='distance backwards to propagate'
     )
     argparser.add_argument(
+        '--separate',
+        action='store_true',
+        help='only save new chargers in outfile'
+    )
+    argparser.add_argument(
         '-n',
         type=int,
         default=1,
@@ -112,7 +117,8 @@ if __name__ == "__main__":
             sys.exit()
     the_map = world.get_map()
     
-    all_chargers = new_chargers = args.init_chargers
+    all_chargers = list() if args.separate else args.init_chargers
+    new_chargers = args.init_chargers
     for _ in range(args.n):
         new_chargers = propagate(the_map, new_chargers, args.d)
         all_chargers += new_chargers
