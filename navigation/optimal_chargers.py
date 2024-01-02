@@ -3,15 +3,16 @@ Uses data from a previous simulation run to put chargers in the best places.
 """
 import os
 import sys
+import time
 import math
 import argparse
 import numpy as np
 import pandas as pd
 import carla
+# import matplotlib.pyplot as plt
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from charger_stuff import create_charger
-from navigation.draw_chargers import draw_chargers
+from navigation.charger_stuff import create_charger
 
 
 def get_vehicle_data(infolder) -> dict:
@@ -47,6 +48,22 @@ def get_heatmap(xs, ys, unit_dim: float):
     return density, xunit, yunit
 
 
+def display_options(world:carla.World, options:list, interval:float, power=None, efficiency=None):
+    print(f'front_left,front_right,back_right{",power" if power is not None else ""}{",efficiency" if efficiency is not None else ""}')
+    power_str = ''
+    if power is not None:
+        power_str = f',{power}'
+    efficiency_str = ''
+    if efficiency is not None:
+        efficiency_str = f',{efficiency}'
+    for charger in options:
+        charger.draw(world.debug, interval)
+        print(f'"({charger.front_left.x},{charger.front_left.y},{charger.front_left.z})",', end='')
+        print(f'"({charger.front_right.x},{charger.front_right.y},{charger.front_right.z})",', end='')
+        print(f'"({charger.back_right.x},{charger.back_right.y},{charger.back_right.z})"{power_str}{efficiency_str}')
+        time.sleep(interval)
+
+
 def get_chargers(xs, ys, unit_dim: float, n_chargers: int, length: float, width: float, the_map: carla.Map):
     """
     """
@@ -54,6 +71,10 @@ def get_chargers(xs, ys, unit_dim: float, n_chargers: int, length: float, width:
     chargers = list()
     length_in_idxs = math.ceil(length / unit_dim)
     for _ in range(n_chargers):
+        # plt.imshow(density, cmap='hot', interpolation='nearest')
+        # plt.colorbar()
+        # plt.show()
+
         pop_idx = np.unravel_index(density.argmax(), density.shape)
         if density[pop_idx] == 0.0:
             break
@@ -90,13 +111,13 @@ if __name__ == "__main__":
         'infolder',
         help='folder with simulation output data to use for determining optimal placement'
     )
-    # argparser.add_argument(
-    #     '-i', '--interval',
-    #     metavar='I',
-    #     default=5.0,
-    #     type=float,
-    #     help='wait time between charger demonstrations, or 0 to keep demonstrations active'
-    # )
+    argparser.add_argument(
+        '-i', '--interval',
+        metavar='I',
+        default=5.0,
+        type=float,
+        help='wait time between charger demonstrations, or 0 to keep demonstrations active'
+    )
     argparser.add_argument(
         'n',
         type=int,
@@ -105,7 +126,7 @@ if __name__ == "__main__":
     argparser.add_argument(
         '-u', '--unit-dim',
         metavar='U',
-        default=0.5,
+        default=1.0,
         type=float,
         help='dimension of squares analyzed for visitation frequency'
     )
@@ -165,4 +186,4 @@ if __name__ == "__main__":
     ys = np.concatenate([vehicle_data[idx]['y'].values for idx in vehicle_data.keys()])
     density, xunit, yunit = get_heatmap(xs, ys, args.unit_dim)
     chargers = get_chargers(xs, ys, args.unit_dim, args.n, args.length, args.width, the_map)
-    draw_chargers(chargers, world.debug, 100)
+    display_options(world, chargers, args.interval, args.power, args.efficiency)
