@@ -9,7 +9,67 @@ import numpy as np
 import pandas as pd
 import carla
 
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from charger_stuff import create_charger
+from navigation.draw_chargers import draw_chargers
+
+
+def get_vehicle_data(infolder) -> dict:
+    """
+    Returns all vehicle data as a dict of pandas DataFrames.
+    """
+    vehicle_meta = pd.read_csv(os.path.join(infolder, "vehicles.csv"), index_col=0)
+    vehicle_data = {
+        idx: pd.read_csv(os.path.join(infolder, f"vehicle{idx}.csv"), index_col=0)
+        for idx in vehicle_meta.index
+    }
+    return vehicle_data
+
+
+def get_heatmap(xs, ys, unit_dim: float):
+    """
+    `xs`: list of x-coordinates
+    `ys`: corresponding list of y-coordinates
+    `unit_dim`: dimension of squares analyzed for visitation frequency
+
+    Returns a tuple with the following values:
+    - Histogram, represented as an np array
+    - Dimension of each unit in the x direction. This should be similar to but slightly smaller than `unit_dim`
+    - Dimension of each unit in the y direction. This should be similar to but slightly smaller than `unit_dim`
+    """
+    xrange = xs.ptp()
+    xbins = math.ceil(xrange / unit_dim)
+    xunit = xrange / xbins
+    yrange = ys.ptp()
+    ybins = math.ceil(yrange / unit_dim)
+    yunit = yrange / ybins
+    density, xedges, yedges = np.histogram2d(xs, ys, [xbins, ybins], density=True)
+    return density, xunit, yunit
+
+
+def get_chargers(xs, ys, unit_dim: float, n_chargers: int, length: float, width: float, the_map: carla.Map):
+    """
+    """
+    density, xunit, yunit = get_heatmap(xs, ys, unit_dim)
+    chargers = list()
+    length_in_idxs = math.ceil(length / unit_dim)
+    for _ in range(n_chargers):
+        pop_idx = np.unravel_index(density.argmax(), density.shape)
+        if density[pop_idx] == 0.0:
+            break
+        x = xs.min() + (pop_idx[0] + 0.5) * xunit
+        y = ys.min() + (pop_idx[1] + 0.5) * yunit
+        wp = the_map.get_waypoint(carla.Location(x, y, 0.0))
+        charger = create_charger(length, width, wp.transform)
+        chargers.append(charger)
+
+        # This will exclude a square of size lengthxlength (plus a little extra). Is there a better option?
+        for x_idx in range(pop_idx[0]-length_in_idxs, pop_idx[0]+length_in_idxs+1):
+            if x_idx < density.shape[0]:
+                for y_idx in range(pop_idx[1]-length_in_idxs, pop_idx[1]+length_in_idxs+1):
+                    if y_idx < density.shape[1]:
+                        density[x_idx, y_idx] = 0.0
+    return chargers
 
 
 if __name__ == "__main__":
@@ -47,7 +107,7 @@ if __name__ == "__main__":
         metavar='U',
         default=0.5,
         type=float,
-        help='dimension of units to analyze for visitation frequency'
+        help='dimension of squares analyzed for visitation frequency'
     )
     argparser.add_argument(
         '--power',
@@ -98,3 +158,11 @@ if __name__ == "__main__":
         else:
             print("Error: This map is not available.")
             sys.exit()
+    the_map = world.get_map()
+
+    vehicle_data = get_vehicle_data(args.infolder)
+    xs = np.concatenate([vehicle_data[idx]['x'].values for idx in vehicle_data.keys()])
+    ys = np.concatenate([vehicle_data[idx]['y'].values for idx in vehicle_data.keys()])
+    density, xunit, yunit = get_heatmap(xs, ys, args.unit_dim)
+    chargers = get_chargers(xs, ys, args.unit_dim, args.n, args.length, args.width, the_map)
+    draw_chargers(chargers, world.debug, 100)
