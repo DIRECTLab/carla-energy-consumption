@@ -275,7 +275,7 @@ def main():
         '--seed',
         metavar='SEED',
         type=int,
-        help='random seed; guarantees determinism in synch mode'
+        help='random seed; guarantees determinism in synch mode; use a nonnegative integer'
     )
     args = argparser.parse_args()
 
