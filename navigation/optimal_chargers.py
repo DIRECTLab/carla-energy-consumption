@@ -3,13 +3,11 @@ Uses data from a previous simulation run to put chargers in the best places.
 """
 import os
 import sys
-import time
 import math
 import argparse
 import numpy as np
 import pandas as pd
 import carla
-# import matplotlib.pyplot as plt
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from navigation.charger_stuff import create_charger, display_options
@@ -57,10 +55,6 @@ def get_chargers(xs, ys, unit_dim: float, n_chargers: int, length: float, width:
     chargers = list()
     length_in_idxs = math.ceil(length / unit_dim)
     for _ in range(n_chargers):
-        # plt.imshow(density, cmap='hot', interpolation='nearest')
-        # plt.colorbar()
-        # plt.show()
-
         pop_idx = np.unravel_index(density.argmax(), density.shape)
         if density[pop_idx] == 0.0:
             break
