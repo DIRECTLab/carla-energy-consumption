@@ -15,15 +15,17 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from navigation.charger_stuff import create_charger
 
 
-def get_vehicle_data(infolder) -> dict:
+def get_vehicle_data(infolders) -> dict:
     """
     Returns all vehicle data as a dict of pandas DataFrames.
+    `infolders`: List of paths to output from `multitracking.py`.
     """
-    vehicle_meta = pd.read_csv(os.path.join(infolder, "vehicles.csv"), index_col=0)
-    vehicle_data = {
-        idx: pd.read_csv(os.path.join(infolder, f"vehicle{idx}.csv"), index_col=0)
-        for idx in vehicle_meta.index
-    }
+    vehicle_data = dict()
+    for infolder in infolders:
+        vehicle_meta = pd.read_csv(os.path.join(infolder, "vehicles.csv"), index_col=0)
+        for idx in vehicle_meta.index:
+            data = pd.read_csv(os.path.join(infolder, f"vehicle{idx}.csv"), index_col=0)
+            vehicle_data[f"{infolder}-{idx}"] = data
     return vehicle_data
 
 
@@ -48,7 +50,7 @@ def get_heatmap(xs, ys, unit_dim: float):
     return density, xunit, yunit
 
 
-def display_options(world:carla.World, options:list, interval:float, power=None, efficiency=None):
+def display_options(world:carla.World, options:list, interval:float=None, power:float=None, efficiency:float=None):
     print(f'front_left,front_right,back_right{",power" if power is not None else ""}{",efficiency" if efficiency is not None else ""}')
     power_str = ''
     if power is not None:
@@ -57,11 +59,12 @@ def display_options(world:carla.World, options:list, interval:float, power=None,
     if efficiency is not None:
         efficiency_str = f',{efficiency}'
     for charger in options:
-        charger.draw(world.debug, interval)
         print(f'"({charger.front_left.x},{charger.front_left.y},{charger.front_left.z})",', end='')
         print(f'"({charger.front_right.x},{charger.front_right.y},{charger.front_right.z})",', end='')
         print(f'"({charger.back_right.x},{charger.back_right.y},{charger.back_right.z})"{power_str}{efficiency_str}')
-        time.sleep(interval)
+        if interval is not None:
+            charger.draw(world.debug, interval)
+            time.sleep(interval)
 
 
 def get_chargers(xs, ys, unit_dim: float, n_chargers: int, length: float, width: float, the_map: carla.Map):
@@ -108,20 +111,22 @@ if __name__ == "__main__":
         help='width of the charger'
     )
     argparser.add_argument(
-        'infolder',
-        help='folder with simulation output data to use for determining optimal placement'
+        'n',
+        metavar='N',
+        type=int,
+        help='maximum number of chargers to display'
+    )
+    argparser.add_argument(
+        'infolders',
+        nargs='+',
+        metavar='INFOLDER',
+        help='path to directory with simulation output data'
     )
     argparser.add_argument(
         '-i', '--interval',
         metavar='I',
-        default=5.0,
         type=float,
-        help='wait time between charger demonstrations, or 0 to keep demonstrations active'
-    )
-    argparser.add_argument(
-        'n',
-        type=int,
-        help='maximum number of chargers to display'
+        help='wait time between charger demonstrations, or 0 to keep demonstrations active; default no demonstrations'
     )
     argparser.add_argument(
         '-u', '--unit-dim',
@@ -181,7 +186,7 @@ if __name__ == "__main__":
             sys.exit()
     the_map = world.get_map()
 
-    vehicle_data = get_vehicle_data(args.infolder)
+    vehicle_data = get_vehicle_data(args.infolders)
     xs = np.concatenate([vehicle_data[idx]['x'].values for idx in vehicle_data.keys()])
     ys = np.concatenate([vehicle_data[idx]['y'].values for idx in vehicle_data.keys()])
     density, xunit, yunit = get_heatmap(xs, ys, args.unit_dim)
