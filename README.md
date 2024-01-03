@@ -3,9 +3,10 @@ Energy consumption tracking for CARLA simulator.
 
 
 ## Contents
+All scripts in this directory run independently from each other and can be run from the command line. 
 When in doubt, opt for [multitracking.py](multitracking.py). This program is the most up-to-date and offers most of the functionality of both [unitracking.py](unitracking.py) and [automatic_control.py](automatic_control.py), plus more.
 
-More information about usage and options for scripts which are run from the command line can be obtained with the `-h` option. 
+More information about usage and options can be obtained with the `-h` option. 
 See also [QUICKSTART.MD](./QUICKSTART.md).
 
 - [automatic_control.py](automatic_control.py) tracks a vehicle which is automatically controlled on the client side.
