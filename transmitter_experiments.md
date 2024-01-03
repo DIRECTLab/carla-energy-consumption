@@ -20,6 +20,10 @@ File structure is as follows (replace `NA`, `NT`, `S` with numbers, `P` with "ra
 ## 1. Generate Agents
 TODO!
 Use `input/prepare_agents.py` to create these files. It may need altered to allow an ideal `lane_offset` distribution.
+The following parameters should be randomized:
+- `lane_offset`
+- `init_soc`
+- `hvac`
 
 
 ## 2. Generate Transmitters

@@ -3,7 +3,21 @@ Example input files for [automatic_control.py](../automatic_control.py), [unitra
 
 
 ## Contents
-- [chargers.csv](chargers.csv) is an example CSV file for loading wireless chargers. 
+- [directions.csv](directions.csv) is an example CSV file for loading predetermined directions in [unitracking.py](../unitracking.py). It demonstrates the `direction` field and accepted values.
+
+    *In this mode, the vehicle will not perform lane changes. If lane changes are necessary, use a path file instead.*
+
+- [path.csv](path.csv) is an example CSV file for loading a predetermined path in [unitracking.py](../unitracking.py). 
+    This file demonstrates the following fields, required for all files of this type:
+    - `x`: global x coordinate.
+    - `y`: global y coordinate.
+    - `z`: global z coordinate.
+
+    *For proper functionality, ensure that points lie in roads and that there is at least one point for each road segment the vehicle should travel.* 
+
+- [prepare_agents.py](./prepare_agents.py) is a script for creating an agent file such as [tracked_agent.csv](./tracked_agent.csv).
+
+- [Town06_intersection_chargers.csv](./Town06_intersection_chargers.csv) is an example CSV file for loading wireless chargers. 
     Receivers and transmitters are assumed to be double-D coils with the same dimensions, 
     which means that every entry in this file should have the same dimensions. 
     Dimensions and coordinates are those of the transmitter's coils. Maximum power transferred is `power * efficiency`, 
@@ -20,18 +34,6 @@ Example input files for [automatic_control.py](../automatic_control.py), [unitra
     - `efficiency`: Maximum charger-vehicle efficiency as a fraction assuming perfect alignment.
 
     To automatically generate a file of this type, see [charger_options.py](../navegation/charger_options.py).
-
-- [directions.csv](directions.csv) is an example CSV file for loading predetermined directions in [unitracking.py](../unitracking.py). It demonstrates the `direction` field and accepted values.
-
-    *In this mode, the vehicle will not perform lane changes. If lane changes are necessary, use a path file instead.*
-
-- [path.csv](path.csv) is an example CSV file for loading a predetermined path in [unitracking.py](../unitracking.py). 
-    This file demonstrates the following fields, required for all files of this type:
-    - `x`: global x coordinate.
-    - `y`: global y coordinate.
-    - `z`: global z coordinate.
-
-    *For proper functionality, ensure that points lie in roads and that there is at least one point for each road segment the vehicle should travel.* 
 
 - [tracked_agent.csv](tracked_agent.csv) is an example CSV file for loading vehicles in [multitracking.py](multitracking.py). It demonstrates the following required fields: 
     - `vehicle`: which vehicle blueprint to use. To view the available blueprints, run the CARLA example found at `PythonAPI\examples\vehicle_gallery.py`.
@@ -64,5 +66,7 @@ Example input files for [automatic_control.py](../automatic_control.py), [unitra
     - `braking_alpha`
 
     For defaults, leave fields blank or do not include them.
+
+- [tracked_agents.csv](./tracked_agents.csv) showcases all of the vehicles available in CARLA 0.9.14, for use in [multitracking.py](multitracking.py). It does not contain good EV parameters for all vehicles.
 
 - [untracked_agents.csv](untracked_agents.csv) is a CSV for the `-u` option in [multitracking.py](multitracking.py). It follows the same pattern as [tracked_agent.csv](tracked_agent.csv). 
