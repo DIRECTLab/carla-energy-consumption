@@ -12,7 +12,7 @@ import carla
 # import matplotlib.pyplot as plt
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from navigation.charger_stuff import create_charger
+from navigation.charger_stuff import create_charger, display_options
 
 
 def get_vehicle_data(infolders) -> dict:
@@ -48,23 +48,6 @@ def get_heatmap(xs, ys, unit_dim: float):
     yunit = yrange / ybins
     density, xedges, yedges = np.histogram2d(xs, ys, [xbins, ybins], density=True)
     return density, xunit, yunit
-
-
-def display_options(world:carla.World, options:list, interval:float=None, power:float=None, efficiency:float=None):
-    print(f'front_left,front_right,back_right{",power" if power is not None else ""}{",efficiency" if efficiency is not None else ""}')
-    power_str = ''
-    if power is not None:
-        power_str = f',{power}'
-    efficiency_str = ''
-    if efficiency is not None:
-        efficiency_str = f',{efficiency}'
-    for charger in options:
-        print(f'"({charger.front_left.x},{charger.front_left.y},{charger.front_left.z})",', end='')
-        print(f'"({charger.front_right.x},{charger.front_right.y},{charger.front_right.z})",', end='')
-        print(f'"({charger.back_right.x},{charger.back_right.y},{charger.back_right.z})"{power_str}{efficiency_str}')
-        if interval is not None:
-            charger.draw(world.debug, interval)
-            time.sleep(interval)
 
 
 def get_chargers(xs, ys, unit_dim: float, n_chargers: int, length: float, width: float, the_map: carla.Map):

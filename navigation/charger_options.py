@@ -5,11 +5,9 @@ import os
 import argparse
 import carla
 import random
-import time
-
-from charger_stuff import create_charger
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from navigation.charger_stuff import create_charger, display_options
 from interface.loading import parse_location
 
 
@@ -30,22 +28,6 @@ def get_charger_options(world:carla.World, length:float, width:float) -> list:
         charger = create_charger(length, width, transform)
         options.append(charger)
     return options
-
-
-def display_options(world:carla.World, options:list, interval:float, power=None, efficiency=None):
-    print(f'front_left,front_right,back_right{",power" if power is not None else ""}{",efficiency" if efficiency is not None else ""}')
-    power_str = ''
-    if power is not None:
-        power_str = f',{power}'
-    efficiency_str = ''
-    if efficiency is not None:
-        efficiency_str = f',{efficiency}'
-    for charger in options:
-        charger.draw(world.debug, interval)
-        print(f'"({charger.front_left.x},{charger.front_left.y},{charger.front_left.z})",', end='')
-        print(f'"({charger.front_right.x},{charger.front_right.y},{charger.front_right.z})",', end='')
-        print(f'"({charger.back_right.x},{charger.back_right.y},{charger.back_right.z})"{power_str}{efficiency_str}')
-        time.sleep(interval)
 
 
 if __name__ == '__main__':
@@ -71,9 +53,8 @@ if __name__ == '__main__':
     argparser.add_argument(
         '-i', '--interval',
         metavar='I',
-        default=5.0,
         type=float,
-        help='wait time between charger demonstrations, or 0 to keep demonstrations active'
+        help='wait time between charger demonstrations, or 0 to keep demonstrations active; default no demonstrations'
     )
     argparser.add_argument(
         '-n', '--number',
