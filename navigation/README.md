@@ -22,6 +22,7 @@ These scripts are intended to be run from the command line. Use the `-h` option 
 - [optimal_chargers.py](./optimal_chargers.py) uses data from one or more prior simulations to determine the best places to install chargers for maximum utilization.
     - This script works best when data from multiple simulations is used. For example:
         ```
+        # For this example, it is recommended to modify input/tracked_agent.csv so that 100 agents are produced, so that there is 100 times as much data.
         python multitracking.py input/tracked_agent.csv output/Town06_20min-1001/ -m Town06 --seed 1001 -t 1200 -d 0.05 -r
         python multitracking.py input/tracked_agent.csv output/Town06_20min-1002/ -m Town06 --seed 1002 -t 1200 -d 0.05 -r
         python multitracking.py input/tracked_agent.csv output/Town06_20min-1003/ -m Town06 --seed 1003 -t 1200 -d 0.05 -r
