@@ -5,6 +5,7 @@ Energy consumption tracking for CARLA simulator.
 ## Contents
 When in doubt, opt for [multitracking.py](multitracking.py). This program is the most up-to-date and offers most of the functionality of both [unitracking.py](unitracking.py) and [automatic_control.py](automatic_control.py), plus more.
 
+More information about usage and options for scripts which are run from the command line can be obtained with the `-h` option. 
 See also [QUICKSTART.MD](./QUICKSTART.md).
 
 - [automatic_control.py](automatic_control.py) tracks a vehicle which is automatically controlled on the client side.
@@ -19,16 +20,13 @@ See also [QUICKSTART.MD](./QUICKSTART.md).
 
 - [manual_control_steeringwheel.py](./manual_control_steeringwheel.py) tracks power usage of a vehicle which the user drives using a steering wheel controller.
 
-    - Run `python manual_control_steeringwheel.py -h` to get all options.
-
     Basic Usage
     1. Start the CARLA server.
     2. Run `python manual_control_steeringwheel.py input/tracked_agent.csv`.
 
 - [multitracking.py](multitracking.py) tracks multiple vehicles at once. These vehicles can be controlled by the Traffic Manager or one of the agents under `agents/navigation/`.
 
-    - Run `python multitracking.py -h` to get all options. The `-d` option is strongly recommended.
-    - For BehaviorAgents, ensure `delta` time step is below 0.02.
+    - The `-d` option is strongly recommended. Try `0.05` at first. For BehaviorAgents, ensure `delta` time step is below `0.02`.
 
     Basic Usage
     1. Start the CARLA server.
@@ -37,7 +35,7 @@ See also [QUICKSTART.MD](./QUICKSTART.md).
 
 - [unitracking.py](unitracking.py) shows a usage example allowing greater control over a single vehicle. This spawns traffic and tracks energy usage and other data about a simulated Tesla Model 3, displaying updates every second. At the end, it graphs the power consumed as compared with velocity, acceleration and road grade, then plots a heatmap of the areas the vehicle travelled to. 
 
-    - Run `python unitracking.py -h` to get all options. The `-t` option is strongly recommended.
+    - The `-t` option is strongly recommended.
 
     Basic Usage
     1. Start the CARLA server.
