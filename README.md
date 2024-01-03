@@ -57,3 +57,7 @@ See also [QUICKSTART.MD](./QUICKSTART.md).
 
 ## Requirements
 Follow CARLA [installation instructions](https://carla.readthedocs.io/en/0.9.14/start_quickstart/) for both server and client. In addition, use `pip` or `conda` to install `matplotlib`, `pandas`, `shapely`, and `networkx`. This code was tested on CARLA `v0.9.14`, Python `v3.8.16`.
+
+
+## License 
+All software is included under the [MIT License](https://opensource.org/license/mit/).
