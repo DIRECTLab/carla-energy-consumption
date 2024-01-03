@@ -19,7 +19,7 @@ File structure is as follows (replace `NA`, `NT`, `S` with numbers, `P` with "ra
 
 ## 1. Generate Agents
 TODO!
-Use `input/prepare_agents.py` to create these files. It may need altered to allow an ideal `lane_offset` distribution.
+Use `input/creation/prepare_agents.py` to create these files. It may need altered to allow an ideal `lane_offset` distribution.
 The following parameters should be randomized:
 - `lane_offset`
 - `init_soc`
@@ -29,7 +29,7 @@ The following parameters should be randomized:
 ## 2. Generate Transmitters
 ### Open-Lane Transmitters (`open`)
 ```
-python navigation/charger_options.py 2 1 -m Town06 --power 50_000 --efficiency 0.95 -n NT --seed S > input/transmitter_experiments/chargers/NT/random/S.csv
+python input/creation/charger_options.py 2 1 -m Town06 --power 50_000 --efficiency 0.95 -n NT --seed S > input/transmitter_experiments/chargers/NT/random/S.csv
 ```
 
 ### Optimal Transmitters (`popular`)
@@ -40,7 +40,7 @@ Note that placement is determined using moderate traffic (`NA = 100`). High-traf
 python multitracking.py input/transmitter_experiments/agents/100/S.csv input/transmitter_experiments/chargers/NT/P/S/S^1/ -m Town06 --seed S^1 -t 1500 -d 0.05 -r
 python multitracking.py input/transmitter_experiments/agents/100/S.csv input/transmitter_experiments/chargers/NT/P/S/S^2/ -m Town06 --seed S^2 -t 1500 -d 0.05 -r
 python multitracking.py input/transmitter_experiments/agents/100/S.csv input/transmitter_experiments/chargers/NT/P/S/S^3/ -m Town06 --seed S^3 -t 1500 -d 0.05 -r
-python navigation/optimal_chargers.py -m Town06 2 1 NT input/transmitter_experiments/chargers/NT/P/S/S^1/ input/transmitter_experiments/chargers/NT/P/S/S^2/ input/transmitter_experiments/chargers/NT/P/S/S^3/ --power 50_000 --efficiency 0.95 > input/transmitter_experiments/chargers/NT/popular/S.csv
+python input/creation/optimal_chargers.py -m Town06 2 1 NT input/transmitter_experiments/chargers/NT/P/S/S^1/ input/transmitter_experiments/chargers/NT/P/S/S^2/ input/transmitter_experiments/chargers/NT/P/S/S^3/ --power 50_000 --efficiency 0.95 > input/transmitter_experiments/chargers/NT/popular/S.csv
 ```
 Cleanup (optional):
 ```

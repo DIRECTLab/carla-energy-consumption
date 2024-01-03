@@ -46,7 +46,7 @@ See also [QUICKSTART.MD](./QUICKSTART.md).
 
 - `interface/` is an interface between the user-facing programs contained in this directory and the inner workings of the core logic. See [its README](./interface/README.md).
 
-- `input/` contains example input files for  [automatic_control.py](automatic_control.py), [unitracking.py](unitracking.py) and [multitracking.py](multitracking.py). See [its README](input/README.md) for input file documentation.
+- `input/` contains example input files for [automatic_control.py](automatic_control.py), [unitracking.py](unitracking.py) and [multitracking.py](multitracking.py). It also contains some scripts to help create those files. See [its README](input/examples/README.md) for input file documentation.
 
 - `navigation/` contains some functions for getting oriented to CARLA maps and wireless chargers. See [its README](navigation/README.md). 
 

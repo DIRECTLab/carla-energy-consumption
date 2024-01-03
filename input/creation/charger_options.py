@@ -6,8 +6,8 @@ import argparse
 import carla
 import random
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from navigation.charger_stuff import create_charger, display_options
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+from input.creation.charger_stuff import create_charger, display_options
 from interface.loading import parse_location
 
 

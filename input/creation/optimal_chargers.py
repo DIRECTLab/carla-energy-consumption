@@ -9,8 +9,8 @@ import numpy as np
 import pandas as pd
 import carla
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from navigation.charger_stuff import create_charger, display_options
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+from input.creation.charger_stuff import create_charger, display_options
 
 
 def get_vehicle_data(infolders) -> dict:

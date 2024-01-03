@@ -15,8 +15,6 @@ Example input files for [automatic_control.py](../automatic_control.py), [unitra
 
     *For proper functionality, ensure that points lie in roads and that there is at least one point for each road segment the vehicle should travel.* 
 
-- [prepare_agents.py](./prepare_agents.py) is a script for creating an agent file such as [tracked_agent.csv](./tracked_agent.csv).
-
 - [Town06_intersection_chargers.csv](./Town06_intersection_chargers.csv) is an example CSV file for loading wireless chargers. 
     Receivers and transmitters are assumed to be double-D coils with the same dimensions, 
     which means that every entry in this file should have the same dimensions. 

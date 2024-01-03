@@ -3,10 +3,9 @@ import os
 import sys
 import carla
 
-from charger_stuff import create_charger
-from draw_chargers import draw_chargers
-
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+from input.creation.charger_stuff import create_charger
+from navigation.draw_chargers import draw_chargers
 from interface.loading import get_chargers
 
 
