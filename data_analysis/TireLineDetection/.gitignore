@@ -1,0 +1,7 @@
+data/
+*.pt
+*.csv
+*.zip
+images/
+first_batch/
+csv_data/
