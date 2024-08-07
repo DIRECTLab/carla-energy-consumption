@@ -23,7 +23,13 @@ See also [QUICKSTART.MD](./QUICKSTART.md).
 
     Basic Usage
     1. Start the CARLA server.
-    2. Run `python manual_control_steeringwheel.py input/tracked_agent.csv`.
+    2. Run `python manual_control_steeringwheel.py input/examples/tracked_agent.csv`.
+
+- [manual_control_reporting](manual_control_reporting.py) does the same as manual_control_steeringwheel.py but with live reporting to the terminal.
+
+    Basic Usage
+    1. Start the CARLA server.
+    2. Run `python manual_control_reporting.py input/examples/tracked_agent.csv`.
 
 - [multitracking.py](multitracking.py) tracks multiple vehicles at once. These vehicles can be controlled by the Traffic Manager or one of the agents under `agents/navigation/`.
 
