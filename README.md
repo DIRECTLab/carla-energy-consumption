@@ -25,7 +25,7 @@ See also [QUICKSTART.MD](./QUICKSTART.md).
     1. Start the CARLA server.
     2. Run `python manual_control_steeringwheel.py input/examples/tracked_agent.csv`.
 
-- [manual_control_reporting](manual_control_reporting.py) does the same as manual_control_steeringwheel.py but with live reporting to the terminal.
+- [manual_control_reporting.py](manual_control_reporting.py) does the same as manual_control_steeringwheel.py but with live reporting to the terminal.
 
     Basic Usage
     1. Start the CARLA server.
