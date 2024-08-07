@@ -13,6 +13,8 @@ These scripts are intended to be run from the command line. Use the `-h` option 
 
 - [junction_chargers.py](./junction_chargers.py) gives parameters for wireless chargers near junctions.
 
+- [junction_chargers_all.py](./junction_chargers_all.py) runs the same as junction_chargers.py but also creates a file called `all_junctions.csv` in the specified folder that combines the information for all the chargers at all the junctions.
+
 - [optimal_chargers.py](./optimal_chargers.py) uses data from one or more prior simulations to determine the best places to install chargers for maximum utilization.
     - This script works best when data from multiple simulations is used. For example:
         ```
