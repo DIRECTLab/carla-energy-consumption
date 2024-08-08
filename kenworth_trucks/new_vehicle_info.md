@@ -8,7 +8,7 @@ go [here](https://forums.unrealengine.com/t/export-fbx-from-ue4/374740/2) for ho
 Don't forget to remove the extra stuff from the blender file.
 I don't think we need a fancy fbx model that moves. You add the moving wheels seperately. Though it might be useful for how the trailer moves behind the cab...hmmm
 
-0. CARLA must be installed from the source to allow editing abilities. The following was done with CARLA installed from source for Linux on Ubuntu 20. Go [here](https://carla.readthedocs.io/en/latest/build_linux/) for how to build from source in Linux.
+0. CARLA must be installed from the source to allow editing abilities. The following was done with CARLA installed from source for Linux on Ubuntu 20. Go [here](https://carla.readthedocs.io/en/latest/build_linux/) for how to build from source in Linux. Make sure that when you are cloning CARLA that you are getting version 0.9.14. use the command `git clone -b 0.9.14 https://github.com/carla-simulator/carla.git`. When pip installing the carla package install the correct package `pip install carla==0.9.14`
 1. Download and install [Blender](https://www.blender.org/download/)
 2. Find an .fbx model of the desired vehicle
     - as of right now I have found that it is not necessary to get a rigged 3D model for the wheels to move as part of the importing process is connecting your choice of model to the bones of a rigged model which will allow the wheels to move.
