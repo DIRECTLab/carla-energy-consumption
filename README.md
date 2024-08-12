@@ -37,7 +37,7 @@ See also [QUICKSTART.MD](./QUICKSTART.md).
 
     Basic Usage
     1. Start the CARLA server.
-    2. Run `python multitracking.py input/tracked_agent.csv output/`.
+    2. Run `python multitracking.py input/examples/tracked_agent.csv output/`.
         - This will save all data to the `output/` directory, potentially overwriting data that is already there. `output/` can be replaced by any path to a directory or potential directory.
 
 - [unitracking.py](unitracking.py) shows a usage example allowing greater control over a single vehicle. This spawns traffic and tracks energy usage and other data about a simulated Tesla Model 3, displaying updates every second. At the end, it graphs the power consumed as compared with velocity, acceleration and road grade, then plots a heatmap of the areas the vehicle travelled to. 
