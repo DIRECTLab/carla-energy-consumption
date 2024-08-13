@@ -51,6 +51,8 @@ def get_agents(path) -> list:
     """
     regular_params = ['vehicle', 'agent_type', 'number', 'color', 'hvac', 'init_soc', 'lane_offset',]
     # EV params are used to create an EV object
+    print("vehicle Name")
+    print(regular_params[0])
     ev_params = ['capacity', 'A_f', 'gravity', 'C_r', 'c_1', 'c_2', 'rho_Air', 'C_D', 'motor_efficiency', 'driveline_efficiency', 'braking_alpha',]
     defaults = {
         'number': 1,
@@ -80,7 +82,9 @@ def get_agents(path) -> list:
                 else:
                     # Convert from str to correct type. Type must have a constructor that accepts str
                     agent_specification[option] = type(defaults[option])(agent_specification[option])
-
+            # Previously the default was 50.0 for teslas, even when teslas always have a bigger capacity than 50.0
+            if agent_specification['vehicle'][:13] == 'vehicle.tesla':
+                agent_specification['capacity'] = 265.0
             agent_class = dict()
             for param in regular_params:
                 if param in agent_specification.keys():
