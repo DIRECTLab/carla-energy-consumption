@@ -31,6 +31,7 @@ from interface.world import World
 from interface.loading import get_agents, get_chargers
 from interface.reporting import prepare_outfolder, save_vehicle_data, save_all_chargers, print_update
 from interface.wheel.carla_control import CarlaControl
+from navigation.draw_chargers import draw_chargers
 
 
 class Simulation:
@@ -47,7 +48,6 @@ class Simulation:
         try:
             client = carla.Client(args.host, args.port)
             client.set_timeout(60.0)
-
             self.__display = pygame.display.set_mode(
                 (args.width, args.height),
                 pygame.HWSURFACE | pygame.DOUBLEBUF)
@@ -63,9 +63,10 @@ class Simulation:
                 args.tracked[0]['hvac']
             )
             self.__controller = CarlaControl(self.__world, args.autopilot)
-
+            self.__chargers = args.wireless_chargers
+            self.__charger_world = client.get_world()
+            draw_chargers(self.__chargers, self.__charger_world.debug,-1 )
             self.__simulate(args.outfolder)
-
         finally:
             if self.__world is not None:
                 self.__world.destroy()
@@ -157,7 +158,6 @@ def main():
         help='CSV file to read wireless charging data from'
     )
     args = argparser.parse_args()
-
     args.width, args.height = [int(x) for x in args.res.split('x')]
 
     log_level = logging.DEBUG if args.debug else logging.INFO
