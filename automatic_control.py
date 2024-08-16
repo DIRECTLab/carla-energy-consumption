@@ -40,7 +40,7 @@ from interface.trackers.ev import EV
 from interface.trackers.time_tracker import TimeTracker
 from interface.trackers.kinematics_tracker import KinematicsTracker
 from interface.trackers.soc_tracker import SocTracker
-
+from navigation.draw_chargers import draw_chargers
 
 # ==============================================================================
 # -- Global functions ----------------------------------------------------------
@@ -748,6 +748,9 @@ def game_loop(args):
 
         hud = HUD(args.width, args.height)
         world = World(client.get_world(), hud, args)
+        chargers = args.wireless_chargers
+        charger_world = client.get_world()
+        draw_chargers(chargers, charger_world.debug, -1)
         controller = KeyboardControl(world)
         if args.agent == "Basic":
             agent = BasicAgent(world.player, 30)
@@ -896,7 +899,6 @@ def main():
         type=argparse.FileType('w'),
         help='Name of file to write tracking data to'
     )
-
     args = argparser.parse_args()
 
     args.width, args.height = [int(x) for x in args.res.split('x')]
