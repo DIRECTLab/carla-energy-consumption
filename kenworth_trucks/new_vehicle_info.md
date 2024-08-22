@@ -32,3 +32,7 @@ I don't think we need a fancy fbx model that moves. You add the moving wheels se
     - The link to the documentation the video refers to is in the video description, when going there make sure you are on the right page for your version of CARLA.
 10. Before exporting delete the hidden extra meshes or else they will show up in your final result in CARLA. Then continue following the video
 11. When importing in CARLA make sure the wheels are spheres and that they come outside the body of the truck, otherwise the wheels will spin wrong or they will spin and not move the truck at all.
+
+
+## Some Troubles I've found
+The CARLACharge code runs great on version 0.9.14. However, it is a lot harder to get the custom vehicles to work properly in this version, and I ran into an issue where the truck didn't seem to interact with the ground properly or was stuck in the air at a weird angle. I was able to import the Kenworth truck and configure it in a later version of CARLA but the CARLACharge code didn't want to run properly. I realized that I had mismatching version of the client and server and that may have been the issue. It is possible that if installed properly the version 0.9.15 of CARLA build from source will have the bug fixed with custom vehicles and will run the CARLACharge code. 
