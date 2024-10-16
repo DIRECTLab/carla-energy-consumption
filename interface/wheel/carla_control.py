@@ -33,7 +33,7 @@ class CarlaControl(Control):
         """
         # TODO: Simplify below
         throttle = 1.6 + (2.05 * math.log10(-0.7 * super().throttle + 1.4) - 1.2) / 0.92
-        return max(0.27, min(1., throttle))
+        return max(0, min(1., throttle))
 
     def parse_events(self, world):
         control = carla.VehicleControl()
