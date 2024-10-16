@@ -18,11 +18,11 @@ while true; do
 done
 
 wmctrl -a "CarlaUE4"
-sleep 1 
+sleep 10 
 
 xdotool key Alt+p 
 
-sleep 10 
+sleep 20 
 
 export RES=$(xrandr | grep '*' | awk '{print $1}')
 echo "Current resolution is: $RES"
