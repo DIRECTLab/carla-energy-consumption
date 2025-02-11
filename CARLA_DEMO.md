@@ -2,7 +2,7 @@
 This readme is meant for when carla demos are to be run at showcases, events, etc. 
 
 First, ensure you have the carla server downloaded onto your machine. If not, you can
-clone the repository  found here [carla](https://github.com/carla-simulator/carla.git).
+clone the repository  found here [carla](https://github.com/carla-simulator/carla/tree/ue4-dev?tab=readme-ov-file).
 Make sure to follow their documentation for getting carla setup correctly.
 
 Once you have the carla server setup, run the server
