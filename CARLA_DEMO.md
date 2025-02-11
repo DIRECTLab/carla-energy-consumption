@@ -15,3 +15,8 @@ make launch
 This will boot up the carla server. Once it's loaded, the default map should load onto
 the screen. Press play to start the server.
 
+Now that the server is running, you can run the following script to run the carla client
+
+```bash
+./run_carla.sh
+```
