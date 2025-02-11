@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd ~/carla 
+cd ~/research/repos/carla 
 make launch > /dev/null 2>&1 &  
 
 echo "Waiting for CarlaUE4 to load... Please do not touch mouse or keyboard"
@@ -27,7 +27,7 @@ sleep 20
 export RES=$(xrandr | grep '*' | awk '{print $1}')
 echo "Current resolution is: $RES"
 
-cd ~/carla-energy-consumption
+cd ~/research/repos/carla-energy-consumption
 python3 manual_control_steeringwheel.py ./input/examples/kenworth.csv -w ./input/examples/Town10_intersection_chargers.csv --res $RES > /dev/null 2>&1 &
 python3 navigation/draw_chargers.py ./input/examples/Town10_intersection_chargers.csv > /dev/null 2>&1 &
 
