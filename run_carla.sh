@@ -8,10 +8,10 @@ else
   echo "Carla conda env does not exist, installing..."
   conda create -n carlaenv python=3.8 -y
   conda activate carlaenv
-  conda install -c conda-forge pandas matplotlib pygame -y
+  conda install -c conda-forge pandas matplotlib pygame shapely networkx -y
   pip install carla
 fi
 
 export RES=$(xrandr | grep '*' | awk '{print $1}')
-python3 manual_control_steeringwheel.py ./input/examples/kenworth.csv -w ./input/examples/Town10_intersection_chargers.csv --res $RES > /dev/null 2>&1 &
+python3 manual_control_steeringwheel.py ./input/examples/tesla.csv -w ./input/examples/Town10_intersection_chargers.csv --res $RES > /dev/null 2>&1 &
 python3 navigation/draw_chargers.py ./input/examples/Town10_intersection_chargers.csv

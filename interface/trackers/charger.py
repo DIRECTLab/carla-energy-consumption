@@ -94,8 +94,8 @@ class Charger:
         """
         Draws the charging area.
         """
-        center = Color(255,0,1)
-        edges = Color(30,255,0)
+        center = Color(0,5,0)
+        edges = Color(0,5,0)
         length = self.back_right - self.front_right
         back_left = self.front_left + length
         debug.draw_point(self.center, color=center, life_time=life_time)
