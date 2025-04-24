@@ -12,6 +12,8 @@ cd carla
 make launch
 ```
 
+Or if that doesnt work and there is a ./CarlaUE4.sh file run that instead.
+
 This will boot up the carla server. Once it's loaded, the default map should load onto
 the screen. Press play to start the server.
 
