@@ -9,7 +9,7 @@ else
   conda create -n carlaenv python=3.8 -y
   conda activate carlaenv
   conda install -c conda-forge pandas matplotlib pygame shapely networkx -y
-  pip install carla
+  pip install carla==0.9.14
 fi
 
 export RES=$(xrandr | grep '*' | awk '{print $1}')
