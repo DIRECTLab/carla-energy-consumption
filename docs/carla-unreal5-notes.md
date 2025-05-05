@@ -51,14 +51,27 @@ fatal: unable to access 'https://github.com/CarlaUnreal/UnrealEngine.git/': The 
 * Attempted[x]: Had to make a new GitHub "classic" token with `repo` permissions, this worked. 
 * Result: My credentials for accessing the Unreal repo were recognized.
 
-### Attempting Extended Build Instructions (does the building one step at time)
-* [Extended Build Instructions](https://carla-ue5.readthedocs.io/en/latest/build_linux_ue5/#extended-build-instructions)
-* The error is just from `sudo apt update`, just got the same error from running that alone.
-```bash
-(carlaUE5-env) carla@gaston-System-Product-Name:~/CarlaUE5$ grep -r "llvm-toolchain-jammy-10" /etc/apt/sources.list.d/
-/etc/apt/sources.list.d/archive_uri-http_apt_llvm_org_jammy_-jammy.list:deb http://apt.llvm.org/jammy/ llvm-toolchain-jammy-10 main
-/etc/apt/sources.list.d/archive_uri-http_apt_llvm_org_jammy_-jammy.list:# deb-src http://apt.llvm.org/jammy/ llvm-toolchain-jammy-10 main
-```
-The file where I commented out, which is odd it looked like there was already the same item in that file which was commented out already.
+### Failed at the End of Build
+* Failed near what I think was the end of the super script `./CarlaSetup.sh --interactive`. I believe it failed when trying to build the PythonAPI.
+* I think this might be because of my conda environment. I think the super script pip installs packages. Though those should still be visible to the environment? Not sure.
+* Looking more into my conda environment, it looks like the main setup script failed to actually install any of the packages in conda. I think to fix this I will have to go through the step by step setup instead and make sure the packages install to conda.
+* Though, I do believe the Unreal Engine compiled successfully, so I should be able to skip to the PythonAPI setup/only do steps that involve python packages. Took almost 2 hours to build the Unreal Engine.
 
-* Result: Commenting that out did fix the errror, will need to test if that was needed for the Carla Sim
+```bash
+[444/444] Linking CXX static library LibCarla/libcarla-server.a
+Installing Python API...
+[0/2] Re-checking globbed directories...
+[0/2] cd /home/carla/CarlaUE5/PythonAPI/c...rla/CarlaUE5/Build/PythonAPI/dist --wheel
+/usr/bin/python3.11: No module named build
+FAILED: PythonAPI/CMakeFiles/carla-python-api /home/carla/CarlaUE5/Build/PythonAPI/CMakeFiles/carla-python-api 
+cd /home/carla/CarlaUE5/PythonAPI/carla && /opt/cmake-3.28.3-linux-x86_64/bin/cmake -E copy /home/carla/CarlaUE5/LICENSE /home/carla/CarlaUE5/PythonAPI/carla/LICENSE && /usr/bin/python3.11 -m build --outdir /home/carla/CarlaUE5/Build/PythonAPI/dist --wheel
+ninja: build stopped: subcommand failed.
+```
+
+* Attempted[x]: First I ran `conda install pip python=3.11` to get some main python pacakges and python itself in the environment.
+* Attempted[x]: Ran `pip install build` from inside the conda env.
+#### Fixed
+* Added the following to the top of the `CarlaSetup.sh` script in the `CarlaUE5` directory.
+    * `export PATH=/opt/cmake-3.28.3-linux-x86_64/bin:$PATH` This forced the script to recognize the cmake install as before, the build would fail saying the wrong version or missing cmake.
+* Ran the setup script with all of the following modifiers. The python modifier to force use of the conda environment's python as before the build of the PythonAPI would fail as the script kept trying to use the base python interpreter which did not have the correct packages installed.
+    * `sudo -E env GIT_LOCAL_CREDENTIALS=GITHUB_USERNAME@GITHUB_TOKEN ./CarlaSetup.sh --python-root=/home/carla/miniconda3/envs/carlaUE5-env/bin/`
