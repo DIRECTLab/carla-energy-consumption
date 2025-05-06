@@ -28,6 +28,9 @@
 * Put the absolute path to cmake in the command.
 `sudo -E /opt/cmake-3.28.3-linux-x86_64/bin/cmake --build Build --target launch`
 
+### Launch the Editor
+`cmake --build Build --target launch` in server env
+
 
 ## Errors and Fixes
 * Note: When a command is run with `sudo` permission. All of the environment variables are reset for security. So if you need the environment variables for the command to work, you have to add the `-E` modifier to preserve the environment. This has caused a lot of errors.
@@ -183,3 +186,10 @@ tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN
 * This broke stuff. Note to self there is more to a conda env than just running the copy command.
 * Fixed it, had to rerun the setup with the new path to the python interpreter in my renamed conda env
   * `sudo -E env GIT_LOCAL_CREDENTIALS=GITHUB_USER@GITHUB_TOKEN ./CarlaSetup.sh --python-root=/home/carla/miniconda3/envs/server-carlaUE5/bin/`
+
+* Just realized conda client env has the wrong version of the carla python package installed. It has `0.0.15`, my server has `0.10.0`
+  * Going to update this and see if it gets things working.
+
+* Got carla 0.10.0 installed with `pip install /home/carla/CarlaUE5/Build/PythonAPI/dist/carla-0.10.0-cp311-cp311-linux_x86_64.whl`
+  * Using the local wheel, as carla 0.10.0 does not show up on pip
+  * Also upgraded to python 3.11.8 to match the server env, which might fix this issue?

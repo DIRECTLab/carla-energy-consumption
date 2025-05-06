@@ -6,11 +6,11 @@ if conda env list | grep -qw "client-carlaUE5"; then
   echo "Carla client conda env exists, skipping installation..."
   conda activate client-carlaUE5
 else
-  echo "Carla client conda env does not exist, installing..."
-  conda create -n client-carlaUE5 python=3.8 -y
+  echo "Carla conda env client-carlaUE5 does not exist, installing..."
+  conda create -n client-carlaUE5 python=3.11.8 -y
   conda activate client-carlaUE5
   conda install -c conda-forge pandas matplotlib pygame shapely networkx -y
-  pip install carla==0.9.14
+  # pip install carla==0.10.0 #The new carla version for use with Unreal Engine 5, however does not show up on pip yet. How to get it?
 fi
 
 export RES=$(xrandr | grep '*' | awk '{print $1}')
