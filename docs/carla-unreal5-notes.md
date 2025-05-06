@@ -140,3 +140,7 @@ ninja: error: rebuilding 'build.ninja': Error writing to build log: Permission d
 * Getting lots more permission issues. Been running this command on a couple of folders in `CarlaUE5` to move permissions back to the user. Doing so has been making the launch go longer not being run as sudo, has not failed yet.
 1. `
 2. `sudo chown -R $USER:$USER /home/carla/CarlaUE5/Unreal/`
+
+#### Fixed
+* Changing those permissions worked! The Carla Unreal Editor is now working!
+* Now need to get the energy consumption extension working with it.
