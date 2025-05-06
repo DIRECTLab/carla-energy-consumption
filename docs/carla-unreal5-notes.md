@@ -1,7 +1,8 @@
 # Carla Setup with Unreal Engine 5
 ## Machine
 * Working on `Ubuntu 22.04.5`
-* Working in a conda env: `carlaUE5-env`
+* Working in a conda env: `server-carlaUE5`
+* Working in a conda env: `client-carlaUE5`
 
 ## Important links
 * [Carla Site](https://carla.org/)
@@ -11,6 +12,9 @@
 * [Adding a New Vehicle](https://carla-ue5.readthedocs.io/en/latest/tuto_content_authoring_vehicles/)
 * [PythonAPI docs for CarlaUE5](https://carla-ue5.readthedocs.io/en/latest/python_api/) There do seem to be some changes between the UE version used in Carla. May need to refactor our energy consumption extension to work again.
 * [PythonAPI docs for CarlaUE4](https://carla.readthedocs.io/en/latest/python_api/)
+
+* [Carla Forum](https://github.com/carla-simulator/carla/discussions/)
+* [Carla Discord Link](https://discord.com/invite/8kqACuC)
 
 ## Disk Req
 * Size of folders after install: TODO add
@@ -105,7 +109,7 @@ CMake Error: CMAKE_ASM_COMPILER not set, after EnableLanguage
 
 #### Fixed
 * Added the following to the top of the `CarlaSetup.sh` script in the `CarlaUE5` directory.
-    * `export PATH=/opt/cmake-3.28.3-linux-x86_64/bin:$PATH` This forced the script to recognize the cmake install as before, the build would fail saying the wrong version or missing cmake.
+    * `export PATH=/opt/cmake-3.28.3-linux-x86_64/bin:$PATH` This forced the script to recognize the cmake install, as before the build would fail saying the wrong version or missing cmake.
 * Ran the setup script with all of the following modifiers. The python modifier to force use of the conda environment's python as before the build of the PythonAPI would fail as the script kept trying to use the base python interpreter which did not have the correct packages installed.
     * `sudo -E env GIT_LOCAL_CREDENTIALS=GITHUB_USERNAME@GITHUB_TOKEN ./CarlaSetup.sh --python-root=/home/carla/miniconda3/envs/carlaUE5-env/bin/`
 ---
@@ -144,3 +148,38 @@ ninja: error: rebuilding 'build.ninja': Error writing to build log: Permission d
 2. `sudo chown -R $USER:$USER /home/carla/CarlaUE5/PythonAPI/`
 3. `sudo chown -R $USER:$USER /home/carla/CarlaUE5/Unreal/`
 * Changing those permissions worked! The Carla Unreal 5 Editor is now working!
+
+### Error getting client to connect to server
+Output
+```bash
+(base) carla@gaston-System-Product-Name:~/carla-energy-consumption$ ./run_carla.sh 
+Carla conda env exists, skipping installation...
+Traceback (most recent call last):
+  File "navigation/draw_chargers.py", line 54, in <module>
+    world = client.get_world()
+RuntimeError: time-out of 20000ms while waiting for the simulator, make sure the simulator is ready and connected to 127.0.0.1:2000
+```
+* Client not recognizing that the server is running.
+* Output from `netstat -an` while the carla server running. From two different times, I restarted the server and these same ports came up as listening. I am not sure which one is the carla server. I suppose I am not sure that the carla server is even listening, but I think it is. Which in that case either need to find where you can set the default port Carla Server uses, or change the default port the client will use.
+```bash
+tcp        0      0 127.0.0.1:631           0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:5345          0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:8558          0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN     
+......
+tcp        0      0 127.0.0.1:631           0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:5345          0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.1:8558          0.0.0.0:*               LISTEN     
+tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN     
+```
+* According to the documentation the carlaUE5 still listens on port 2000 by default, so either that default got changed somehow or the server is not actually listening for anything.
+
+#### Attempted Fixes TODO
+* Change up accessors for the test vehicles in the client's csv's
+* One thoguht is that the carla-environment package maybe needs to be updated to work with carlaUE5. So going to make a new conda env which could be updated hopefully.
+
+
+* `conda remove --name carlaUE5-env --all` renamed this conda env to be `server-carlaUE5`, I thought better naming.
+* This broke stuff. Note to self there is more to a conda env than just running the copy command.
+* Fixed it, had to rerun the setup with the new path to the python interpreter in my renamed conda env
+  * `sudo -E env GIT_LOCAL_CREDENTIALS=GITHUB_USER@GITHUB_TOKEN ./CarlaSetup.sh --python-root=/home/carla/miniconda3/envs/server-carlaUE5/bin/`

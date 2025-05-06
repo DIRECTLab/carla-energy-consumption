@@ -1,13 +1,14 @@
 #!/bin/bash
+#I made some edits to this script to start getting our extension working with carla unreal engine 5
 eval "$(conda shell.bash hook)"
 
-if conda env list | grep -qw "carlaenv"; then
-  echo "Carla conda env exists, skipping installation..."
-  conda activate carlaenv
+if conda env list | grep -qw "client-carlaUE5"; then
+  echo "Carla client conda env exists, skipping installation..."
+  conda activate client-carlaUE5
 else
-  echo "Carla conda env does not exist, installing..."
-  conda create -n carlaenv python=3.8 -y
-  conda activate carlaenv
+  echo "Carla client conda env does not exist, installing..."
+  conda create -n client-carlaUE5 python=3.8 -y
+  conda activate client-carlaUE5
   conda install -c conda-forge pandas matplotlib pygame shapely networkx -y
   pip install carla==0.9.14
 fi
