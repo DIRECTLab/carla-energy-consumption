@@ -147,6 +147,7 @@ ninja: error: rebuilding 'build.ninja': Error writing to build log: Permission d
 * Getting lots more permission issues. Been running this command on a couple of folders in `CarlaUE5` to move permissions back to the user. Doing so has been making the launch go longer not being run as sudo, has not failed yet.
 
 #### Fixed
+TODO I could add these as part of the build script, I think
 1. `sudo chown -R $USER:$USER /home/carla/CarlaUE5/Build/`
 2. `sudo chown -R $USER:$USER /home/carla/CarlaUE5/PythonAPI/`
 3. `sudo chown -R $USER:$USER /home/carla/CarlaUE5/Unreal/`
@@ -186,10 +187,25 @@ tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN
 * This broke stuff. Note to self there is more to a conda env than just running the copy command.
 * Fixed it, had to rerun the setup with the new path to the python interpreter in my renamed conda env
   * `sudo -E env GIT_LOCAL_CREDENTIALS=GITHUB_USER@GITHUB_TOKEN ./CarlaSetup.sh --python-root=/home/carla/miniconda3/envs/server-carlaUE5/bin/`
-
+  * TODO: write result. I am going try to rebuild now, setting the python version to be 3.11.8 so it matches the client (client has to be 3.11.8 for other dependencies it needed.)
 * Just realized conda client env has the wrong version of the carla python package installed. It has `0.0.15`, my server has `0.10.0`
   * Going to update this and see if it gets things working.
 
 * Got carla 0.10.0 installed with `pip install /home/carla/CarlaUE5/Build/PythonAPI/dist/carla-0.10.0-cp311-cp311-linux_x86_64.whl`
   * Using the local wheel, as carla 0.10.0 does not show up on pip
   * Also upgraded to python 3.11.8 to match the server env, which might fix this issue?
+
+### Getting close but no pygame/control screen
+* I realized I was not clicking the play button on the server side, which is necessary for the client to actually connect.
+* Now the client seems to connect but nothing happens?
+* Output:
+  ```bash
+  (client-carlaUE5) carla@gaston-System-Product-Name:~/carla-energy-consumption$ ./run_carla.sh 
+  Carla client conda env exists, skipping installation...
+  Waiting for Ctrl-C
+  ```
+* Which looking around the map more, it does look like the charger boxes are being drawn onto the map which is cool. However the pygame screen is no longer coming up like before. Which I am thinking could have something to do with my versions in the conda env. Going to try to update pygame in there.
+* Yes that is the issue. I cloned the old `carlaenv` to make the new `client-carlaUE5` but when updating the python version it must have deleted packages that were needed like `pygame`, `panda`, others. Not sure why, still learning how conda works exactly. But I think it shoudl fix things once I get those packages added back correctly
+
+* deleted the client env twice. Better idea, going to make a new one, with the newer version of python and carla. Then just install the things `run_carla.sh` call for. Better than all the random stuff I installed just looking at the conda list from `carlaenv`. I think I ended up installing a bunch of sub libraries which maybe messed things up? Cause after installiing all that, the pygame window would come up but only for a second then dissapear.
+  * It forced to change to python 3.11.8, maybe I will need to rebuild Carla Server with that instead of 3.11.11. Does it matter?

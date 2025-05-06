@@ -10,7 +10,9 @@ else
   conda create -n client-carlaUE5 python=3.11.8 -y
   conda activate client-carlaUE5
   conda install -c conda-forge pandas matplotlib pygame shapely networkx -y
-  # pip install carla==0.10.0 #The new carla version for use with Unreal Engine 5, however does not show up on pip yet. How to get it?
+  pip install /home/carla/CarlaUE5/Build/PythonAPI/dist/carla-0.10.0-cp311-cp311-linux_x86_64.whl #The new carla version for use with Unreal Engine 5
+                                                                                                  #Does not appear on pip, so have to grab it from
+                                                                                                  #the local wheel file in the Carla server Build
 fi
 
 export RES=$(xrandr | grep '*' | awk '{print $1}')
