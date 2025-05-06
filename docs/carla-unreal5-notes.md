@@ -138,9 +138,9 @@ ninja: error: rebuilding 'build.ninja': Error writing to build log: Permission d
 * Which is implying `ninja` cannot be accessed without sudo rights.
 * Used `sudo` alot during building to get things working, which now is turning out to be a problem. As Unreal won't ran as `sudo` and setting up things with `sudo` locked permissions from the user `carla`.
 * Getting lots more permission issues. Been running this command on a couple of folders in `CarlaUE5` to move permissions back to the user. Doing so has been making the launch go longer not being run as sudo, has not failed yet.
-1. `
-2. `sudo chown -R $USER:$USER /home/carla/CarlaUE5/Unreal/`
 
 #### Fixed
-* Changing those permissions worked! The Carla Unreal Editor is now working!
-* Now need to get the energy consumption extension working with it.
+1. `sudo chown -R $USER:$USER /home/carla/CarlaUE5/Build/`
+2. `sudo chown -R $USER:$USER /home/carla/CarlaUE5/PythonAPI/`
+3. `sudo chown -R $USER:$USER /home/carla/CarlaUE5/Unreal/`
+* Changing those permissions worked! The Carla Unreal 5 Editor is now working!
