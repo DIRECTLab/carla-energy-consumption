@@ -31,7 +31,7 @@ Example input files for [automatic_control.py](../automatic_control.py), [unitra
     - `power`: Power used by charger in Watts.
     - `efficiency`: Maximum charger-vehicle efficiency as a fraction assuming perfect alignment.
 
-    To automatically generate a file of this type, see [charger_options.py](../navegation/charger_options.py).
+    To automatically generate a file of this type, see [charger_options.py](../creation/charger_options.py).
 
 - [tracked_agent.csv](tracked_agent.csv) is an example CSV file for loading vehicles in [multitracking.py](multitracking.py). It demonstrates the following required fields: 
     - `vehicle`: which vehicle blueprint to use. To view the available blueprints, run the CARLA example found at `PythonAPI\examples\vehicle_gallery.py`.

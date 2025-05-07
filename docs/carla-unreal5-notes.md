@@ -22,13 +22,13 @@
 * [Speed Up Carla FPS Post](https://github.com/carla-simulator/carla/discussions/8484) Comments that they sped up to 24/25 FPS by adding the -RenderOffScreen flag to the server.
 * [Turn Off Screen Rendering Mode](https://carla-ue5.readthedocs.io/en/latest/adv_rendering_options/#off-screen-rendering-mode) It is looking like it might only be possible to do this with the CarlaUE5 quick build, not the build with the Unreal Editor.
 
-
-## Large Disk Requirements
+## General Disk Requirements
 * `UnrealEngine5_carla` ->, 163Gb
 * `CarlaUE5` -> 76Gb
 * `client-carlaUE5` Conda environment -> 1.4Gb
 * `server-carlaUE5` Conda environment -> 328 Mb
 * `carla-energy-consumption` -> 138Mb
+
 
 
 ## Process, following non-extended build instructions
@@ -286,12 +286,17 @@ tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN
 
 ### Charging pad outlines are appearing partially in the ground
 * Must be some issue with the z-axis that is being calculated for the csv file.
+* `charger_options.py` is supposedly the file that handles generation for the csv files that place the chargers in the map. However it is missing.
+---
+
 
 ## TODOs
 1. Carla Client running slow, option to check that should speed things up
 2. Shut off background display to speed things up
 3. fix the charging pads, z-axis
 4. Take a look at 
+5. Skip to 11:41
+
 
 ## Current Status
 * Carla Editor and Carla client for manual driving are both working with the UE5 on map 10!
