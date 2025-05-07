@@ -6,10 +6,13 @@
 
 ## Important links
 * [Carla Site](https://carla.org/)
+
 * [Carla Unreal Engine 5 docs](https://carla-ue5.readthedocs.io/en/latest/)
 * [Carla Linux Build](https://carla-ue5.readthedocs.io/en/latest/build_linux_ue5/)
 * [Extended Build Instructions](https://carla-ue5.readthedocs.io/en/latest/build_linux_ue5/#extended-build-instructions) These take the build step by step, instead of the all containing script, for more control should the main script have errors or greater configuration is needed.
+
 * [Adding a New Vehicle](https://carla-ue5.readthedocs.io/en/latest/tuto_content_authoring_vehicles/)
+
 * [PythonAPI docs for CarlaUE5](https://carla-ue5.readthedocs.io/en/latest/python_api/) There do seem to be some changes between the UE version used in Carla. May need to refactor our energy consumption extension to work again.
 * [PythonAPI docs for CarlaUE4](https://carla.readthedocs.io/en/latest/python_api/)
 
@@ -18,11 +21,12 @@
 
 
 ## Large Disk Requirements
-* `CarlaUE5` -> 76Gb
 * `UnrealEngine5_carla` ->, 163Gb
-* `carla-energy-consumption` -> 138Mb
+* `CarlaUE5` -> 76Gb
 * `client-carlaUE5` Conda environment -> 1.4Gb
 * `server-carlaUE5` Conda environment -> 328 Mb
+* `carla-energy-consumption` -> 138Mb
+
 
 ## Process, following non-extended build instructions
 ### Setup the environment
@@ -269,12 +273,17 @@ tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN
   ```
 
 #### Fixed
-`vehicle.tesla.model3`
-
+* The example vehicle csv was the issue. Orignally this was in `tesla.csv`, `vehicle.tesla.model3`. This accessor did not work with the PythonAPI, the built in Tesla must have different accessor names. It was taking too long to find the correct accessors for the Tesla.
+* Switched example to be `lincoln.csv`, with the working accessor `vehicle.lincoln.mkz`.
+* With that switch, the Pygame console now loads, and User is able to drive the vehicle with the steering wheel! The charging part also functions, when driving the vehicle on top of one of the pads, the increase in charge power is recognized in the HUD stats.
 ---
 
 
-TODO Carla Client running slow, option to check that makes
-Shut off background display to speed things up
+### Charging pad outlines are appearing partially in the ground
+* Must be some issue with the z-axis.
 
-TODO fix the charging pads, z-axis
+## TODOs
+1. TODO Carla Client running slow, option to check that makes
+2. Shut off background display to speed things up
+3. TODO fix the charging pads, z-axis
+4. 

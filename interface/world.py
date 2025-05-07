@@ -52,17 +52,14 @@ class World:
         # Keep same camera config if the camera manager exists.
         cam_index = self.camera_manager.index if self.camera_manager is not None else 0
         cam_pos_index = self.camera_manager.transform_index if self.camera_manager is not None else 0
-        # Get a random blueprint.
-        vehicleBlueprints = self.world.get_blueprint_library().filter(self._actor_filter)
-        print("TEST Vehicle Blueprint---")
-        for vehicle in vehicleBlueprints:
-            print(vehicle)
 
+        # Get a random blueprint.
         blueprint = random.choice(self.world.get_blueprint_library().filter(self._actor_filter))
         blueprint.set_attribute('role_name', 'hero')
         if blueprint.has_attribute('color'):
             color = random.choice(blueprint.get_attribute('color').recommended_values)
             blueprint.set_attribute('color', color)
+
         # Spawn the player.
         if self.player is not None:
             spawn_point = self.player.get_transform()
@@ -76,6 +73,7 @@ class World:
             spawn_point = random.choice(spawn_points) if spawn_points else carla.Transform()
             self.player = self.world.try_spawn_actor(blueprint, spawn_point)
         self.ev = EV(self.player, **self.ev_params)
+        
         # Set up the sensors.
         self.collision_sensor = CollisionSensor(self.player, self.hud)
         self.lane_invasion_sensor = LaneInvasionSensor(self.player, self.hud)
