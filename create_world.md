@@ -7,8 +7,11 @@
 5. Open up Blender, and select the Blosm tool. Import your .osm file. I'm still figuring out fully what to do here to make everything look good, but for now just export this into the `carla/Import` as a .fbx file. 
 6. Run `make import` in the `carla` directory. This is what makes the map.
 7. Run `make launch` and your map should appear in the content browser under `map_package/Maps/<filename>`
+8. In order to make the ego vehicle populate in the world, you have to update all 129 spawning points to be on land
+9. To add landscape quickly, use the landscape mode in the `modes` on the top bar of the UE. This URL is super helpful to know what parameters you should put for your landscape `https://dev.epicgames.com/documentation/en-us/unreal-engine/creating-landscapes?application_version=4.27`
+10. I figured out how to add the weather by comparing the inputs for Town10 under `BP_Sky` and this CARLA Document `https://dev.epicgames.com/documentation/en-us/unreal-engine/creating-landscapes?application_version=4.27`
+
 ## Things To Do
-1. Figure out how to get vehicles populating in the world
 2. Figure out the best way to not have roads just dying or if I need to change that at all
 2. Fix the graphics
 3. Add traffic controls
