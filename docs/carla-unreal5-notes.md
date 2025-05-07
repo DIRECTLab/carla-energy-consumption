@@ -1,8 +1,8 @@
 # Carla Setup with Unreal Engine 5
 ## Machine
 * Working on `Ubuntu 22.04.5`
-* Working in a conda env: `server-carlaUE5`
-* Working in a conda env: `client-carlaUE5`
+* Working in a Conda env: `server-carlaUE5`
+* Working in a Conda env: `client-carlaUE5`
 
 ## Important links
 * [Carla Site](https://carla.org/)
@@ -23,17 +23,21 @@
 ### Setup the environment
 * Need to make a GitHub token, or setup SSH as the setup script needs this to clone the Unreal Engine repository, which must be linked to a GitHub account.
 * Download of Carla Content took about 30 minutes.
-
-* Had to run the launch command in the following way to work properly. It kept having the error where it would not find cmake.
-* Put the absolute path to cmake in the command.
-`sudo -E /opt/cmake-3.28.3-linux-x86_64/bin/cmake --build Build --target launch`
+* Command that worked to fully setup the Unreal Editor
+  * `sudo -E env GIT_LOCAL_CREDENTIALS=GITHUB_USERNAME@GITHUB_TOKEN ./CarlaSetup.sh --python-root=/home/carla/miniconda3/envs/server-carlaUE5/bin/`
+  * Make a classic github token with your account. Note, your github account needs to be linked to EpicGames to Unreal Repo.t
 
 ### Launch the Editor
-`cmake --build Build --target launch` in server env
+* Run `cmake --build Build --target launch` in the root directory of `CarlaUE5` in the `server-carlaUE5` Conda env.
+* Note: Once the Setup is done, only need to run this command to relaunch the Carla UE Editor/Server
 
+### Working Editor
+* Click the play button to make ready for client to connect.
+* Run `./run_carla.sh` in the root directory of `carla-energy-consumption`
 
 ## Errors and Fixes
 * Note: When a command is run with `sudo` permission. All of the environment variables are reset for security. So if you need the environment variables for the command to work, you have to add the `-E` modifier to preserve the environment. This has caused a lot of errors.
+
 ### Error at setup
 * I got this error running the script which basically does everything to download, build and start.
 * `sudo -E env GIT_LOCAL_CREDENTIALS=github_username@github_token ./CarlaSetup.sh`
@@ -48,9 +52,11 @@ E: The repository 'http://apt.llvm.org/jammy llvm-toolchain-jammy-10 Release' do
 N: Updating from such a repository can't be done securely, and is therefore disabled by default.
 N: See apt-secure(8) manpage for repository creation and user configuration details.
 ```
-* Attempted[x]: Going to comment it out from the update list, I am not sure if Carla actually needs the repository that is causing issues. As chatGPT saying the jammy-10 does not exist for Ubuntu 22.04
-* Result: This did allow the setup to continue. Should not cause an issue later.
+
+#### Fixed
+* Commented it out from the update list, I am not sure if Carla actually needs the repository that is causing issues. As chatGPT saying the jammy-10 does not exist for Ubuntu 22.04. This did allow the setup to continue.
 ---
+
 
 ### Permission denied for access to Unreal repo
 * Got all of the Carla Contents through, but now keeps having permission issues when trying to install the UnrealEngine. I have linked my account and I shared an access token, not sure why it is not seeing the permission. 
@@ -61,14 +67,16 @@ fatal: unable to access 'https://github.com/CarlaUnreal/UnrealEngine.git/': The 
 ```
 * The script will detect if the Carla Contents were already downloaded. You can rerun the setup script without having to redownload alll of the Carla Contents.
 * I think I setup my GitHub access token wrong.
-* Attempted[x]: Had to make a new GitHub "classic" token with `repo` permissions, this worked. 
-* Result: My credentials for accessing the Unreal repo were recognized.
+
+#### Fixed
+* Had to make a new GitHub "classic" token with `repo` permissions, my credentials for accessing the Unreal repo were then recognized.
 ---
+
 
 ### Failed at the End of Build
 * Failed near what I think was the end of the super script `./CarlaSetup.sh --interactive`. I believe it failed when trying to build the PythonAPI.
-* I think this might be because of my conda environment. I think the super script pip installs packages. Though those should still be visible to the environment? Not sure.
-* Looking more into my conda environment, it looks like the main setup script failed to actually install any of the packages in conda. I think to fix this I will have to go through the step by step setup instead and make sure the packages install to conda.
+* I think this might be because of my Conda environment. I think the super script pip installs packages. Though those should still be visible to the environment? Not sure.
+* Looking more into my Conda environment, it looks like the main setup script failed to actually install any of the packages in Conda. I think to fix this I will have to go through the step by step setup instead and make sure the packages install to Conda.
 * Though, I do believe the Unreal Engine compiled successfully, so I should be able to skip to the PythonAPI setup/only do steps that involve python packages. Took almost 2 hours to build the Unreal Engine.
 
 ```bash
@@ -108,14 +116,16 @@ CMake Error: CMAKE_ASM_COMPILER not set, after EnableLanguage
 
 #### Attempted Fixes
 * First I ran `conda install pip python=3.11` to get some main python pacakges and python itself in the environment.
-* Ran `pip install build` from inside the conda env.
+* Ran `pip install build` from inside the Conda env.
 
 #### Fixed
 * Added the following to the top of the `CarlaSetup.sh` script in the `CarlaUE5` directory.
     * `export PATH=/opt/cmake-3.28.3-linux-x86_64/bin:$PATH` This forced the script to recognize the cmake install, as before the build would fail saying the wrong version or missing cmake.
-* Ran the setup script with all of the following modifiers. The python modifier to force use of the conda environment's python as before the build of the PythonAPI would fail as the script kept trying to use the base python interpreter which did not have the correct packages installed.
-    * `sudo -E env GIT_LOCAL_CREDENTIALS=GITHUB_USERNAME@GITHUB_TOKEN ./CarlaSetup.sh --python-root=/home/carla/miniconda3/envs/carlaUE5-env/bin/`
+    * Reinstalled cmake, putting it into `/opt`. 
+* Ran the setup script with all of the following modifiers. The python modifier forces use of the Conda environment's python interpreter as before the build of the PythonAPI would fail as the script kept trying to use the base env python interpreter which does not have the correct packages installed.
+    * `sudo -E env GIT_LOCAL_CREDENTIALS=GITHUB_USERNAME@GITHUB_TOKEN ./CarlaSetup.sh --python-root=/home/carla/miniconda3/envs/server-carlaUE5/bin/`
 ---
+
 
 ### Failed at the very end to Launch
 Command: `sudo -E /opt/cmake-3.28.3-linux-x86_64/bin/cmake --build Build --target launch`  
@@ -143,17 +153,19 @@ Output
 ninja: error: rebuilding 'build.ninja': Error writing to build log: Permission denied
 ```
 * Which is implying `ninja` cannot be accessed without sudo rights.
-* Used `sudo` alot during building to get things working, which now is turning out to be a problem. As Unreal won't ran as `sudo` and setting up things with `sudo` locked permissions from the user `carla`.
-* Getting lots more permission issues. Been running this command on a couple of folders in `CarlaUE5` to move permissions back to the user. Doing so has been making the launch go longer not being run as sudo, has not failed yet.
+* Used `sudo` alot during building to get things working, which now is turning out to be a problem. As Unreal won't run as `sudo` and setting up things with `sudo` locked permissions from the user `carla`.
 
 #### Fixed
-TODO I could add these as part of the build script, I think
+Changing those permissions worked! The Carla Unreal 5 Editor is now working!
 1. `sudo chown -R $USER:$USER /home/carla/CarlaUE5/Build/`
 2. `sudo chown -R $USER:$USER /home/carla/CarlaUE5/PythonAPI/`
 3. `sudo chown -R $USER:$USER /home/carla/CarlaUE5/Unreal/`
-* Changing those permissions worked! The Carla Unreal 5 Editor is now working!
+(TODO I could add these as part of the build script, or rework the setup to not use `sudo` in spots that make it not work at the end somehow.)
+---
+
 
 ### Error getting client to connect to server
+Command: `./run_carla.sh` ran in the client env in `carla-energy-consumption`
 Output
 ```bash
 (base) carla@gaston-System-Product-Name:~/carla-energy-consumption$ ./run_carla.sh 
@@ -178,34 +190,35 @@ tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN
 ```
 * According to the documentation the carlaUE5 still listens on port 2000 by default, so either that default got changed somehow or the server is not actually listening for anything.
 
-#### Attempted Fixes TODO
-* Change up accessors for the test vehicles in the client's csv's
-* One thoguht is that the carla-environment package maybe needs to be updated to work with carlaUE5. So going to make a new conda env which could be updated hopefully.
-
-
-* `conda remove --name carlaUE5-env --all` renamed this conda env to be `server-carlaUE5`, I thought better naming.
-* This broke stuff. Note to self there is more to a conda env than just running the copy command.
-* Fixed it, had to rerun the setup with the new path to the python interpreter in my renamed conda env
-  * `sudo -E env GIT_LOCAL_CREDENTIALS=GITHUB_USER@GITHUB_TOKEN ./CarlaSetup.sh --python-root=/home/carla/miniconda3/envs/server-carlaUE5/bin/`
-  * TODO: write result. I am going try to rebuild now, setting the python version to be 3.11.8 so it matches the client (client has to be 3.11.8 for other dependencies it needed.)
-* Just realized conda client env has the wrong version of the carla python package installed. It has `0.0.15`, my server has `0.10.0`
+#### Attempted Fixes
+* Just realized `client-carlaUE5` env has the wrong version of the carla python package installed. It has `0.9.15`, my server has `0.10.0`
   * Going to update this and see if it gets things working.
 
-* Got carla 0.10.0 installed with `pip install /home/carla/CarlaUE5/Build/PythonAPI/dist/carla-0.10.0-cp311-cp311-linux_x86_64.whl`
-  * Using the local wheel, as carla 0.10.0 does not show up on pip
-  * Also upgraded to python 3.11.8 to match the server env, which might fix this issue?
-
-### Getting close but no pygame/control screen
+#### Fixed
 * I realized I was not clicking the play button on the server side, which is necessary for the client to actually connect.
-* Now the client seems to connect but nothing happens?
+* The `client-carlaUE5` had the wrong version of carla. Got that updated to `carla 0.10.0`.
+  * Got carla 0.10.0 installed with `pip install /home/carla/CarlaUE5/Build/PythonAPI/dist/carla-0.10.0-cp311-cp311-linux_x86_64.whl`
+  * Using the local wheel file in `~/CarlaUE5/Build/PythonAPI/dist` as `carla 0.10.0` does not show up on `pip`.
+* I did some other version matching, I unfortunately did not test it before trying some other things. However, I believe that the connection problem was fixed once the carla version was correct, though may have come from the other version match fixes. As the drawn charger squares show up on the server now when you run `run_carla.sh` client side. It is connecting now.
+---
+
+
+### Pygame screen flashes but does not stay
+* Now the client seems to connect but pygame screen not staying/working.
 * Output:
   ```bash
   (client-carlaUE5) carla@gaston-System-Product-Name:~/carla-energy-consumption$ ./run_carla.sh 
   Carla client conda env exists, skipping installation...
   Waiting for Ctrl-C
   ```
-* Which looking around the map more, it does look like the charger boxes are being drawn onto the map which is cool. However the pygame screen is no longer coming up like before. Which I am thinking could have something to do with my versions in the conda env. Going to try to update pygame in there.
-* Yes that is the issue. I cloned the old `carlaenv` to make the new `client-carlaUE5` but when updating the python version it must have deleted packages that were needed like `pygame`, `panda`, others. Not sure why, still learning how conda works exactly. But I think it shoudl fix things once I get those packages added back correctly
+* Looking around the map more, it does look like the charger boxes are being drawn onto the map which is cool.
+* I cloned the old `carlaenv` to make the new `client-carlaUE5` but when updating the python version it must have deleted packages that were needed like `pygame`, `panda`, others. Not sure why, still learning how Conda works exactly. But I think it shoudl fix things once I get those packages added back correctly
+* I think I messed up the Conda client env by cloning it from the old one then trying to switch the python version. Ended up installing a bunch of sub libraries and trying to patch dependency issues, which eventually caused strange dependency locks where I could not install needed packages.
 
-* deleted the client env twice. Better idea, going to make a new one, with the newer version of python and carla. Then just install the things `run_carla.sh` call for. Better than all the random stuff I installed just looking at the conda list from `carlaenv`. I think I ended up installing a bunch of sub libraries which maybe messed things up? Cause after installiing all that, the pygame window would come up but only for a second then dissapear.
-  * It forced to change to python 3.11.8, maybe I will need to rebuild Carla Server with that instead of 3.11.11. Does it matter?
+#### Attempted Fixes
+* Deleted the client env twice, it. Better idea, going to make a new one, with the newer version of python and carla. Then just install the packages `run_carla.sh` calls for. Better than all the random stuff I installed just looking at the Conda list from `carlaenv`. 
+  * I am going try to rebuild now, setting the python interpreter of `server-carlaUE5` env to be `Python 3.11.8` so it matches the client (client had to be `Python 3.11.8` for other dependencies it needed, according to Conda.)
+  * The PyGame screen does come up now, so getting close but just flashes then disappears. Not sure what the problem is.
+* TODO Change up accessors for the test vehicles in the client's csv's
+#### Fixed
+---
