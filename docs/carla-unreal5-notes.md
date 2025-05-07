@@ -205,6 +205,8 @@ tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN
 
 ### Pygame screen flashes but does not stay
 * Now the client seems to connect but pygame screen not staying/working.
+* I say it is connecting because when the client is run, the charger pad squares are drawn in the server. They look a different from the Unreal4, though. They are darker colored, and
+ a little stuck in the ground.
 * Output:
   ```bash
   (client-carlaUE5) carla@gaston-System-Product-Name:~/carla-energy-consumption$ ./run_carla.sh 
@@ -219,6 +221,54 @@ tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN
 * Deleted the client env twice, it. Better idea, going to make a new one, with the newer version of python and carla. Then just install the packages `run_carla.sh` calls for. Better than all the random stuff I installed just looking at the Conda list from `carlaenv`. 
   * I am going try to rebuild now, setting the python interpreter of `server-carlaUE5` env to be `Python 3.11.8` so it matches the client (client had to be `Python 3.11.8` for other dependencies it needed, according to Conda.)
   * The PyGame screen does come up now, so getting close but just flashes then disappears. Not sure what the problem is.
+
+* I realized the `run_carla.sh` script was suppressing all terminal output, so I made a debug version that does not suppress output to see the errors.
+* Output:
+  ```bash
+  (client-carlaUE5) carla@gaston-System-Product-Name:~/carla-energy-consumption$ ./run_carla.sh 
+  Carla client conda env exists, skipping installation...
+  <frozen importlib._bootstrap>:241: RuntimeWarning: Your system is avx2 capable but pygame was not built with support for it. The performance of some of your blits could be adversely affected. Consider enabling compile time detection with environment variables like PYGAME_DETECT_AVX2=1 if you are compiling without cross compilation.
+  pygame 2.6.1 (SDL 2.32.50, Python 3.11.8)
+  Hello from the pygame community. https://www.pygame.org/contribute.html
+  Waiting for Ctrl-C
+  vehicle Name
+  vehicle
+  INFO: listening to server 127.0.0.1:2000
+
+  Welcome to CARLA manual control with steering wheel Logitech G29.
+
+  To drive start by pressing the brake pedal.
+  Change your wheel_config.ini according to your steering wheel.
+
+  To find out the values of your steering wheel use jstest-gtk in Ubuntu.
+
+
+  Traceback (most recent call last):
+    File "/home/carla/carla-energy-consumption/manual_control_steeringwheel.py", line 170, in <module>
+      main()
+    File "/home/carla/carla-energy-consumption/manual_control_steeringwheel.py", line 162, in main
+      Simulation(args)
+    File "/home/carla/carla-energy-consumption/manual_control_steeringwheel.py", line 55, in __init__
+      self.__world = World(
+                    ^^^^^^
+    File "/home/carla/carla-energy-consumption/interface/world.py", line 48, in __init__
+      self.restart()
+    File "/home/carla/carla-energy-consumption/interface/world.py", line 56, in restart
+      blueprint = random.choice(self.world.get_blueprint_library().filter(self._actor_filter))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "/home/carla/miniconda3/envs/client-carlaUE5/lib/python3.11/random.py", line 373, in choice
+      raise IndexError('Cannot choose from an empty sequence')
+  IndexError: Cannot choose from an empty sequence
+  double free or corruption (out)
+  ```
+
 * TODO Change up accessors for the test vehicles in the client's csv's
+
 #### Fixed
+
 ---
+
+Carla Client running slow, option to check that makes
+Shut off background display to speed things up
+
+TODO fix the charging pads, z-axis

@@ -16,5 +16,9 @@ else
 fi
 
 export RES=$(xrandr | grep '*' | awk '{print $1}')
-python3 manual_control_steeringwheel.py ./input/examples/tesla.csv -w ./input/examples/Town10_intersection_chargers.csv --res $RES > /dev/null 2>&1 &
+python3 manual_control_steeringwheel.py ./input/examples/lincoln.csv -w ./input/examples/Town10_intersection_chargers.csv --res $RES > /dev/null 2>&1 &
 python3 navigation/draw_chargers.py ./input/examples/Town10_intersection_chargers.csv
+
+# Same except output is not suppressed to hopefully be able to see errors
+# python3 manual_control_steeringwheel.py ./input/examples/tesla.csv -w ./input/examples/Town10_intersection_chargers.csv --res $RES &
+# python3 navigation/draw_chargers.py ./input/examples/Town10_intersection_chargers.csv
