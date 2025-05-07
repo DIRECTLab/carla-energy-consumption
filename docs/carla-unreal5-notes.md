@@ -16,8 +16,13 @@
 * [Carla Forum](https://github.com/carla-simulator/carla/discussions/)
 * [Carla Discord Link](https://discord.com/invite/8kqACuC)
 
-## Disk Req
-* Size of folders after install: TODO add
+
+## Large Disk Requirements
+* `CarlaUE5` -> 76Gb
+* `UnrealEngine5_carla` ->, 163Gb
+* `carla-energy-consumption` -> 138Mb
+* `client-carlaUE5` Conda environment -> 1.4Gb
+* `server-carlaUE5` Conda environment -> 328 Mb
 
 ## Process, following non-extended build instructions
 ### Setup the environment
@@ -34,6 +39,7 @@
 ### Working Editor
 * Click the play button to make ready for client to connect.
 * Run `./run_carla.sh` in the root directory of `carla-energy-consumption`
+
 
 ## Errors and Fixes
 * Note: When a command is run with `sudo` permission. All of the environment variables are reset for security. So if you need the environment variables for the command to work, you have to add the `-E` modifier to preserve the environment. This has caused a lot of errors.
@@ -262,13 +268,13 @@ tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN
   double free or corruption (out)
   ```
 
-* TODO Change up accessors for the test vehicles in the client's csv's
-
 #### Fixed
+`vehicle.tesla.model3`
 
 ---
 
-Carla Client running slow, option to check that makes
+
+TODO Carla Client running slow, option to check that makes
 Shut off background display to speed things up
 
 TODO fix the charging pads, z-axis
