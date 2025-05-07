@@ -1,4 +1,4 @@
-# Carla Setup with Unreal Engine 5
+# Carla Editor Setup with Unreal Engine 5
 ## Machine
 * Working on `Ubuntu 22.04.5`
 * Working in a Conda env: `server-carlaUE5`
@@ -7,17 +7,20 @@
 ## Important links
 * [Carla Site](https://carla.org/)
 
+### Build Process
 * [Carla Unreal Engine 5 docs](https://carla-ue5.readthedocs.io/en/latest/)
 * [Carla Linux Build](https://carla-ue5.readthedocs.io/en/latest/build_linux_ue5/)
 * [Extended Build Instructions](https://carla-ue5.readthedocs.io/en/latest/build_linux_ue5/#extended-build-instructions) These take the build step by step, instead of the all containing script, for more control should the main script have errors or greater configuration is needed.
+* [Accessing Unreal Engine code on GitHub](https://www.unrealengine.com/en-US/ue-on-github)
 
+### Useful
 * [Adding a New Vehicle](https://carla-ue5.readthedocs.io/en/latest/tuto_content_authoring_vehicles/)
-
-* [PythonAPI docs for CarlaUE5](https://carla-ue5.readthedocs.io/en/latest/python_api/) There do seem to be some changes between the UE version used in Carla. May need to refactor our energy consumption extension to work again.
-* [PythonAPI docs for CarlaUE4](https://carla.readthedocs.io/en/latest/python_api/)
-
 * [Carla Forum](https://github.com/carla-simulator/carla/discussions/)
 * [Carla Discord Link](https://discord.com/invite/8kqACuC)
+
+#### Speed Carla Up
+* [Speed Up Carla FPS Post](https://github.com/carla-simulator/carla/discussions/8484) Comments that they sped up to 24/25 FPS by adding the -RenderOffScreen flag to the server.
+* [Turn Off Screen Rendering Mode](https://carla-ue5.readthedocs.io/en/latest/adv_rendering_options/#off-screen-rendering-mode) It is looking like it might only be possible to do this with the CarlaUE5 quick build, not the build with the Unreal Editor.
 
 
 ## Large Disk Requirements
@@ -34,7 +37,7 @@
 * Download of Carla Content took about 30 minutes.
 * Command that worked to fully setup the Unreal Editor
   * `sudo -E env GIT_LOCAL_CREDENTIALS=GITHUB_USERNAME@GITHUB_TOKEN ./CarlaSetup.sh --python-root=/home/carla/miniconda3/envs/server-carlaUE5/bin/`
-  * Make a classic github token with your account. Note, your github account needs to be linked to EpicGames to Unreal Repo.t
+  * Make a classic github token with your account. Note, your github account needs to be linked to EpicGames to the Unreal Repo.
 
 ### Launch the Editor
 * Run `cmake --build Build --target launch` in the root directory of `CarlaUE5` in the `server-carlaUE5` Conda env.
@@ -43,6 +46,8 @@
 ### Working Editor
 * Click the play button to make ready for client to connect.
 * Run `./run_carla.sh` in the root directory of `carla-energy-consumption`
+* PyGame window should come up with the Lincoln example car. Able to drive with the steering wheel.
+  * Note: Will crash if the steering wheel is not connected before starting client.
 
 
 ## Errors and Fixes
@@ -280,10 +285,28 @@ tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN
 
 
 ### Charging pad outlines are appearing partially in the ground
-* Must be some issue with the z-axis.
+* Must be some issue with the z-axis that is being calculated for the csv file.
 
 ## TODOs
-1. TODO Carla Client running slow, option to check that makes
+1. Carla Client running slow, option to check that should speed things up
 2. Shut off background display to speed things up
-3. TODO fix the charging pads, z-axis
-4. 
+3. fix the charging pads, z-axis
+4. Take a look at 
+
+## Current Status
+* Carla Editor and Carla client for manual driving are both working with the UE5 on map 10!
+
+### FPS
+All felt pretty smooth except for the full screen res, which was still pretty good but felt slightly slow here and there
+* Full screen resolution on this machine. (3440x1440)
+  * client running at about 60
+  * server at 9-10
+* 1920x1080
+  * client about 60
+  * server 14-15
+* 1366x768
+  * Around 60
+  * 17-18
+* 1440x900
+  * Around 60
+  * 16-17
