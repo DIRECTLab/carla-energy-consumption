@@ -21,7 +21,6 @@
 
 ## Errors
 ### Unreal Editor crashes trying to import `KenworthTruck.fbx`
-
 * Crash Report from Unreal Editor
 ```
 LoginId:801c24400ce14c3ab9a8ebfda8e62a7e-000003ee
@@ -51,94 +50,25 @@ libc.so.6!UnknownFunction(0x94ac2)
 libc.so.6!UnknownFunction(0x12684f)
 ```
 
-* 2nd attempt exporting then importing again
-```
-LoginId:801c24400ce14c3ab9a8ebfda8e62a7e-000003ee
-
-Assertion failed: ResourceIndex < State.MaxDescriptorCount [File:./Runtime/VulkanRHI/Private/VulkanDescriptorSets.cpp] [Line: 890] 
-You need to grow the resource array size for [VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER]!
-
-
-libUnrealEditor-VulkanRHI.so!FVulkanBindlessDescriptorManager::GetFreeResourceIndex(FVulkanBindlessDescriptorManager::BindlessSetState&) [/home/carla/UnrealEngine5_carla/Engine/Source/./Runtime/VulkanRHI/Private/VulkanDescriptorSets.cpp:890]
-libUnrealEditor-VulkanRHI.so!FVulkanBindlessDescriptorManager::ReserveDescriptor(VkDescriptorType) [/home/carla/UnrealEngine5_carla/Engine/Source/./Runtime/VulkanRHI/Private/VulkanDescriptorSets.cpp:693]
-libUnrealEditor-VulkanRHI.so!FVulkanShaderResourceView::FVulkanShaderResourceView(FRHICommandListBase&, FVulkanDevice&, FRHIViewableResource*, FRHIViewDesc const&) [/home/carla/UnrealEngine5_carla/Engine/Source/./Runtime/VulkanRHI/Private/VulkanUAV.cpp:13]
-libUnrealEditor-VulkanRHI.so!FVulkanDynamicRHI::RHICreateShaderResourceView(FRHICommandListBase&, FRHIViewableResource*, FRHIViewDesc const&) [/home/carla/UnrealEngine5_carla/Engine/Source/./Runtime/VulkanRHI/Private/VulkanUAV.cpp:674]
-libUnrealEditor-Engine.so!FColorVertexBuffer::InitRHI(FRHICommandListBase&) [/home/carla/UnrealEngine5_carla/Engine/Source/Runtime/RHI/Public/RHICommandList.h:886]
-libUnrealEditor-RenderCore.so!FRenderResource::InitResource(FRHICommandListBase&) [/home/carla/UnrealEngine5_carla/Engine/Source/./Runtime/RenderCore/Private/RenderResource.cpp:190]
-libUnrealEditor-Engine.so!FStaticMeshVertexBuffers::InitFromDynamicVertex(FRHICommandListBase*, FRenderCommandPipe*, FLocalVertexFactory*, TArray<FDynamicMeshVertex, TSizedDefaultAllocator<32> >&, unsigned int, unsigned int)::$_0::operator()(FRHICommandListBase&) const [/home/carla/UnrealEngine5_carla/Engine/Source/./Runtime/Engine/Private/StaticMesh.cpp:1103]
-libUnrealEditor-RenderCore.so!UE::Core::Private::Function::TFunctionRefCaller<FRenderThreadCommandPipe::EnqueueAndLaunch(char16_t const*, unsigned int&, TStatId, TUniqueFunction<void (FRHICommandListImmediate&)>&&)::$_0, void>::Call(void*) [/home/carla/UnrealEngine5_carla/Engine/Source/Runtime/Core/Public/Templates/Function.h:470]
-libUnrealEditor-RenderCore.so!TGraphTask<TFunctionGraphTaskImpl<void (), (ESubsequentsMode::Type)1> >::ExecuteTask() [/home/carla/UnrealEngine5_carla/Engine/Source/Runtime/Core/Public/Templates/Function.h:470]
-libUnrealEditor-Core.so!UE::Tasks::Private::FTaskBase::TryExecuteTask() [/home/carla/UnrealEngine5_carla/Engine/Source/Runtime/Core/Public/Tasks/TaskPrivate.h:504]
-libUnrealEditor-Core.so!FNamedTaskThread::ProcessTasksNamedThread(int, bool) [/home/carla/UnrealEngine5_carla/Engine/Source/Runtime/Core/Public/Async/TaskGraphInterfaces.h:482]
-libUnrealEditor-Core.so!FNamedTaskThread::ProcessTasksUntilQuit(int) [/home/carla/UnrealEngine5_carla/Engine/Source/./Runtime/Core/Private/Async/TaskGraph.cpp:667]
-libUnrealEditor-RenderCore.so!RenderingThreadMain(FEvent*) [/home/carla/UnrealEngine5_carla/Engine/Source/./Runtime/RenderCore/Private/RenderingThread.cpp:317]
-libUnrealEditor-RenderCore.so!FRenderingThread::Run() [/home/carla/UnrealEngine5_carla/Engine/Source/./Runtime/RenderCore/Private/RenderingThread.cpp:468]
-libUnrealEditor-Core.so!FRunnableThreadPThread::Run() [/home/carla/UnrealEngine5_carla/Engine/Source/./Runtime/Core/Private/HAL/PThreadRunnableThread.cpp:25]
-libUnrealEditor-Core.so!FRunnableThreadPThread::_ThreadProc(void*) [/home/carla/UnrealEngine5_carla/Engine/Source/Runtime/Core/Private/HAL/PThreadRunnableThread.h:187]
-libc.so.6!UnknownFunction(0x94ac2)
-libc.so.6!UnknownFunction(0x12684f)
-```
-
 * [Forum on similar issue](https://forums.unrealengine.com/t/ue5-2-freezes-on-importing-fbx/1263565/2?page=2)
+* I tested importing a very simple FBX of just the default cube on Blender startup. This did work. The issue seems to be with the kenworth FBX file specifically.
 
-* Stuff I am reading with chatGPT saying that the issue could be with the Nvidia and Vulkan drivers. Which the oen recommended by `sudo ubuntu-drivers devices` is newer than the one being used on this machine.
+#### Attempted Fixes
+1. Stuff I am reading with chatGPT saying that the issue could be with the Nvidia and Vulkan drivers. Which the one recommended by `sudo ubuntu-drivers devices` is newer than the one being used on this machine.
+    * Updated nvidia to `driver   : nvidia-driver-570 - third-party non-free recommended`
+    * No change, still same error upon attempt to import.
+2. Loaded the original FBX file into Blender. Tried adding a "decimate" modifier to the truck in Blender, which was supposed to simplify it. Then exported it again.
+    * Changed ratio to `0.75`
+    * Did the `triangulate` option which makes all mesh shapes triangles to simplify as well.
+3. Tried exporting it with those changes again, but looked closer at the settings of the export. Not sure what I changed, but the truck still looked pretty good, and this time the exported FBX is much smaller than the original, it is `20Kb`, instead of the original FBX file which is `40Mb`.
+4. `[2025.05.08-22.42.18:716][722]r.GpuProfilerMaxEventBufferSizeKB = "1024"` ran this in the Unreal Console to increase the buffer size.
+    * Still failing. I am thinking maybe I need to look more into the import settings for bringing in the file, I might be doing something wrong.
 
-* Going to update to `driver   : nvidia-driver-570 - third-party non-free recommended` this driver.
+* ls /etc/vulkan/icd.d/
 
-* Current Driver
-```bash
-(base) carla@gaston-System-Product-Name:~$ nvidia-smi
-Thu May  8 13:58:42 2025
-+-----------------------------------------------------------------------------------------+
-| NVIDIA-SMI 560.28.03              Driver Version: 560.28.03      CUDA Version: 12.6     |
-|-----------------------------------------+------------------------+----------------------+
-| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
-| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
-|                                         |                        |               MIG M. |
-|=========================================+========================+======================|
-|   0  NVIDIA GeForce RTX 3090        Off |   00000000:01:00.0  On |                  N/A |
-|  0%   50C    P8             43W /  370W |    6732MiB /  24576MiB |     15%      Default |
-|                                         |                        |                  N/A |
-+-----------------------------------------+------------------------+----------------------+
+Check in that directory. Sitll having issues. Even though the fbx is much smaller. Either I am importing/exporting badly. Or maybe vulkan driver issues.
+Maybe increase vulkan buffer size?
 
-+-----------------------------------------------------------------------------------------+
-| Processes:                                                                              |
-|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
-|        ID   ID                                                               Usage      |
-|=========================================================================================|
-|    0   N/A  N/A      2744      G   /usr/lib/xorg/Xorg                            323MiB |
-|    0   N/A  N/A      2891      G   /usr/bin/gnome-shell                           86MiB |
-|    0   N/A  N/A      3506      G   /opt/google/chrome/chrome                       4MiB |
-|    0   N/A  N/A      3554      G   ...seed-version=20250508-050101.681000         98MiB |
-|    0   N/A  N/A      8867      G   ...erProcess --variations-seed-version         56MiB |
-|    0   N/A  N/A     29389    C+G   .../Engine/Binaries/Linux/UnrealEditor       6021MiB |
-+-----------------------------------------------------------------------------------------+
-```
+#### Fixed
 
-* Currently Available drivers
-```bash
-(base) carla@gaston-System-Product-Name:~$ sudo ubuntu-drivers devices
-== /sys/devices/pci0000:00/0000:00:01.0/0000:01:00.0 ==
-modalias : pci:v000010DEd00002204sv00001462sd00003884bc03sc00i00
-vendor   : NVIDIA Corporation
-model    : GA102 [GeForce RTX 3090]
-driver   : nvidia-driver-545-open - distro non-free
-driver   : nvidia-driver-565 - third-party non-free
-driver   : nvidia-driver-535-open - distro non-free
-driver   : nvidia-driver-570-server - distro non-free
-driver   : nvidia-driver-560-open - third-party non-free
-driver   : nvidia-driver-545 - distro non-free
-driver   : nvidia-driver-550 - distro non-free
-driver   : nvidia-driver-535 - distro non-free
-driver   : nvidia-driver-570 - third-party non-free recommended
-driver   : nvidia-driver-470-server - distro non-free
-driver   : nvidia-driver-535-server-open - distro non-free
-driver   : nvidia-driver-565-open - third-party non-free
-driver   : nvidia-driver-570-open - third-party non-free
-driver   : nvidia-driver-560 - third-party non-free
-driver   : nvidia-driver-550-open - distro non-free
-driver   : nvidia-driver-470 - distro non-free
-driver   : nvidia-driver-570-server-open - distro non-free
-driver   : nvidia-driver-535-server - distro non-free
-driver   : xserver-xorg-video-nouveau - distro free builtin
-```
+---
