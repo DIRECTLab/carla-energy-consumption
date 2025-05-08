@@ -60,3 +60,4 @@ The creator of this tool either dropped an underscore, missed some arguments, or
                 self.geometry = DSC_geometry_clothoid()
                 return super().invoke(context, event)
         ```
+        Also use this code after fixing all of these files just to clear out the cache of blender: `find ~/.config/blender/4.4/scripts/addons/blender-driving-scenario-creator -name '*.pyc' -delete`
