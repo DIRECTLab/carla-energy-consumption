@@ -287,6 +287,34 @@ tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN
 ### Charging pad outlines are appearing partially in the ground
 * Must be some issue with the z-axis that is being calculated for the csv file.
 * `charger_options.py` is supposedly the file that handles generation for the csv files that place the chargers in the map. However it is missing.
+
+#### Recreating the Town10_intersection_chargers.csv based on the new map 10
+
+* 
+* front_left = "(41.04231262207031,53.58794403076172,1.7484555314695172e-07)"
+* front_right = "(40.042396545410156,53.601051330566406,1.7484555314695172e-07)"
+* back_right = "(40.01618194580078,51.601226806640625,-1.7484555314695172e-07)"
+* power = 100000.0
+* efficiency = 0.95
+
+* front_left = "(57.981632232666016,66.82268524169922,0.0)"
+* front_right = "(57.982913970947266,65.82268524169922,0.0)"
+* back_right = "(59.982913970947266,65.82524871826172,0.0)"
+* power = 100000.0
+* efficiency = 0.95
+
+* map=`Town10HD_Opt`
+* power = 100000.0
+* efficiency = 0.95
+* length = 2
+* width = 1
+
+* Well, I was able to correctly generate a chargers csv for the town 10 map with this command. THat is progess. 
+  * `python junction_chargers_all.py --power 100000.0 --efficiency 0.95 -m Town10HD_Opt 2 1 testing-chager-creation`
+* But even though it regenerated based off of the UE5 version of map 10 the charger boxes are still in the ground weirdly.
+  * Will need to look at the actual calculations for the Z-coordinate of teh chargers.
+* I messed with some of the values, maybe I can mess with the values of one and see how to get it right. Also need to check out how the z-coordinate is generated.
+
 ---
 
 
