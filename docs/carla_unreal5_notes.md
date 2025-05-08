@@ -40,7 +40,7 @@
   * Make a classic github token with your account. Note, your github account needs to be linked to EpicGames to the Unreal Repo.
 
 ### Launch the Editor
-* Run `cmake --build Build --target launch` in the root directory of `CarlaUE5` in the `server-carlaUE5` Conda env.
+* Run `cmake --build Build -t launch` (-t or --target) in the root directory of `CarlaUE5` in the `server-carlaUE5` Conda env.
 * Note: Once the Setup is done, only need to run this command to relaunch the Carla UE Editor/Server
 
 ### Working Editor
