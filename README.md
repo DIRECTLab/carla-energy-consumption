@@ -7,7 +7,7 @@ All scripts in this directory run independently from each other and can be run f
 When in doubt, opt for [multitracking.py](multitracking.py). This program is the most up-to-date and offers most of the functionality of both [unitracking.py](unitracking.py) and [automatic_control.py](automatic_control.py), plus more.
 
 More information about usage and options can be obtained with the `-h` option. 
-See also [QUICKSTART.MD](./QUICKSTART.md).
+See also [QUICKSTART.MD](./docs/QUICKSTART.md).
 
 - [automatic_control.py](automatic_control.py) tracks a vehicle which is automatically controlled on the client side.
 

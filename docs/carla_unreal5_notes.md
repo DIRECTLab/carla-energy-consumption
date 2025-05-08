@@ -311,6 +311,7 @@ tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN
 
 * Well, I was able to correctly generate a chargers csv for the town 10 map with this command. THat is progess. 
   * `python junction_chargers_all.py --power 100000.0 --efficiency 0.95 -m Town10HD_Opt 2 1 testing-chager-creation`
+  * I did delete the files I created as I did not want to save them. Can add create again later.
 * But even though it regenerated based off of the UE5 version of map 10 the charger boxes are still in the ground weirdly.
   * Will need to look at the actual calculations for the Z-coordinate of teh chargers.
 * I messed with some of the values, maybe I can mess with the values of one and see how to get it right. Also need to check out how the z-coordinate is generated.
