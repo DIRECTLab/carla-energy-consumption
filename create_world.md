@@ -43,7 +43,7 @@ I would repeat the process above until I had everything I needed to install the 
 The creator of this tool either dropped an underscore, missed some arguments, or initialized things wrong. These are all of my fixes in order to get his tool to work correctly on Blender 4.4.
 * If you get warning errors about missing a parameter when drawing a 4-way junction breaks go to `/home/carla/.config/blender/4.4/scripts/addons/blender-driving-scenario-creator/junction_four_way.py` and adjust `helpers.set_connecting_road_properties(context, 'right', road_contact_point, width_lane_incoming)` to be `helpers.set_connecting_road_properties(context, 'right', road_contact_point, width_lane_incoming, width_lane_incoming)`. We will just assume that the width of the lane coming and leaving are going to be the same width.
 * If none of the road tools draw in Driving Scenario Creator.
-    1. For me the most common error was Blender couldn't create an instance of DSC_OT_<tool name> to cal lcallback function 'invoke'. If this is the same case for you then you have to change these files:
+    1. For me the most common error was Blender couldn't create an instance of DSC_OT_(tool name) to cal lcallback function 'invoke'. If this is the same case for you then you have to change these files:
         * road_straight.py
         * road_arc.py
         * road_clothoid.py
@@ -61,3 +61,4 @@ The creator of this tool either dropped an underscore, missed some arguments, or
                 return super().invoke(context, event)
         ```
         Also use this code after fixing all of these files just to clear out the cache of blender: `find ~/.config/blender/4.4/scripts/addons/blender-driving-scenario-creator -name '*.pyc' -delete`
+* If you go to `/home/carla/.config/blender/4.4/scripts/addons/blender-driving-scenario-creator` and look at `__init__.py` the class DSC_Properties(bpy.types.PropertyGroup) has a typo in the traffic light properties. It currently has `name='road_object_traffic light_properties' `when it should be `name='road_object_traffic_light_properties'`
