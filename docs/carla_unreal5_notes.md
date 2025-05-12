@@ -35,13 +35,22 @@
 ### Setup the environment
 * Need to make a GitHub token, or setup SSH as the setup script needs this to clone the Unreal Engine repository, which must be linked to a GitHub account.
 * Download of Carla Content took about 30 minutes.
-* Command that worked to fully setup the Unreal Editor
+* Command that worked to fully setup the Unreal Editor, run it in the root of the `CarlaUE5` directory.
   * `sudo -E env GIT_LOCAL_CREDENTIALS=GITHUB_USERNAME@GITHUB_TOKEN ./CarlaSetup.sh --python-root=/home/carla/miniconda3/envs/server-carlaUE5/bin/`
   * Make a classic github token with your account. Note, your github account needs to be linked to EpicGames to the Unreal Repo.
+  1. `sudo chown -R $USER:$USER /home/carla/CarlaUE5/Build/`
+  2. `sudo chown -R $USER:$USER /home/carla/CarlaUE5/PythonAPI/`
+  3. `sudo chown -R $USER:$USER /home/carla/CarlaUE5/Unreal/`
 
-### Launch the Editor
+### Launching the Editor After Build/Source changes
+* Run `sudo -E /opt/cmake-3.28.3-linux-x86_64/bin/cmake --build Build --target launch` first. 
+  * Probably need to go back and build things so running works better, however this way does work for now. Have to run to actually build as somethings are locked as root permission during the build process.
 * Run `cmake --build Build -t launch` (-t or --target) in the root directory of `CarlaUE5` in the `server-carlaUE5` Conda env.
+  * Have to run again without `sudo` as UnrealEngine will refuse to start with root permissions.
 * Note: Once the Setup is done, only need to run this command to relaunch the Carla UE Editor/Server
+
+## Launching the Editor Otherwise
+* Run `cmake --build Build -t launch` (-t or --target) in the root directory of `CarlaUE5` in the `server-carlaUE5` Conda env.
 
 ### Working Editor
 * Click the play button to make ready for client to connect.
@@ -319,7 +328,8 @@ tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN
 ---
 
 
-## TODOs
+## TODOs ls -l /home/carla/CarlaUE5
+
 1. Carla Client running slow, option to check that should speed things up
 2. Shut off background display to speed things up
 3. fix the charging pads, z-axis

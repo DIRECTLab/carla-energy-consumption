@@ -18,6 +18,9 @@
 ## Software Requirements
 * TODO I used `blender 3.0.1` to add the Kenworth Truck
 
+## Process
+* 
+
 
 ## Errors
 ### Unreal Editor crashes trying to import `KenworthTruck.fbx`
@@ -57,12 +60,24 @@ libc.so.6!UnknownFunction(0x12684f)
 1. Stuff I am reading with chatGPT saying that the issue could be with the Nvidia and Vulkan drivers. Which the one recommended by `sudo ubuntu-drivers devices` is newer than the one being used on this machine.
     * Updated nvidia to `driver   : nvidia-driver-570 - third-party non-free recommended`
     * No change, still same error upon attempt to import.
+
 2. Loaded the original FBX file into Blender. Tried adding a "decimate" modifier to the truck in Blender, which was supposed to simplify it. Then exported it again.
     * Changed ratio to `0.75`
     * Did the `triangulate` option which makes all mesh shapes triangles to simplify as well.
+    * Still failed to import.
+
 3. Tried exporting it with those changes again, but looked closer at the settings of the export. Not sure what I changed, but the truck still looked pretty good, and this time the exported FBX is much smaller than the original, it is `20Kb`, instead of the original FBX file which is `40Mb`.
+
 4. `[2025.05.08-22.42.18:716][722]r.GpuProfilerMaxEventBufferSizeKB = "1024"` ran this in the Unreal Console to increase the buffer size.
     * Still failing. I am thinking maybe I need to look more into the import settings for bringing in the file, I might be doing something wrong.
+
+5. Ran `sudo apt install vulkan-tools libvulkan1`
+    * Console said they were already at the latest version.
+    * Tried again, still the same error.
+
+6. Editting file in Carla UE5 source code to increase the size of the buffer
+    * I modified line 890 to be the following (just added more text to see what the size of `State.MaxDescriptorCount` actually is)
+    * `checkf(ResourceIndex < State.MaxDescriptorCount, TEXT("You need to grow the resource array size for [%s]! State.MaxDescriptoCount=%dDONUT"), VK_TYPE_TO_STRING(VkDescriptorType, State.Descri    ptorType), State.MaxDescriptorCount);`
 
 * ls /etc/vulkan/icd.d/
 
