@@ -15,7 +15,7 @@
 
 ### Useful
 * [Adding a New Vehicle](https://carla-ue5.readthedocs.io/en/latest/tuto_content_authoring_vehicles/)
-* [Carla Forum](https://github.com/carla-simulator/carla/discussions/)
+* [Carla Discord Discussions](https://github.com/carla-simulator/carla/discussions/)
 * [Carla Discord Link](https://discord.com/invite/8kqACuC)
 
 #### Speed Carla Up
@@ -32,15 +32,17 @@
 
 
 ## Process, following non-extended build instructions
-### Setup the environment
+### Setup the environment - Building the PythonAPI
 * Need to make a GitHub token, or setup SSH as the setup script needs this to clone the Unreal Engine repository, which must be linked to a GitHub account.
 * Download of Carla Content took about 30 minutes.
 * Command that worked to fully setup the Unreal Editor, run it in the root of the `CarlaUE5` directory.
   * `sudo -E env GIT_LOCAL_CREDENTIALS=GITHUB_USERNAME@GITHUB_TOKEN ./CarlaSetup.sh --python-root=/home/carla/miniconda3/envs/server-carlaUE5/bin/`
   * Make a classic github token with your account. Note, your github account needs to be linked to EpicGames to the Unreal Repo.
+* Have to run these so Unreal can start without using sudo
   1. `sudo chown -R $USER:$USER /home/carla/CarlaUE5/Build/`
   2. `sudo chown -R $USER:$USER /home/carla/CarlaUE5/PythonAPI/`
   3. `sudo chown -R $USER:$USER /home/carla/CarlaUE5/Unreal/`
+    * As one command: `sudo chown -R $USER:$USER /home/carla/CarlaUE5/Build/ && sudo chown -R $USER:$USER /home/carla/CarlaUE5/PythonAPI/ && sudo chown -R $USER:$USER /home/carla/CarlaUE5/Unreal/`
 
 ### Launching the Editor After Build/Source changes
 * Run `sudo -E /opt/cmake-3.28.3-linux-x86_64/bin/cmake --build Build --target launch` first. 

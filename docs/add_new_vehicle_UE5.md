@@ -77,9 +77,16 @@ libc.so.6!UnknownFunction(0x12684f)
 
 6. Editting file in Carla UE5 source code to increase the size of the buffer
     * I modified line 890 to be the following (just added more text to see what the size of `State.MaxDescriptorCount` actually is)
-    * `checkf(ResourceIndex < State.MaxDescriptorCount, TEXT("You need to grow the resource array size for [%s]! State.MaxDescriptoCount=%dDONUT"), VK_TYPE_TO_STRING(VkDescriptorType, State.Descri    ptorType), State.MaxDescriptorCount);`
+    * `checkf(ResourceIndex < State.MaxDescriptorCount, TEXT("You need to grow the resource array size for [%s]! State.MaxDescriptoCount=%d"), VK_TYPE_TO_STRING(VkDescriptorType, State.Descri    ptorType), State.MaxDescriptorCount);`
+    * Result: `You need to grow the resource array size for [VK_DESCRIPTOR_TYPE_UNIFORM_TEXEL_BUFFER]! curr_size=65536`
 
 * ls /etc/vulkan/icd.d/
+
+* The Great Search, important finds
+    * `./Public/VulkanThirdParty.h:35: VK_DESCRIPTOR_TYPE_MAX_ENUM = 0x7FFFFFFF`, the value equals `2,147,483,647` in decimal.
+    * `./Public/VulkanThirdParty.h:16: VK_DESCRIPTOR_TYPE_SAMPLER = 0,`
+    * `./Public/VulkanThirdParty.h:18: VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE = 2,`
+
 
 Check in that directory. Sitll having issues. Even though the fbx is much smaller. Either I am importing/exporting badly. Or maybe vulkan driver issues.
 Maybe increase vulkan buffer size?
