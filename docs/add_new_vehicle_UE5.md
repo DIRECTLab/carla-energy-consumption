@@ -23,6 +23,8 @@ Possibly helpful Videos
 ## Process
 * TODO
 
+## Status
+* Vehicles is imported and supposedly setup? I went through all of the adding vehicle docs, but it seems incomplete, I still do not know how to get the kenworth driving, not just sitting static on the map.
 
 ## Errors
 ### Unreal Editor crashes trying to import `KenworthTruck.fbx`
@@ -78,10 +80,11 @@ Possibly helpful Videos
         * The issue is specifically with the truck material, possible being too complex or my thought is that it is in some format not compatible with UE5.
     ---
 
-* TODO The Great Search, important finds
-    * `./Public/VulkanThirdParty.h:35: VK_DESCRIPTOR_TYPE_MAX_ENUM = 0x7FFFFFFF`, the value equals `2,147,483,647` in decimal.
-    * `./Public/VulkanThirdParty.h:16: VK_DESCRIPTOR_TYPE_SAMPLER = 0,`
-    * `./Public/VulkanThirdParty.h:18: VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE = 2,`
-
+8. Deleted some materials that did not seem to be used for much
+    * I deleted down to 6 materials
+    * Result: I was able to import the truck and it's materials!
 
 #### Fixed
+Deleting the materials worked. I have the Kenworth Truck imported.
+* It seems that the kenworth truck FBX had a lot of different materials compared to the vehicles in carla which had around 6, give or take a few. I believe that ws the issue, just too many materials.
+* Later I also found that Carla includes some basic vehicle materials which can be used on added vehicles, I switched most of the Kenworths used materials to be these as they honestly look nicer than the ones I imported.
