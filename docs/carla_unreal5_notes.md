@@ -331,12 +331,9 @@ tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN
 
 
 ## TODOs ls -l /home/carla/CarlaUE5
-
-1. Carla Client running slow, option to check that should speed things up
-2. Shut off background display to speed things up
-3. fix the charging pads, z-axis
-4. Take a look at 
-5. Skip to 11:41
+1. Shut off background display to speed things up
+2. fix the charging pads, z-axis
+3. Figure out the Reinforcement learning plugin for Unreal Engine 5
 
 
 ## Current Status

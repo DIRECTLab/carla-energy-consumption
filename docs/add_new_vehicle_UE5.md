@@ -22,6 +22,7 @@ Possibly helpful Videos
 
 ## Process
 * TODO
+* Note the accessor from the client side when you make a csv file for your vehicle is as follows `vehicle.MAKE.MODEL` ie `vehicle.kenworth.lessmaterials` is what loaded the kenworth truck.
 
 ## Status
 * Vehicles is imported and supposedly setup? I went through all of the adding vehicle docs, but it seems incomplete, I still do not know how to get the kenworth driving, not just sitting static on the map.
@@ -88,3 +89,47 @@ Possibly helpful Videos
 Deleting the materials worked. I have the Kenworth Truck imported.
 * It seems that the kenworth truck FBX had a lot of different materials compared to the vehicles in carla which had around 6, give or take a few. I believe that ws the issue, just too many materials.
 * Later I also found that Carla includes some basic vehicle materials which can be used on added vehicles, I switched most of the Kenworths used materials to be these as they honestly look nicer than the ones I imported.
+
+### Can't figure out how to access the new Kenworth
+#### Attempted Fixes
+Looking for the actual file where the list of vehicle blueprints is defined.
+* The location of the factory c++ files
+    * `~/CarlaUE5/Unreal/CarlaUnreal/Plugins/Carla/Source/Carla/Actor/Factory$`
+* The Location of the Json config files
+    * `~/CarlaUE5/Unreal/CarlaUnreal/Content/Carla/Config`
+
+#### Fixed
+* I found the file!
+* Just had to add my created vehicle to the json file. After doing so, the kenworth truck loaded up on the client side!
+* Note the accessor from the client side when you make a csv file for your vehicle is as follows `vehicle.MAKE.MODEL` ie `vehicle.kenworth.lessmaterials` is what loaded the truck.
+* Added the following to `VehicleParameters.json`
+    ```json
+    {
+        "Make": "kenworth",
+        "Model": "lessmaterials",
+        "Class": "/Game/Carla/Blueprints/Vehicles/KenworthLessMaterials/BP_KenworthLessMaterials.BP_KenworthLessMaterials_C",
+        "NumberOfWheels": 4,
+        "Generation": -1,
+        "ObjectType": "",
+        "BaseType": "truck",
+        "SpecialType": "",
+        "HasDynamicDoors": false,
+        "HasLights": false,
+        "RecommendedColors": [
+            {
+                "R": 0,
+                "G": 0,
+                "B": 0,
+                "A": 0
+            }
+        ],
+        "SupportedDrivers": []
+    }
+    ```
+
+### Truck spawns in but cannot move
+* The Kenworth truck stays floating above the ground, and the wheels do not move when throttle pushed or steering wheel turned.
+
+#### Attempted Fixes
+1. I deleted all of the Kenworth truck files. Going to retry the import/setup process now that I understand it better. I think the issue is just some issue in how it was setup. I must have missed something.
+    * Result: 
