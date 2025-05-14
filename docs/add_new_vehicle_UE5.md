@@ -128,8 +128,12 @@ Looking for the actual file where the list of vehicle blueprints is defined.
     ```
 
 ### Truck spawns in but cannot move
-* The Kenworth truck stays floating above the ground, and the wheels do not move when throttle pushed or steering wheel turned.
+* The Kenworth truck stays floating above the ground once spawned in, and the wheels do not move when throttle pushed or steering wheel turned.
 
 #### Attempted Fixes
 1. I deleted all of the Kenworth truck files. Going to retry the import/setup process now that I understand it better. I think the issue is just some issue in how it was setup. I must have missed something.
+    * I had just assumed this part was done. I just added the bone constraints to the four wheel bones, so they don't move and they rotate how they are supposed to. Maybe this caused and issue?
+    * I was shown a weight setting that I do not think I activated before, maybe that will fix floating?
+    * Also there is an error showing up about missing bone ends? I don't think there was anything in the documentation on this. Will need to see if it matteres.
+    
     * Result: 
