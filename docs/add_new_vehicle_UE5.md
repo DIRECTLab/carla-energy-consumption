@@ -1,33 +1,64 @@
 # Adding a New Vehicle to Carla Unreal Engine 5
 
 ## Links
-TODO clean these links up, delete non-useful ones  
 Reading
 * [Carla UE5 Docs](https://carla-ue5.readthedocs.io/en/latest/)
-
 * [CarlaDocs: Content authoring - vehicles](https://carla-ue5.readthedocs.io/en/latest/tuto_content_authoring_vehicles/)
-
-* [CarlaDocs: Generate Detailed Colliders](https://carla-ue5.readthedocs.io/en/latest/tuto_D_generate_colliders/)
+* [UE4 Add vehicle to Carla](https://www.youtube.com/watch?v=0F3ugwkISGk) (Even though this video is for adding a vehicle into UE4, it was still very helpful as the process for UE5 is similar.)
 
 Possibly helpful Videos
-* [Import Objects From Blender to Unreal 5](https://youtu.be/BqF5D4kteX8?si=3R2og5zqYq4cYVLL)
-* [Rig Blender Vehicle for UE5](https://youtu.be/fcLBQ-zjEK8?si=gr0fc_u_ZLOF5ErP)
 * [UE4 Adding Trailer to Vehicle](https://www.youtube.com/watch?v=mJufrK7RkeI)
-* [UE4 Add vehicle to Carla](https://www.youtube.com/watch?v=0F3ugwkISGk)
----
 
 
 ## Software Requirements
-* TODO I used `blender 3.0.1` to export the Kenworth Truck
+* I used `blender 3.0.1` to export the Kenworth Truck
 
 
 ## Process
-* TODO
-* Note the accessor from the client side when you make a csv file for your vehicle is as follows `vehicle.MAKE.MODEL`. Ie. `vehicle.kenworth.lessmaterials` is what loaded the kenworth truck in the 
+*Generally was able to follow the Carla Docs and the video for adding a vehicle. Below are the things I changed, or just had to figure out where the docs were vague or unclear.*
+
+Note: This is the process I followed for adding the [kenworthTruck_Old.fbx](../models/kenworth_trucks/kenworthTruck_Old.fbx). Which already had the bones rigged up. I essentially started my work from `07:30` in the [UE4 Add vehicle to Carla](https://www.youtube.com/watch?v=0F3ugwkISGk) video. Following the carla docs starting at the "Export" heading down. The part of the Docs above that heading seemed right and were helpful to understand, but I did not do them myself to get the KenworthTruck model working as the FBX model I was given already had the bones rigged up for the wheels and body.
+
+1. I imported `kenworthTruck_Old.fbx` into Blender.
+    * Deleted a lot of the materials, see [Crash on Import](#unreal-editor-crashes-trying-to-import-kenworthtruckfbx). Left 6 materials: `Metal_Coated_tqm`, `Tire_tqm`, `Glass_Glossy_Orange`, `Car_Paint_tqm`, `Glass_Basic_tqm`, and `Glass_Black_tqm`.
+    * Added bone constraints to the wheels to make sure they stay in position and only rotate the expected directions. See [UE4 Add vehicle to Carla](https://www.youtube.com/watch?v=0F3ugwkISGk) at time `07:30`.
+    * Exported as [kenworthTruck_Updated.fbx](../models/kenworth_trucks/kenworthTruck_Updated.fbx) with these settings  
+    ![Blender Export Settings Image](../images/blender_export_settings.png)
+
+2. Imported Truck into CarlaUE5
+    * 
+    
+    * Note the accessor from the client side when you make a csv file for your vehicle is as follows `vehicle.MAKE.MODEL`. Ie. `vehicle.kenworth.truck` is what loaded the kenworth truck. The Make and Model fields are set when editting `VehicleParameters.json`.
+    
+    * Added the following to `VehicleParameters.json` located `~/CarlaUE5/Unreal/CarlaUnreal/Content/Carla/Config` to make the Kenworth accessible through the PythonAPI.
+    ```json
+    {
+        "Make": "kenworth",
+        "Model": "truck",
+        "Class": "/Game/Carla/Blueprints/Vehicles/KenworthTruck/BP_KenworthTruck.BP_KenworthTruck_C",
+        "NumberOfWheels": 4,
+        "Generation": -1,
+        "ObjectType": "",
+        "BaseType": "truck",
+        "SpecialType": "",
+        "HasDynamicDoors": false,
+        "HasLights": false,
+        "RecommendedColors": [
+            {
+                "R": 0,
+                "G": 0,
+                "B": 0,
+                "A": 0
+            }
+        ],
+        "SupportedDrivers": []
+    }
+    ```
+    
 
 
 ## Errors
-* These are errors and their fixes I encountered during first time setup. Hopefully you will find them helpful should you need debugging during your setup.
+*These are errors and their fixes I encountered during first time setup. Hopefully you will find them helpful should you need debugging during your setup.*
 ### Unreal Editor crashes trying to import `KenworthTruck.fbx`
 * Crash Report from Unreal Editor
     ```
@@ -101,13 +132,13 @@ Looking for the actual file where the list of vehicle blueprints is defined.
 #### Fixed
 * I found the file!
 * Just had to add my created vehicle to the json file. After doing so, the kenworth truck loaded up on the client side!
-* Note the accessor from the client side when you make a csv file for your vehicle is as follows `vehicle.MAKE.MODEL` ie `vehicle.kenworth.lessmaterials` is what loaded the truck.
+* Note the accessor from the client side when you make a csv file for your vehicle is as follows `vehicle.MAKE.MODEL` ie `vehicle.kenworth.truck` is what loaded the truck.
 * Added the following to `VehicleParameters.json`
     ```json
     {
         "Make": "kenworth",
-        "Model": "lessmaterials",
-        "Class": "/Game/Carla/Blueprints/Vehicles/KenworthLessMaterials/BP_KenworthLessMaterials.BP_KenworthLessMaterials_C",
+        "Model": "truck",
+        "Class": "/Game/Carla/Blueprints/Vehicles/KenworthTruck/BP_KenworthTruck.BP_KenworthTruck_C",
         "NumberOfWheels": 4,
         "Generation": -1,
         "ObjectType": "",

@@ -20,10 +20,6 @@
 * [Carla Discord Discussions](https://github.com/carla-simulator/carla/discussions/)
 * [Carla Discord Link](https://discord.com/invite/8kqACuC)
 
-#### Speed Carla Up
-* [Speed Up Carla FPS Post](https://github.com/carla-simulator/carla/discussions/8484) Comments that they sped up to 24/25 FPS by adding the -RenderOffScreen flag to the server.
-* [Turn Off Screen Rendering Mode](https://carla-ue5.readthedocs.io/en/latest/adv_rendering_options/#off-screen-rendering-mode) It is looking like it might only be possible to do this with the CarlaUE5 quick build, not the build with the Unreal Editor.
-
 
 ## Rough Disk Requirements
 * `UnrealEngine5_carla` ->, 163Gb
@@ -69,8 +65,7 @@
 
 
 ## Errors and Fixes
-* * These are errors and their fixes I encountered during first time setup. Hopefully you will find them helpful should you need debugging during your setup.
-* Note: When a command is run with `sudo` permission. All of the environment variables are reset for security. So if you need the environment variables for the command to work, you have to add the `-E` modifier to preserve the environment.
+* These are errors and their fixes I encountered during first time setup. Hopefully you will find them helpful should you need debugging during your setup.
 
 ### Error at setup
 * I got this error running the script which basically does everything to download, build and start.
