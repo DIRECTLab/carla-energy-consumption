@@ -334,7 +334,12 @@ tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN
 1. Shut off background display to speed things up
 2. fix the charging pads, z-axis
 3. Figure out the Reinforcement learning plugin for Unreal Engine 5
+4. Speed up Carla!
 
+### Longterm Goals
+* Integrate reinforcement learning into Carla (through the PythonAPI)
+  * Able to command the vehicle and it drives properly going from one place to the other.
+  * Get the charging data as it's going for learning.
 
 ## Current Status
 * Carla Editor and Carla client for manual driving are both working with the UE5 on map 10!

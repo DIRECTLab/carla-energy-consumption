@@ -135,5 +135,7 @@ Looking for the actual file where the list of vehicle blueprints is defined.
     * I had just assumed this part was done. I just added the bone constraints to the four wheel bones, so they don't move and they rotate how they are supposed to. Maybe this caused and issue?
     * I was shown a weight setting that I do not think I activated before, maybe that will fix floating?
     * Also there is an error showing up about missing bone ends? I don't think there was anything in the documentation on this. Will need to see if it matteres.
-    
+    * Tire measurements:
+        * Width 30cm
+        * Radius 42cm
     * Result: 
