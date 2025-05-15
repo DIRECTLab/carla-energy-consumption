@@ -1,6 +1,6 @@
 # What to do for events
 
-1. open 3 termanal tabs
+1. open 3 terminal tabs
 
 2. run command to start unreal engine
 ```bash

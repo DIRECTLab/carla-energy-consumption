@@ -18,16 +18,16 @@ Possibly helpful Videos
 
 
 ## Software Requirements
-* TODO I used `blender 3.0.1` to add the Kenworth Truck
+* TODO I used `blender 3.0.1` to export the Kenworth Truck
+
 
 ## Process
 * TODO
-* Note the accessor from the client side when you make a csv file for your vehicle is as follows `vehicle.MAKE.MODEL` ie `vehicle.kenworth.lessmaterials` is what loaded the kenworth truck.
+* Note the accessor from the client side when you make a csv file for your vehicle is as follows `vehicle.MAKE.MODEL`. Ie. `vehicle.kenworth.lessmaterials` is what loaded the kenworth truck in the 
 
-## Status
-* Vehicles is imported and supposedly setup? I went through all of the adding vehicle docs, but it seems incomplete, I still do not know how to get the kenworth driving, not just sitting static on the map.
 
 ## Errors
+* These are errors and their fixes I encountered during first time setup. Hopefully you will find them helpful should you need debugging during your setup.
 ### Unreal Editor crashes trying to import `KenworthTruck.fbx`
 * Crash Report from Unreal Editor
     ```
@@ -139,3 +139,6 @@ Looking for the actual file where the list of vehicle blueprints is defined.
         * Width 30cm
         * Radius 42cm
     * Result: 
+
+#### Fixed
+* I just followed the Carla documentation again carefully. It drives now.

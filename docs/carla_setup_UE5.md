@@ -1,8 +1,10 @@
-# Carla Editor Setup with Unreal Engine 5
-## Machine
+# Carla Editor Setup with Unreal Engine v5.5
+## Software
 * Working on `Ubuntu 22.04.5`
 * Working in a Conda env: `server-carlaUE5`
 * Working in a Conda env: `client-carlaUE5`
+* Setting up `Carla v0.10.0`
+
 
 ## Important links
 * [Carla Site](https://carla.org/)
@@ -22,13 +24,13 @@
 * [Speed Up Carla FPS Post](https://github.com/carla-simulator/carla/discussions/8484) Comments that they sped up to 24/25 FPS by adding the -RenderOffScreen flag to the server.
 * [Turn Off Screen Rendering Mode](https://carla-ue5.readthedocs.io/en/latest/adv_rendering_options/#off-screen-rendering-mode) It is looking like it might only be possible to do this with the CarlaUE5 quick build, not the build with the Unreal Editor.
 
-## General Disk Requirements
+
+## Rough Disk Requirements
 * `UnrealEngine5_carla` ->, 163Gb
 * `CarlaUE5` -> 76Gb
 * `client-carlaUE5` Conda environment -> 1.4Gb
 * `server-carlaUE5` Conda environment -> 328 Mb
 * `carla-energy-consumption` -> 138Mb
-
 
 
 ## Process, following non-extended build instructions
@@ -47,22 +49,28 @@
 ### Launching the Editor After Build/Source changes
 * Run `sudo -E /opt/cmake-3.28.3-linux-x86_64/bin/cmake --build Build --target launch` first. 
   * Probably need to go back and build things so running works better, however this way does work for now. Have to run to actually build as somethings are locked as root permission during the build process.
+* Have to run these so Unreal can start without using sudo
+  1. `sudo chown -R $USER:$USER /home/carla/CarlaUE5/Build/`
+  2. `sudo chown -R $USER:$USER /home/carla/CarlaUE5/PythonAPI/`
+  3. `sudo chown -R $USER:$USER /home/carla/CarlaUE5/Unreal/`
 * Run `cmake --build Build -t launch` (-t or --target) in the root directory of `CarlaUE5` in the `server-carlaUE5` Conda env.
   * Have to run again without `sudo` as UnrealEngine will refuse to start with root permissions.
 * Note: Once the Setup is done, only need to run this command to relaunch the Carla UE Editor/Server
 
-## Launching the Editor Otherwise
+### Launching the Editor Otherwise
 * Run `cmake --build Build -t launch` (-t or --target) in the root directory of `CarlaUE5` in the `server-carlaUE5` Conda env.
 
-### Working Editor
+### With Working Editor getting Manual Control working
 * Click the play button to make ready for client to connect.
 * Run `./run_carla.sh` in the root directory of `carla-energy-consumption`
-* PyGame window should come up with the Lincoln example car. Able to drive with the steering wheel.
+* PyGame window should come up with whichever example vehicle you have placed in the command. Able to drive with the steering wheel.
+  * Ie `./input/examples/lincoln.csv` in `run_carla.sh` should come up with a lincoln car to drive.
   * Note: Will crash if the steering wheel is not connected before starting client.
 
 
 ## Errors and Fixes
-* Note: When a command is run with `sudo` permission. All of the environment variables are reset for security. So if you need the environment variables for the command to work, you have to add the `-E` modifier to preserve the environment. This has caused a lot of errors.
+* * These are errors and their fixes I encountered during first time setup. Hopefully you will find them helpful should you need debugging during your setup.
+* Note: When a command is run with `sudo` permission. All of the environment variables are reset for security. So if you need the environment variables for the command to work, you have to add the `-E` modifier to preserve the environment.
 
 ### Error at setup
 * I got this error running the script which basically does everything to download, build and start.
@@ -329,32 +337,3 @@ tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN
 
 ---
 
-
-## TODOs ls -l /home/carla/CarlaUE5
-1. Shut off background display to speed things up
-2. fix the charging pads, z-axis
-3. Figure out the Reinforcement learning plugin for Unreal Engine 5
-4. Speed up Carla!
-
-### Longterm Goals
-* Integrate reinforcement learning into Carla (through the PythonAPI)
-  * Able to command the vehicle and it drives properly going from one place to the other.
-  * Get the charging data as it's going for learning.
-
-## Current Status
-* Carla Editor and Carla client for manual driving are both working with the UE5 on map 10!
-
-### FPS
-All felt pretty smooth except for the full screen res, which was still pretty good but felt slightly slow here and there
-* Full screen resolution on this machine. (3440x1440)
-  * client running at about 60
-  * server at 9-10
-* 1920x1080
-  * client about 60
-  * server 14-15
-* 1366x768
-  * Around 60
-  * 17-18
-* 1440x900
-  * Around 60
-  * 16-17
