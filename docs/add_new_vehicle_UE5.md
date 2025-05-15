@@ -6,59 +6,77 @@ Reading
 * [CarlaDocs: Content authoring - vehicles](https://carla-ue5.readthedocs.io/en/latest/tuto_content_authoring_vehicles/)
 * [UE4 Add vehicle to Carla](https://www.youtube.com/watch?v=0F3ugwkISGk) (Even though this video is for adding a vehicle into UE4, it was still very helpful as the process for UE5 is similar.)
 
-Possibly helpful Videos
+Possibly helpful Videos for the future
 * [UE4 Adding Trailer to Vehicle](https://www.youtube.com/watch?v=mJufrK7RkeI)
 
 
-## Software Requirements
-* I used `blender 3.0.1` to export the Kenworth Truck
+## Software Used
+* `blender v3.0.1`
+* `carla v0.10.0`
+* `UnrealEngine v5.5`
 
 
 ## Process
 *Generally was able to follow the Carla Docs and the video for adding a vehicle. Below are the things I changed, or just had to figure out where the docs were vague or unclear.*
 
-Note: This is the process I followed for adding the [kenworthTruck_Old.fbx](../models/kenworth_trucks/kenworthTruck_Old.fbx). Which already had the bones rigged up. I essentially started my work from `07:30` in the [UE4 Add vehicle to Carla](https://www.youtube.com/watch?v=0F3ugwkISGk) video. Following the carla docs starting at the "Export" heading down. The part of the Docs above that heading seemed right and were helpful to understand, but I did not do them myself to get the KenworthTruck model working as the FBX model I was given already had the bones rigged up for the wheels and body.
+Note: This is the process I followed for adding the [kenworthTruck_Old.fbx](../models/kenworth_trucks/kenworthTruck_Old.fbx). Which already had the bones rigged up. I essentially started my work from `07:30` in the [UE4 Add vehicle to Carla](https://www.youtube.com/watch?v=0F3ugwkISGk) video. Following the carla docs starting at the "Export" heading, down. The part of the Docs above that heading seemed right and were helpful to understand, but I did not do them myself to get the KenworthTruck model working as the FBX model I was given already had the bones rigged up for the wheels and body.
 
-1. I imported `kenworthTruck_Old.fbx` into Blender.
+1. Imported `kenworthTruck_Old.fbx` into Blender.
     * Deleted a lot of the materials, see [Crash on Import](#unreal-editor-crashes-trying-to-import-kenworthtruckfbx). Left 6 materials: `Metal_Coated_tqm`, `Tire_tqm`, `Glass_Glossy_Orange`, `Car_Paint_tqm`, `Glass_Basic_tqm`, and `Glass_Black_tqm`.
     * Added bone constraints to the wheels to make sure they stay in position and only rotate the expected directions. See [UE4 Add vehicle to Carla](https://www.youtube.com/watch?v=0F3ugwkISGk) at time `07:30`.
     * Exported as [kenworthTruck_Updated.fbx](../models/kenworth_trucks/kenworthTruck_Updated.fbx) with these settings  
     ![Blender Export Settings Image](../images/blender_export_settings.png)
+    * I did not have any seperate doors, glass, lights, raycast mesh,  or collision mesh made in blender. Only had the bodywork/chassis with wheels to export
 
-2. Imported Truck into CarlaUE5
-    * 
-    
-    * Note the accessor from the client side when you make a csv file for your vehicle is as follows `vehicle.MAKE.MODEL`. Ie. `vehicle.kenworth.truck` is what loaded the kenworth truck. The Make and Model fields are set when editting `VehicleParameters.json`.
-    
-    * Added the following to `VehicleParameters.json` located `~/CarlaUE5/Unreal/CarlaUnreal/Content/Carla/Config` to make the Kenworth accessible through the PythonAPI.
-    ```json
-    {
-        "Make": "kenworth",
-        "Model": "truck",
-        "Class": "/Game/Carla/Blueprints/Vehicles/KenworthTruck/BP_KenworthTruck.BP_KenworthTruck_C",
-        "NumberOfWheels": 4,
-        "Generation": -1,
-        "ObjectType": "",
-        "BaseType": "truck",
-        "SpecialType": "",
-        "HasDynamicDoors": false,
-        "HasLights": false,
-        "RecommendedColors": [
-            {
-                "R": 0,
-                "G": 0,
-                "B": 0,
-                "A": 0
-            }
-        ],
-        "SupportedDrivers": []
-    }
-    ```
-    
+2. Importing Truck into CarlaUE5
+    * Set the file filter to `FBX skeletal meshes(*.fbx)`, this makes sure the right import settings shwo up when you pick your file.
+    * I used all of the default settings, and clicked `Import All`.
+
+3. Setting Vehicle up
+    * I followed the CarlaDocs almost to the letter here, skipping a couple parts for the doors and lights which I did not make for the Kenworth Truck.
+    * Changing Materials: I found that CarlaUE5 had some really good vehicle materials that come with it.
+        * Replaced some of the materials with the better ones.
+            * `Metal_Coated_tqm` -> `BrushedAluminiumBlack_Inst`
+            * `Tire_tqm` -> `Rubber_Inst`
+            * `Car_Paint_tqm` -> `MI_Blue`
+            * `Glass_Basic_tqm` -> `MI_Glass`
+    * I used the automatic collision mesh generation, with the Multi-convex hull.
+    * Vehicle Movement Component
+        * Was able to follow docs here and they worked. I will likely need to go back and figure out a more accurate Torque Curve graph, as I just made one up for it to work.
+        * I need to do more research as I only have a basic understanding of the Torque curve and gear ratios settings, so I left the gears as default settins for now. Later could alter those settings to more accurately simulate the real life performance of the Kenworth truck.
+        * I just looked up average mass, width, and height for a kenworth 6-wheeler, and used that for the last step.
+
+4. Accessing Vehicle to load for manual control on client side
+    * The accessor from the client side when you make a csv file for your vehicle, see [kenworth.csv](../input/examples/kenworth.csv), is as follows `vehicle.MAKE.MODEL`. Ie. `vehicle.kenworth.truck` is what loaded the kenworth truck. The Make and Model fields are set when editting `VehicleParameters.json`.
+    * The docs do not really say much about this for Carla UE5. You need to add your vehicle to `VehicleParameters.json` located `~/CarlaUE5/Unreal/CarlaUnreal/Content/Carla/Config`.
+    * My added entry for the Kenworth Truck.
+        ```json
+        {
+            "Make": "kenworth",
+            "Model": "truck",
+            "Class": "/Game/Carla/Blueprints/Vehicles/KenworthTruck/BP_KenworthTruck.BP_KenworthTruck_C",
+            "NumberOfWheels": 4,
+            "Generation": -1,
+            "ObjectType": "",
+            "BaseType": "truck",
+            "SpecialType": "",
+            "HasDynamicDoors": false,
+            "HasLights": false,
+            "RecommendedColors": [
+                {
+                    "R": 0,
+                    "G": 0,
+                    "B": 0,
+                    "A": 0
+                }
+            ],
+            "SupportedDrivers": []
+        }
+        ```
 
 
 ## Errors
-*These are errors and their fixes I encountered during first time setup. Hopefully you will find them helpful should you need debugging during your setup.*
+*These are errors and fixes encountered during setup. Hopefully you will find them helpful.*
 ### Unreal Editor crashes trying to import `KenworthTruck.fbx`
 * Crash Report from Unreal Editor
     ```

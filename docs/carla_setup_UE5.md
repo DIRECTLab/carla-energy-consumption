@@ -65,7 +65,7 @@
 
 
 ## Errors and Fixes
-* These are errors and their fixes I encountered during first time setup. Hopefully you will find them helpful should you need debugging during your setup.
+*These are errors and fixes encountered during setup. Hopefully you will find them helpful.*
 
 ### Error at setup
 * I got this error running the script which basically does everything to download, build and start.
@@ -303,8 +303,6 @@ tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN
 * `charger_options.py` is supposedly the file that handles generation for the csv files that place the chargers in the map. However it is missing.
 
 #### Recreating the Town10_intersection_chargers.csv based on the new map 10
-
-* 
 * front_left = "(41.04231262207031,53.58794403076172,1.7484555314695172e-07)"
 * front_right = "(40.042396545410156,53.601051330566406,1.7484555314695172e-07)"
 * back_right = "(40.01618194580078,51.601226806640625,-1.7484555314695172e-07)"

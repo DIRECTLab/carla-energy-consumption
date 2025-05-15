@@ -6,9 +6,9 @@ These scripts are intended to be run from the command line. Use the `-h` option 
 
 ## Contents
 
-- [coordinates.py](coordinates.py) highlights the x- and y-axes at (0,0). Each square drawn is 1m x 1m.
+- [coordinates.py](./coordinates.py) highlights the x- and y-axes at (0,0). Each square drawn is 1m x 1m.
 
-- [draw_chargers.py](draw_chargers.py) highlights the wireless chargers specified. Navigate beneath the ground to view wireless chargers placed there, or place them at ground level as recommended.
+- [draw_chargers.py](./draw_chargers.py) highlights the wireless chargers specified. Navigate beneath the ground to view wireless chargers placed there, or place them at ground level as recommended.
 
 - [lane_distance.py](./lane_distance.py) reports the distance covered by the lanes in a specific map. See also `road_area.py`.
 
