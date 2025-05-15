@@ -7,12 +7,19 @@
 2. fix the charging pads, z-axis
 3. Figure out the Reinforcement learning plugin for Unreal Engine 5
 4. Speed up Carla!
+5. Add a command line way to filter which vehicle csv going to choose so I don't have to keep editing the `run_carla.sh` to switch vehicles.
 
 
 ## Longterm Goals
 * Integrate reinforcement learning into Carla (through the PythonAPI)
   * Able to command the vehicle and it drives properly going from one place to the other.
   * Get the charging data as it's going for learning.
+
+
+## Reinforcement Learning with Carla
+### TODO Links to read
+* [End-to-end learning using CARLA Simulator](https://imtiazulhassan.medium.com/end-to-end-learning-using-carla-simulator-12869b5d6f7)
+    * Will I need to get the ROS bridge working to do reinforcement learning? I know they supposedly made it more integrated or easier or something in carlaUE5 to use the ROS.
 
 
 ## Speed Carla Up

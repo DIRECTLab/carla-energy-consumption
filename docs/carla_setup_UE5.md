@@ -56,6 +56,11 @@
 ### Launching the Editor Otherwise
 * Run `cmake --build Build -t launch` (-t or --target) in the root directory of `CarlaUE5` in the `server-carlaUE5` Conda env.
 
+### Getting Client Ready
+* For now, the wheel file for the new `carla v0.10.0` API is not on pip, so you have to install it into the client Conda env from the local file inside of the CarlaUE5 server code. I have the `run_carla.sh` do this automatically.
+  * `pip install /home/carla/CarlaUE5/Build/PythonAPI/dist/carla-0.10.0-cp311-cp311-linux_x86_64.whl`
+* Running `run_carla.sh` should set everything up in the client for you and start with whatever example vehicle csv is chosen in the command.
+
 ### With Working Editor getting Manual Control working
 * Click the play button to make ready for client to connect.
 * Run `./run_carla.sh` in the root directory of `carla-energy-consumption`

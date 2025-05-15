@@ -3,7 +3,7 @@
 - lsb_release -a: Tells you what version of Ubuntu you have
 - df -h: Checks the space left on the drives
 - conda activate *******: Lets you use whatever conda environment you want
-- conda deactiavte: Shuts down the conda environment that you were using
+- conda deactivate: Shuts down the conda environment that you were using
 ## Initial Downloading of CARLA
 - Followed the Linux build instructions on CARLA documents
 - When you reach the "installing Python dependencies" you are going to have deviate a little bit. To be more conscientious, we use the conda environment. Since, we decided to start afresh in downloading CARLA we also created a new conda environment titled `carlaeditorenv`. **When creating a new environment, set Python to 3.8.18 or it will not install the files!** The only install that you have to do using pip is `pip install auditwheel==4.0.0`.

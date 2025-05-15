@@ -2,6 +2,8 @@
 #I made some edits to this script to start getting our extension working with carla unreal engine 5
 eval "$(conda shell.bash hook)"
 
+#TODO add a way to the command line to choose which vehicle csv to run.
+
 if conda env list | grep -qw "client-carlaUE5"; then
   echo "Carla client conda env exists, skipping installation..."
   conda activate client-carlaUE5
