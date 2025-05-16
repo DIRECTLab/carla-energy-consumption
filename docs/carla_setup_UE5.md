@@ -305,7 +305,6 @@ tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN
 
 ### Charging pad outlines are appearing partially in the ground
 * Must be some issue with the z-axis that is being calculated for the csv file.
-* `charger_options.py` is supposedly the file that handles generation for the csv files that place the chargers in the map. However it is missing.
 
 #### Recreating the Town10_intersection_chargers.csv based on the new map 10
 * front_left = "(41.04231262207031,53.58794403076172,1.7484555314695172e-07)"

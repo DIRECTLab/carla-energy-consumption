@@ -7,7 +7,6 @@
 2. fix the charging pads, z-axis
 3. Figure out the Reinforcement learning plugin for Unreal Engine 5
 4. Speed up Carla!
-5. Add a command line way to filter which vehicle csv going to choose so I don't have to keep editing the `run_carla.sh` to switch vehicles.
 
 
 ## Longterm Goals
@@ -41,5 +40,5 @@ All felt pretty smooth except for the full screen res, which was still pretty go
   * Around 60
   * 16-17
 
-## Useful stuff learned
+## Useful
 * Note: When a command is run with `sudo` permission. All of the environment variables are reset for security. So if you need the environment variables for the command to work, you have to add the `-E` modifier to preserve the environment.

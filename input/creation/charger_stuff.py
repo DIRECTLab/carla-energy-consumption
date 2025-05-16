@@ -2,7 +2,6 @@
 Charger stuff shared between scripts in this directory.
 """
 
-
 import os
 import sys
 import time
