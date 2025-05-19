@@ -1,5 +1,5 @@
 # Adding a New Vehicle to CARLA
-[This](https://carla.readthedocs.io/en/latest/tuto_content_authoring_vehicles/) 
+[This](https://carla.readthedocs.io/en/0.9.14/tuto_content_authoring_vehicles/) 
 is the link to the documentation about importing an fbx file into CARLA for a 
 new vehicle.
 
