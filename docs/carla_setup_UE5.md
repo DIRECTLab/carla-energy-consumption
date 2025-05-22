@@ -331,6 +331,5 @@ tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN
 * But even though it regenerated based off of the UE5 version of map 10 the charger boxes are still in the ground weirdly.
   * Will need to look at the actual calculations for the Z-coordinate of teh chargers.
 * I messed with some of the values, maybe I can mess with the values of one and see how to get it right. Also need to check out how the z-coordinate is generated.
-
 ---
 

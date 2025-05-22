@@ -1,11 +1,11 @@
 ## Current Status
 * Carla Editor and Carla client for manual driving are both working with the UE5 on map 10!
 * Able to import kenworth truck and drive it around, it also does recognize the charging pads when driven over them.
-* The Kenworth truck will drive automatically 
+* The Kenworth truck will drive automatically, albeit not very well (cuts corners and can make bad turns where it hits a boundary and gets stuck not knowing to back up) 
 
 ## Kenworth Truck Notes
 * I made my own Torque Curve, will need to get data or something on a true EV 6 wheeler truck torque curve.
-  * Also just left the gears as they were, which are likely wrong.
+  * Also just left the gears settings default.
 * Changed the set mass to 9752Kg, hoping that will make it drive more like an actual semi.
   * Was set at 1800Kg before.
   * Upon changing, the truck does not move anymore, I think I need to change up the torque curve.

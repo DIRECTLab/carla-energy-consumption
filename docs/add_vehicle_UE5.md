@@ -138,6 +138,7 @@ Note: This is the process I followed for adding the [kenworthTruck_Old.fbx](../m
 Deleting the materials worked. I have the Kenworth Truck imported.
 * It seems that the kenworth truck FBX had a lot of different materials compared to the vehicles in carla which had around 6, give or take a few. I believe that ws the issue, just too many materials.
 * Later I also found that Carla includes some basic vehicle materials which can be used on added vehicles, I switched most of the Kenworths used materials to be these as they honestly look nicer than the ones I imported.
+---
 
 ### Can't figure out how to access the new Kenworth
 #### Attempted Fixes
@@ -175,6 +176,7 @@ Looking for the actual file where the list of vehicle blueprints is defined.
         "SupportedDrivers": []
     }
     ```
+---
 
 ### Truck spawns in but cannot move
 * The Kenworth truck stays floating above the ground once spawned in, and the wheels do not move when throttle pushed or steering wheel turned.
@@ -190,4 +192,5 @@ Looking for the actual file where the list of vehicle blueprints is defined.
     * Result: 
 
 #### Fixed
-* I just followed the Carla documentation again carefully. It drives now.
+* I restarted the process and followed the Carla documentation more carefully. It drives now.
+---
