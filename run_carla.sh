@@ -13,7 +13,7 @@ show_help() {
 }
 
 #Default values
-#NR is which monitor to start on. 1 is primary.
+#NR is which monitor's resolution to start pygame with, 1 is the primary monitor.
 export RES=$(xrandr | grep '*' | awk 'NR==1 {print $1}')
 VEHICLE=lincoln
 
