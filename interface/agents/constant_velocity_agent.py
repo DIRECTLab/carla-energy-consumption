@@ -16,7 +16,7 @@ from .basic_agent import BasicAgent
 class ConstantVelocityAgent(BasicAgent):
     """
     ConstantVelocityAgent implements an agent that navigates the scene at a fixed velocity.
-    This agent will fail if asked to perform turns that are impossible are the desired speed.
+    This agent will fail if asked to perform turns that are impossible at the desired speed.
     This includes lane changes. When a collision is detected, the constant velocity will stop,
     wait for a bit, and then start again.
     """
