@@ -5,13 +5,14 @@
 
 ## Kenworth Truck Notes
 * I made my own Torque Curve, will need to get data or something on a true EV 6 wheeler truck torque curve.
-  * Also just left the gears settings default.
+  * Gears settings default.
 * Changed the set mass to 9752Kg, hoping that will make it drive more like an actual semi.
   * Was set at 1800Kg before.
   * Upon changing, the truck does not move anymore, I think I need to change up the torque curve.
   * Changed the Max Torque to 5000. The truck does move now, however it drives with some odd behavior.
     * Weird bouncing at times where the road appears to be smooth.
     * It seems to keep hitting bumps in the road that are not there.
+    * Struggles to make turns nicely (swings too wide, hitting other vehicles and obstacles)
 
 ## TODOs
 1. Shut off background display to speed things up
@@ -26,21 +27,13 @@
   * Get the charging data as it's going for learning.
 
 
-## Reinforcement Learning with Carla
-### TODO Links to read
-* [End-to-end learning using CARLA Simulator](https://imtiazulhassan.medium.com/end-to-end-learning-using-carla-simulator-12869b5d6f7)
-    * Will I need to get the ROS bridge working to do reinforcement learning? I know they supposedly made it more integrated or easier or something in carlaUE5 to use the ROS.
-
-### From Videos
-* [Python code example for Reinforcement Learning](https://github.com/Duane321/mutual_information/blob/main/videos/monte_carlo_for_RL_and_off_policy_methods/blackjack.py)
-
 ## Speed Carla Up
 * [Speed Up Carla FPS Post](https://github.com/carla-simulator/carla/discussions/8484) Comments that they sped up to 24/25 FPS by adding the -RenderOffScreen flag to the server.
 * [Turn Off Screen Rendering Mode](https://carla-ue5.readthedocs.io/en/latest/adv_rendering_options/#off-screen-rendering-mode) It is looking like it might only be possible to do this with the CarlaUE5 quick build, not the build with the Unreal Editor.
 
 ### FPS
-All felt pretty smooth except for the full screen res, which was still pretty good but felt slightly slow here and there
-* Full screen resolution on this machine. (3440x1440)
+All felt pretty smooth except for the 3440x1440 res, which is somewhat jumpy
+* 3440x1440
   * client running at about 60
   * server at 9-10
 * 1920x1080

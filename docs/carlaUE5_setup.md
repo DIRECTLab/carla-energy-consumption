@@ -1,8 +1,7 @@
 # Carla Editor Setup with Unreal Engine v5.5
 ## Software
 * Working on `Ubuntu 22.04.5`
-* Working in a Conda env: `server-carlaUE5`
-* Working in a Conda env: `client-carlaUE5`
+* Working in a Conda env: `server-carlaUE5` and `client-carlaUE5`
 * Setting up `Carla v0.10.0`
 
 
