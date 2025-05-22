@@ -13,8 +13,11 @@ show_help() {
 }
 
 #Default values
-export RES=$(xrandr | grep '*' | awk '{print $1}')
+#NR is which monitor to start on. 1 is primary.
+export RES=$(xrandr | grep '*' | awk 'NR==1 {print $1}')
 VEHICLE=lincoln
+
+echo $RES
 
 #Handles the options
 while getopts "v:s:r:h" opt; do
