@@ -6,6 +6,9 @@
   * [More Details from the Video](https://www.dsinnovators.com/blogs/implementing-reinforcement-learning-algorithm-in-carlas-environment)
 * [Farama Tools for RL training](https://farama.org/)
 * `OpenAI gym` is a tool for doing Reinforcement Learning
+* [Docs by OpenAI to learn RL](https://spinningup.openai.com/en/latest/spinningup/rl_intro.html)
+* [Stanford DeepLearning Tutorial](http://ufldl.stanford.edu/tutorial/)
+* [Stanford RL Course](https://www.youtube.com/watch?v=FgzM3zpZ55o&list=PLoROMvodv4rOSOPzutgyCTapiGlY2Nd8u)
 
 ### From Videos
 * [Python code example for Reinforcement Learning](https://github.com/Duane321/mutual_information/blob/main/videos/monte_carlo_for_RL_and_off_policy_methods/blackjack.py)

@@ -193,4 +193,7 @@ Looking for the actual file where the list of vehicle blueprints is defined.
 
 #### Fixed
 * I restarted the process and followed the Carla documentation more carefully. It drives now.
+
+### Truck brakes are working poorly
+* I changed the collision mesh to capsule, and spheres for the wheels. Which did seem to make the truck drive a little more normally? Hard to tell, the brakes are now severely underpowered. Not sure what the problem there is.
 ---

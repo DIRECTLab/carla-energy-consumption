@@ -4,20 +4,16 @@ eval "$(conda shell.bash hook)"
 show_help() {
   echo "Usage: $0 [-v VEHICLE] [-r RES] [-h]"
   echo ""
-  echo "Leave with no options to use defaults"
-  echo ""
   echo "Options:"
-  echo "  -v  VEHICLE Specify name of the vehicle csv to load. Ie. for kenworth.csv, enter kenworth."
-  echo "  -r  RES Specify the desired resolution for the client screen. Ie. 1920x1080"
-  echo "  -h  Show this help message and exit."
+  echo "  -v  VEHICLE       Specify name of the vehicle csv to load. Ie. for kenworth.csv, enter kenworth."
+  echo "  -r  WIDTHxHEIGHT  Specify the desired resolution for the client screen. Ie. 1920x1080"
+  echo "  -h                Show this help message and exit."
 }
 
 #Default values
 #NR is which monitor's resolution to start pygame with, 1 is the primary monitor.
 export RES=$(xrandr | grep '*' | awk 'NR==1 {print $1}')
 VEHICLE=lincoln
-
-echo $RES
 
 #Handles the options
 while getopts "v:s:r:h" opt; do

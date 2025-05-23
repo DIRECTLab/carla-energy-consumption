@@ -15,11 +15,12 @@
     * Struggles to make turns nicely (swings too wide, hitting other vehicles and obstacles)
 
 ## TODOs
-1. Shut off background display to speed things up
-2. fix the charging pads, z-axis
-3. Figure out the Reinforcement learning plugin for Unreal Engine 5
-4. Speed up Carla!
-
+1. fix the charging pads, z-axis
+1. Figure out the Reinforcement learning plugin for Unreal Engine 5
+1. Speed up Carla!
+1. Fix the kenworth truck so it is driving well
+1. Add a working trailer to the kenworth
+  * How do we work with more than four wheels that move?
 
 ## Longterm Goals
 * Integrate reinforcement learning into Carla (through the PythonAPI)
