@@ -49,6 +49,9 @@ def get_agents(path) -> list:
     """
     Loads the agents from the CSV at `path`.
     """
+    #TODO delete TEST print
+    print("TEST path = ", path)
+    
     regular_params = ['vehicle', 'agent_type', 'number', 'color', 'hvac', 'init_soc', 'lane_offset',]
     # EV params are used to create an EV object
     print("vehicle Name")
@@ -82,6 +85,10 @@ def get_agents(path) -> list:
                 else:
                     # Convert from str to correct type. Type must have a constructor that accepts str
                     agent_specification[option] = type(defaults[option])(agent_specification[option])
+
+            #TODO delete TEST print
+            print("TEST agent_specification: ", agent_specification)
+
             # Previously the default was 50.0 for teslas, even when teslas always have a bigger capacity than 50.0
             if agent_specification['vehicle'][:13] == 'vehicle.tesla':
                 agent_specification['capacity'] = 265.0

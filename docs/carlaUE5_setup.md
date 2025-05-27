@@ -312,17 +312,18 @@ tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN
 * power = 100000.0
 * efficiency = 0.95
 
-* front_left = "(57.981632232666016,66.82268524169922,0.0)"
-* front_right = "(57.982913970947266,65.82268524169922,0.0)"
-* back_right = "(59.982913970947266,65.82524871826172,0.0)"
-* power = 100000.0
-* efficiency = 0.95
+* Pad measurments
+  * front_left = "(57.981632232666016,66.82268524169922,0.0)"
+  * front_right = "(57.982913970947266,65.82268524169922,0.0)"
+  * back_right = "(59.982913970947266,65.82524871826172,0.0)"
+  * power = 100000.0
+  * efficiency = 0.95
 
-* map=`Town10HD_Opt`
-* power = 100000.0
-* efficiency = 0.95
-* length = 2
-* width = 1
+  * map=`Town10HD_Opt`
+  * power = 100000.0
+  * efficiency = 0.95
+  * length = 2
+  * width = 1
 
 * Well, I was able to correctly generate a chargers csv for the town 10 map with this command. THat is progess. 
   * `python junction_chargers_all.py --power 100000.0 --efficiency 0.95 -m Town10HD_Opt 2 1 testing-chager-creation`
