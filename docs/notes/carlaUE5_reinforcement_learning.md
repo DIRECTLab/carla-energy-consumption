@@ -2,6 +2,7 @@
 ## Links
 * [End-to-end learning using CARLA Simulator](https://imtiazulhassan.medium.com/end-to-end-learning-using-carla-simulator-12869b5d6f7)
     * Will I need to get the ROS bridge working to do reinforcement learning? I know they supposedly made it more integrated or easier or something in carlaUE5 to use the ROS.
+* [Deep RL in Carla](https://github.com/idreesshaikh/Autonomous-Driving-in-Carla-using-Deep-Reinforcement-Learning)
 * [Video: RL in Carla](https://www.youtube.com/watch?v=y4ZMg1YPkZM)
   * [More Details from the Video](https://www.dsinnovators.com/blogs/implementing-reinforcement-learning-algorithm-in-carlas-environment)
 * [Farama Tools for RL training](https://farama.org/)
