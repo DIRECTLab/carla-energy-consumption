@@ -38,6 +38,6 @@ else
                                                                                                   #the local wheel file in the Carla server Build
 fi
 
-python3 manual_control_steeringwheel.py ./input/examples/$VEHICLE.csv -w ./input/examples/Town10_intersection_chargers.csv --res $RES
-# python3 manual_control_steeringwheel.py ./input/examples/$VEHICLE.csv -w ./input/examples/Town10_intersection_chargers.csv --res $RES > /dev/null 2>&1 &
-# python3 navigation/draw_chargers.py ./input/examples/Town10_intersection_chargers.csv
+# python3 manual_control_steeringwheel.py ./input/examples/$VEHICLE.csv -w ./input/examples/Town10_intersection_chargers.csv --res $RES
+python3 manual_control_steeringwheel.py ./input/examples/$VEHICLE.csv -w ./input/examples/Town10_intersection_chargers.csv --res $RES > /dev/null 2>&1 &
+python3 navigation/draw_chargers.py ./input/examples/Town10_intersection_chargers.csv
