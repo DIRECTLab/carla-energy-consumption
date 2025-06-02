@@ -13,5 +13,11 @@ else
 fi
 
 export RES=$(xrandr | grep '*' | awk 'NR==1 {print $1}')
-python3 manual_control_steeringwheel.py --host 129.123.153.74 ./input/examples/kenworth.csv -w ./input/examples/Town10_intersection_chargers.csv --res $RES > /dev/null 2>&1 &
-python3 navigation/draw_chargers.py --host 129.123.153.74 ./input/examples/Town10_intersection_chargers.csv
+python3 manual_control_steeringwheel.py --host 144.39.45.43 ./input/examples/ogdenbus.csv -w ./input/examples/Town10_intersection_chargers.csv --res $RES > /dev/null 2>&1 &
+python3 navigation/draw_chargers.py --host 144.39.45.43 ./input/examples/Town10_intersection_chargers.csv
+
+
+
+# Wi-Fi IP Address: 144.39.45.43
+# Ethernet IP Address: 129.123.153.74 
+
