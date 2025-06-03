@@ -41,9 +41,13 @@
   3. `sudo chown -R $USER:$USER /home/carla/CarlaUE5/Unreal/`
     * As one command: `sudo chown -R $USER:$USER /home/carla/CarlaUE5/Build/ && sudo chown -R $USER:$USER /home/carla/CarlaUE5/PythonAPI/ && sudo chown -R $USER:$USER /home/carla/CarlaUE5/Unreal/`
 
+* Super command that does the first setup and the permission changes in one
+  `sudo -E env GIT_LOCAL_CREDENTIALS=GITHUB_USERNAME@GITHUB_TOKEN ./CarlaSetup.sh --python-root=/home/carla/miniconda3/envs/server-carlaUE5/bin/ && sudo chown -R $USER:$USER /home/carla/CarlaUE5/Build/ && sudo chown -R $USER:$USER /home/carla/CarlaUE5/PythonAPI/ && sudo chown -R $USER:$USER /home/carla/CarlaUE5/Unreal/`
+
 ### Launching the Editor After Build/Source changes
-* Run `sudo -E /opt/cmake-3.28.3-linux-x86_64/bin/cmake --build Build --target launch` first. 
-  * Probably need to go back and build things so running works better, however this way does work for now. Have to run to actually build as somethings are locked as root permission during the build process.
+* Run `sudo -E /opt/cmake-3.28.3-linux-x86_64/bin/cmake --build Build -t launch` first.
+  * This will build but then fail to launch as Unreal will not run with `sudo` permissions.
+  * Probably need to go back and build things so running works better, however this way does work for now. Have to run to actually build as some hings are locked as root permission during the build process.
 * Have to run these so Unreal can start without using sudo
   1. `sudo chown -R $USER:$USER /home/carla/CarlaUE5/Build/`
   2. `sudo chown -R $USER:$USER /home/carla/CarlaUE5/PythonAPI/`
@@ -51,7 +55,10 @@
     * As one command: `sudo chown -R $USER:$USER /home/carla/CarlaUE5/Build/ && sudo chown -R $USER:$USER /home/carla/CarlaUE5/PythonAPI/ && sudo chown -R $USER:$USER /home/carla/CarlaUE5/Unreal/`
 * Run `cmake --build Build -t launch` (-t or --target) in the root directory of `CarlaUE5` in the `server-carlaUE5` Conda env.
   * Have to run again without `sudo` as UnrealEngine will refuse to start with root permissions.
-* Note: Once the Setup is done, only need to run this command to relaunch the Carla UE Editor/Server
+  * Note: Once the Setup is done, only need to run `cmake --build Build -t launch` to restart the editor.
+
+* Super command that does the rebuild, the permission changes, then launches
+  `sudo -E /opt/cmake-3.28.3-linux-x86_64/bin/cmake --build Build -t launch; sudo chown -R $USER:$USER /home/carla/CarlaUE5/Build/ && sudo chown -R $USER:$USER /home/carla/CarlaUE5/PythonAPI/ && sudo chown -R $USER:$USER /home/carla/CarlaUE5/Unreal/ && cmake --build Build -t launch`
 
 ### Launching the Editor Otherwise
 * Run `cmake --build Build -t launch` (-t or --target) in the root directory of `CarlaUE5` in the `server-carlaUE5` Conda env.
