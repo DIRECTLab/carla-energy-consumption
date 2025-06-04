@@ -15,6 +15,11 @@
     * It seems to keep hitting bumps in the road that are not there.
     * Struggles to make turns nicely (swings too wide, hitting other vehicles and obstacles)
 
+## 4080 install
+* Runs smoother, nice fps for the client.
+* The RTX 4080 has less VRAM however, and Carla is now crashing.
+  * Will look into reducing VRAM use of the editor.
+
 ## TODOs
 1. fix the charging pads, z-axis
 1. Figure out the Reinforcement learning plugin for Unreal Engine 5
