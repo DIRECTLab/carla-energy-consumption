@@ -24,9 +24,10 @@
 1. fix the charging pads, z-axis
 1. Figure out the Reinforcement learning plugin for Unreal Engine 5
 1. Speed up Carla!
-1. Fix the kenworth truck so it is driving well
+1. Fix the kenworth truck so it is driving well, especially the brakes
 1. Add a working trailer to the kenworth
   * How do we work with more than four wheels that move?
+1. Figure out Sunshine and Moon stuff to possible stream the demo better
 
 ## Longterm Goals
 * Integrate reinforcement learning into Carla (through the PythonAPI)
