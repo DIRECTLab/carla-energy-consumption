@@ -41,3 +41,7 @@ fi
 # python3 manual_control_steeringwheel.py ./input/examples/$VEHICLE.csv -w ./input/examples/Town10_intersection_chargers.csv --res $RES
 python3 manual_control_steeringwheel.py ./input/examples/$VEHICLE.csv -w ./input/examples/Town10_intersection_chargers.csv --res $RES > /dev/null 2>&1 &
 python3 navigation/draw_chargers.py ./input/examples/Town10_intersection_chargers.csv
+
+# IP address for Luigi machine (tyson)
+## WIFI 144.39.99.66
+## Ethernet 129.123.153.75
