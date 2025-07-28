@@ -6,7 +6,7 @@ Getting chargers on specific roads and lanes is a bit complicated and tricky bec
 4. Run the [propagate_chargers.py](./propagate_chargers.py) script and pass the csv file that conatains the head chrger you want to populate from 
 
 
-## HOW TO RUN roadslanes_chargers.py
+## HOW TO RUN propagate_chargers.py
 usage: `propagate_chargers.py [-h] [--separate] [-n N] [-i I] [-m MAP] [--host H] [--port P] init_chargers outfile d`
 eg. `python propagate_chargers.py /home/directlab/carla-energy-consumption/initial.csv -i 0 -n 10 final.csv 4.0`
 
