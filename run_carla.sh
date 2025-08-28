@@ -13,6 +13,7 @@ else
 fi
 
 export RES=$(xrandr | grep '*' | awk 'NR==1 {print $1}')
+# python3 manual_control_steeringwheel.py ./input/examples/kenworth.csv -w ./input/examples/Town10_intersection_chargers.csv --res $RES > /dev/null 2>&1 &
 python3 manual_control_steeringwheel.py ./input/examples/tesla.csv -w ./input/examples/Town10_intersection_chargers.csv --res $RES > /dev/null 2>&1 &
 python3 navigation/draw_chargers.py ./input/examples/Town10_intersection_chargers.csv
 
