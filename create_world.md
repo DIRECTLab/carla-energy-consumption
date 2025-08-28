@@ -46,6 +46,8 @@ The creator of this tool either dropped an underscore, missed some arguments, or
 * When you are using the Generic Junction tool, click on all of the roads you want to connect and then press the spacebar. This will solidify your drawing.
     * Immediately after drawing the generic junction, you have to use the Junction Connecting road tool to show how the traffic flow works in the junction. In other words, you have to physically draw how a right turn would connect to a different road.
 
+Note: The Blender add on might still not work for straight road, arc, clothoid etc even after these changes. It seems to be a compatibilty issue with the latest blender version so you might wantt to install one of the older blender versions preferably 4.3 and that should work with all the add on feattures.
+
 
 
 ## Method #2: Using Pre-Baked osm-to-xodr converter in CARLA 

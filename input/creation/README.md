@@ -28,4 +28,6 @@ These scripts are intended to be run from the command line. Use the `-h` option 
 
 - [prepare_agents.py](./prepare_agents.py) is a script for creating an agent file such as [tracked_agent.csv](../examples/tracked_agent.csv).
 
-- [propagate_chargers.py](./propagate_chargers.py) propagates chargers backwards through lanes.
+- [propagate_chargers.py](./propagate_chargers.py) propagates chargers backwards through lanes. Check `roadlanes_README.md` to see how to effectively use to get chargers on speciific lanes
+
+- 
