@@ -5,11 +5,11 @@
     * You can clone the repository here: [carla repo](https://github.com/carla-simulator/carla/tree/ue4-dev?tab=readme-ov-file).
     * Make sure to follow their [documentation](https://carla.readthedocs.io/en/latest/) for getting carla setup correctly.
     * Other Helpful Docs for setup and configurations
-        * [`carla_startup.md`](./docs/carla_startup.md)
-        * [`CARLA_editor_notes_Zac.md`](./docs/CARLA_editor_notes_Zac.md)
-        * [`create_world.md`](./docs/create_world.md)
-        * [`add_new_vehicle.md`](./docs/add_new_vehicle.md)
-        * [`steering_wheel_manual.md`](./docs/steering_wheel_manual.md)
+        * [`carla_startup.md`](./carla_startup.md)
+        * [`CARLA_editor_notes_Zac.md`](./CARLA_editor_notes_Zac.md)
+        * [`create_world.md`](./create_world.md)
+        * [`add_new_vehicle.md`](./add_new_vehicle.md)
+        * [`steering_wheel_manual.md`](./steering_wheel_manual.md)
 
 2. Once you have the carla server setup, run the server
     ```bash
