@@ -6,7 +6,6 @@
     * Make sure to follow their [documentation](https://carla.readthedocs.io/en/latest/) for getting carla setup correctly.
     * Other Helpful Docs for setup and configurations
         * [`carla_startup.md`](./carla_install_help.md)
-        * [`CARLA_editor_notes_Zac.md`](./CARLA_editor_notes_Zac.md)
         * [`create_world.md`](./create_world.md)
         * [`add_new_vehicle.md`](./add_new_vehicle.md)
         * [`steering_wheel_manual.md`](./steering_wheel_manual.md)
