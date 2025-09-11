@@ -16,10 +16,14 @@
         * Run `conda env list` to see all available conda envs
     3. Move into the `carla` directory
     4. Run `make launch`
-    * This will start up the Carla Server.
+        * If an error occurs about the pythonAPI/Boost follow step 2 in 
+        [`carla_install_help.md`](./carla_install_help.md) for a solution.
 
 3. Once the carla server is loaded, press play button in the Unreal Editor to
 start the server.
+    * Changing maps:
+        * Best Demo Map: Town10HD (Don't do the Town10 HD OPT)
+        * SLC Import Map: compiled_roads
 
 4. Now that the server is running, run the [`run_carla.sh`](./run_carla.sh)
 script in this repo in another terminal to run the carla client.
