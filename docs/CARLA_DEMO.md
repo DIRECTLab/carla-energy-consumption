@@ -14,6 +14,7 @@
 2. Starting the Carla Server
     1. Open a terminal
     2. Activate the server conda env: `carla-editor-env`
+        * Run `conda env list` to see all available conda envs
     3. Move into the `carla` directory
     4. Run `make launch`
     * This will start up the Carla Server.
