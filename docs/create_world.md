@@ -50,7 +50,6 @@ The creator of this tool either dropped an underscore, missed some arguments, or
 Note: The Blender add on might still not work for straight road, arc, clothoid etc even after these changes. It seems to be a compatibilty issue with the latest blender version so you might wantt to install one of the older blender versions preferably 4.3 and that should work with all the add on feattures.
 
 
-
 ## Method #2: Using Pre-Baked osm-to-xodr converter in CARLA 
 1. Go to the URL `https://www.openstreetmap.org/export#map=17/40.770154/-111.891686` to open up OpenStreetMap in SLC,UT
 2. Select the `manually select a different area` to snip the area that you want to export in an .osm file.
