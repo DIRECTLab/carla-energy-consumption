@@ -17,7 +17,7 @@ show_help() {
 #NR is which monitor's resolution to start pygame with, 1 is the primary monitor.
 export RES=$(xrandr | grep '*' | awk 'NR==1 {print $1}')
 VEHICLE=tesla
-CHARGERS=Town10_intersections_chargers
+CHARGERS=Town10_intersection_chargers
 DEBUG=false
 
 #Handles the options
