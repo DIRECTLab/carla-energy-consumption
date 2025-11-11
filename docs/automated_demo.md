@@ -1,5 +1,7 @@
+# Instructions to run a quick automated simulation that produces some charger use data
 Terminal 1:
 1. Start the CARLA server
+1. Click the play button once running
 
 Terminal 2:
 1. `python input/creation/charger_options.py 2 1 -i 0 --power 100_000 --efficiency 0.95 --seed 0 -m Town10HD > input/examples/automation-demo-chargers.csv`

@@ -32,13 +32,13 @@ while getopts "v:c:s:r:dh" opt; do
   esac
 done
 
-if conda env list | grep -qw "carlaenv"; then
+if conda env list | grep -qw "carla-client-env"; then
   echo "Carla conda env exists, skipping installation..."
-  conda activate carlaenv
+  conda activate carla-client-env
 else
   echo "Carla conda env does not exist, installing..."
-  conda create -n carlaenv python=3.8 -y
-  conda activate carlaenv
+  conda create -n carla-client-env python=3.8 -y
+  conda activate carla-client-env
   conda install -c conda-forge pandas matplotlib pygame shapely networkx -y
   pip install carla==0.9.14
 fi
