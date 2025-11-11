@@ -61,11 +61,3 @@ Note: The Blender add on might still not work for straight road, arc, clothoid e
 1. In order to make the ego vehicle populate in the world, you have to update all 129 spawning points to be on land
 1. To add landscape quickly, use the landscape mode in the `modes` on the top bar of the UE. This URL is super helpful to know what parameters you should put for your landscape `https://dev.epicgames.com/documentation/en-us/unreal-engine/creating-landscapes?application_version=4.27`
 1. I figured out how to add the weather by comparing the inputs for Town10 under `BP_Sky` and this CARLA Document `https://dev.epicgames.com/documentation/en-us/unreal-engine/creating-landscapes?application_version=4.27`
-
-## Things To Do
-1. [] Figure out the best way to not have roads just dying or if I need to change that at all
-1. [] Fix the graphics
-1. [] Add traffic controls
-1. [] Figure out the correct coordinates to upload the charging pads
-1. [] Add weather conditions
-1. [] Add NPC's 
