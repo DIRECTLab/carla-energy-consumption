@@ -78,8 +78,8 @@ your tires from sinking into the ground.
   handles as you expect.
 15. Once you satisfied with the changes you have made, you need to make it a vehicle that we can drive with the steering wheel.
 - First go to the `input/examples` folder in `CARLA-ENGERGY-CONSUMPTION`. Copy the `kenworth.csv` file, but change the name of the file and change `vehicle.kenworth.t860e` into `vehicle.<make of your vehicle>.<model of your vehicle>`. In the Make/Modle sections, put the same labels that you put in the Vehicle Factory for your vehicle. Notice, that everything has to be lowercase even if you captilized it in the Vehicle Factory.
-- Update `run_carla.sh` by going to the line that runs manual_control_steeringwheel and replace the vehicle.csv file with the .csv file that you
-just created. If everything was done correctly, then you should be able to type `run_carla.sh` in the terminal and it will run the client side
+- Update `run_carla_demo.sh` by going to the line that runs manual_control_steeringwheel and replace the vehicle.csv file with the .csv file that you
+just created. If everything was done correctly, then you should be able to type `run_carla_demo.sh` in the terminal and it will run the client side
 and upload your new vehicle to test in the simulation. 
 
 

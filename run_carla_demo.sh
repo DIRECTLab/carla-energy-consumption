@@ -50,6 +50,7 @@ if $AUTOMATED_DEMO; then
     --efficiency 0.95 \
     --seed 0 \
     -m Town10HD > input/examples/automation-demo-chargers.csv &&
+
   python multitracking.py input/examples/tracked_agents.csv \
     output/Town10_lap \
     -w input/examples/automation-demo-chargers.csv \
@@ -61,7 +62,7 @@ else
     python manual_control_steeringwheel.py \
       ./input/examples/$VEHICLE.csv \
       -w ./input/examples/$CHARGERS.csv \
-      --res $RES;
+      --res $RES &
   else
     python manual_control_steeringwheel.py \
       ./input/examples/$VEHICLE.csv \

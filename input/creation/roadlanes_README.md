@@ -2,7 +2,7 @@ Getting chargers on specific roads and lanes is a bit complicated and tricky bec
 
 1. Run the server and move the viewer/screen to the junction whose lane you want to place the chargers. 
 2. Run the [junction_chargers.py](./junction_chargers.py) script and change the interval to like 2.0 seconds or a time frame you think would be convenient to view the charger spawn at that junction and also the csv file related to it.
-3. Run the csv file at the [run_carla.sh](../../run_carla.sh) and manually delete each coordinate until you get the charger that lies directly on the lane you want the charger on. 
+3. Run the csv file at the [run_carla_demo.sh](../../run_carla_demo.sh) and manually delete each coordinate until you get the charger that lies directly on the lane you want the charger on. 
 4. Run the [propagate_chargers.py](./propagate_chargers.py) script and pass the csv file that conatains the head chrger you want to populate from 
 
 

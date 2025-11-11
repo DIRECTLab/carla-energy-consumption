@@ -25,9 +25,9 @@ start the server.
         * Best Demo Map: Town10HD (Don't do the Town10 HD OPT)
         * SLC Import Map: compiled_roads
 
-4. Now that the server is running, run the [`run_carla.sh`](./run_carla.sh)
+4. Now that the server is running, run the [`run_carla_demo.sh`](./run_carla_demo.sh)
 script in this repo in another terminal to run the carla client.
-    * [`run_carla.sh`](./run_carla.sh) runs manual control by default. The 
+    * [`run_carla_demo.sh`](./run_carla_demo.sh) runs manual control by default. The 
     client will crash if you do not have a steering wheel connected
     to the machine when you run the script.
     * You can edit the parameters in the client script to get different vehicles 
