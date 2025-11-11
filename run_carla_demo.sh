@@ -16,7 +16,7 @@ show_help() {
 }
 
 export RES=$(xrandr | grep '*' | awk 'NR==1 {print $1}')
-VEHICLE=tesla
+VEHICLE=kenworth
 CHARGERS=Town10_intersection_chargers
 DEBUG=false
 AUTOMATED_DEMO=false
