@@ -1,5 +1,5 @@
-![alt text](./figures/steering_wheel.png)
-![alt text](./figures/pedals.png)
+![Steering Wheel Diagram](./figures/steering_wheel.png "Steering Wheel Diagram")
+![Pedals Diagram](./figures/pedals.png "Pedals Diagram")
 
 # How to drive
 * Turn the steering wheel to turn the car
