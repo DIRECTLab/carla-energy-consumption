@@ -1,5 +1,4 @@
 # How to Install CARLA 0.9.14 with Unreal Engine Editor
-## Process
 0. CARLA must be built from source to allow editing abilities. The following was done with CARLA installed from source for Linux on Ubuntu 20. Go to [CARLA documentation v0.9.14](https://carla.readthedocs.io/en/0.9.14/build_linux/) for instructions on how to build from source in Linux. After making sure you have all of the correct requirements, make sure that when you are cloning CARLA that you are getting `v0.9.14`. Use the following command after downloading `aria2`: `git clone -b 0.9.14 https://github.com/carla-simulator/carla.git`.
 
 0. After cloning CARLA, you need to have the assets specific to CARLA 0.9.14. This requires that you go into the `Update.sh` and replace the URL on line 50 with this URL: `https://carla-assets.s3.us-east-005.backblazeb2.com/${CONTENT_ID}.tar.gz`
