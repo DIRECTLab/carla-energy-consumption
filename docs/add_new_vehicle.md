@@ -51,13 +51,7 @@ cab...hmmm
 
 
 ## Notes
-Step 12 pertains mostly to the problems I had while trying to import the 
-Kenworth truck. I got it working in the simulator ONLY after removing any 
-reference whatsoever to the middle left and middle right wheels. 
-The KenworthTruck.fbx file in this folder should work straight out of the box, 
-which means you can start 
-[this tutorial](https://www.youtube.com/watch?v=0F3ugwkISGk&t=1027s) at 11:41 
-and go from there.
+Step 12 pertains mostly to the problems I had while trying to import the Kenworth truck. I got it working in the simulator ONLY after removing any reference whatsoever to the middle left and middle right wheels. The [`KenworthTruck.fbx`](../kenworth_trucks/KenworthTruck.fbx) file should work straight out of the box, which means you can start [this tutorial](https://www.youtube.com/watch?v=0F3ugwkISGk&t=1027s) at `11:41`.
 
 There is a new feature in the documentation about adding an N wheeled vehicle.
 This may be useful when adding a trailer to the truck.
