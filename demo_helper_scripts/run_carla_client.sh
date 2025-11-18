@@ -1,6 +1,8 @@
 #!/bin/bash
 eval "$(conda shell.bash hook)"
 
+echo "CWD: $(pwd)"
+
 show_help() {
   echo "Usage: $0 [-v VEHICLE] [-r RES] [-h]"
   echo ""
@@ -15,11 +17,22 @@ show_help() {
   echo "  -h                Show this help message and exit."
 }
 
+# defaults
 export RES=$(xrandr | grep '*' | awk 'NR==1 {print $1}')
 VEHICLE=kenworth
 CHARGERS=Town10_intersection_chargers
 DEBUG=false
 AUTOMATED_DEMO=false
+
+# paths relative to this script's location
+PATH_TO_CHARGER_OPTIONS="../input/creation"
+PATH_TO_INPUT_EXAMPLES="../input/examples"
+PATH_TO_MULTITRACKING="../"
+PATH_TO_OUTPUT="../output"
+PATH_TO_MANUAL_CONTROL="../"
+PATH_TO_DRAW_CHARGERS="../navigation"
+
+# navigation/draw_chargers.py
 
 while getopts "v:c:s:r:adh" opt; do
   case $opt in
@@ -45,30 +58,30 @@ else
 fi
 
 if $AUTOMATED_DEMO; then
-  python input/creation/charger_options.py 2 1 -i 0 \
+  python $PATH_TO_CHARGER_OPTIONS/charger_options.py 2 1 -i 0 \
     --power 100_000 \
     --efficiency 0.95 \
     --seed 0 \
-    -m Town10HD > input/examples/automation-demo-chargers.csv &&
+    -m Town10HD > $PATH_TO_INPUT_EXAMPLES/automation-demo-chargers.csv &&
 
-  python multitracking.py input/examples/tracked_agents.csv \
-    output/Town10_lap \
-    -w input/examples/automation-demo-chargers.csv \
+  python $PATH_TO_MULTITRACKING/multitracking.py $PATH_TO_INPUT_EXAMPLES/tracked_agents.csv \
+    $PATH_TO_OUTPUT/Town10_lap \
+    -w $PATH_TO_INPUT_EXAMPLES/automation-demo-chargers.csv \
     --seed 0 \
     -t 10000\
     -d 0.05
 else
   if $DEBUG; then
-    python manual_control_steeringwheel.py \
-      ./input/examples/$VEHICLE.csv \
-      -w ./input/examples/$CHARGERS.csv \
+    python $PATH_TO_MANUAL_CONTROL/manual_control_steeringwheel.py \
+      $PATH_TO_INPUT_EXAMPLES/$VEHICLE.csv \
+      -w $PATH_TO_INPUT_EXAMPLES/$CHARGERS.csv \
       --res $RES &
   else
-    python manual_control_steeringwheel.py \
-      ./input/examples/$VEHICLE.csv \
-      -w ./input/examples/$CHARGERS.csv \
+    python $PATH_TO_MANUAL_CONTROL/manual_control_steeringwheel.py \
+      $PATH_TO_INPUT_EXAMPLES/$VEHICLE.csv \
+      -w $PATH_TO_INPUT_EXAMPLES/$CHARGERS.csv \
       --res $RES > /dev/null 2>&1 &
   fi
 fi
 
-python navigation/draw_chargers.py ./input/examples/$CHARGERS.csv
+python $PATH_TO_DRAW_CHARGERS/draw_chargers.py $PATH_TO_INPUT_EXAMPLES/$CHARGERS.csv

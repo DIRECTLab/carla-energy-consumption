@@ -3,6 +3,6 @@ eval "$(conda shell.bash hook)"
 
 conda activate carlaenv
 
-cd ../carla
+cd ~/carla
 
 make launch

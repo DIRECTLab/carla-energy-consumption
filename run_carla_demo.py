@@ -14,13 +14,17 @@ from subprocess import (
     Popen
 )
 
-EXPECTED_TIME_UNTIL_WINDOW_APPEARANCE = 15
-PATH_TO_UI_IMAGE = "carlaUE4-play-btn.png"
+PATH_TO_HELPER_SCRIPTS = "./demo_helper_scripts"
+PATH_TO_UI_IMAGE = "./docs/figures/carlaUE4-play-btn.png"
+
 IMAGE_CONFIDENCE = 0.8
-WAIT_BEFORE_CLIENT_START = 10
+
+EXPECTED_TIME_UNTIL_WINDOW_APPEARANCE = 15
+WAIT_BEFORE_CLIENT_START = 15
 
 Popen(
-    ["bash", "start_carla_server.sh"],
+    ["bash", "run_carla_server.sh"],
+    cwd=PATH_TO_HELPER_SCRIPTS,
     stdout=DEVNULL, 
     stderr=DEVNULL
 )
@@ -50,4 +54,7 @@ press('p')
 keyUp('alt')
 
 sleep(WAIT_BEFORE_CLIENT_START)
-run_sub_process(["bash", "run_carla_demo.sh"])
+run_sub_process(
+    ["bash", "run_carla_client.sh"],
+    cwd=PATH_TO_HELPER_SCRIPTS
+)
