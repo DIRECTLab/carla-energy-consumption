@@ -55,7 +55,7 @@ if $AUTOMATED_DEMO; then
     output/Town10_lap \
     -w input/examples/automation-demo-chargers.csv \
     --seed 0 \
-    -t 230 \
+    -t 10000\
     -d 0.05
 else
   if $DEBUG; then
