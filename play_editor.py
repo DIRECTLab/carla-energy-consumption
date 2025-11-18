@@ -5,24 +5,29 @@
 # unreal.LevelEditorSubsystem().editor_play_simulate()
 
 
-import pyautogui
-import time
-import subprocess
+from time import sleep
+from pyautogui import keyDown, press, keyUp
+from subprocess import (
+    DEVNULL,
+    check_output, 
+    CalledProcessError, 
+    run as run_sub_process, 
+    Popen
+)
 
 TIME_TO_WAIT = 100
 
-
-subprocess.Popen(
+Popen(
     ["bash", "start_carla_server.sh"],
-    stdout=subprocess.DEVNULL, 
-    stderr=subprocess.DEVNULL
+    stdout=DEVNULL, 
+    stderr=DEVNULL
 )
 
 unreal_window_handle = None
 
 while unreal_window_handle is None:
     try:
-        unreal_window_handle_bytes = subprocess.check_output(
+        unreal_window_handle_bytes = check_output(
             ["xdotool", "search", "--name", "Unreal Editor"]
         ) 
         print(
@@ -30,15 +35,17 @@ while unreal_window_handle is None:
             unreal_window_handle_bytes
         )
         unreal_window_handle = unreal_window_handle_bytes.split()[0]
-        print("TEST unreal window handle: ", unreal_window_handle)
-    except subprocess.CalledProcessError:
+        # print("TEST unreal window handle: ", unreal_window_handle)
+    except CalledProcessError:
         print("Window not found yet")
-        time.sleep(TIME_TO_WAIT)
+        sleep(TIME_TO_WAIT)
 
 
-subprocess.run(["xdotool", "windowactivate", unreal_window_handle])
+run_sub_process(["xdotool", "windowactivate", unreal_window_handle])
+keyDown('alt')
+press('p')
+keyUp('alt')
 
-time.sleep(1)
-pyautogui.keyDown('alt')
-pyautogui.press('p')
-pyautogui.keyUp('alt')
+sleep(TIME_TO_WAIT)
+
+run_sub_process(["bash", "run_carla_demo.sh"])
