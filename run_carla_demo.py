@@ -20,7 +20,9 @@ PATH_TO_UI_IMAGE = "./docs/figures/carlaUE4-play-btn.png"
 IMAGE_CONFIDENCE = 0.8
 
 EXPECTED_TIME_UNTIL_WINDOW_APPEARANCE = 15
-WAIT_BEFORE_CLIENT_START = 15
+WAIT_BEFORE_CLIENT_START = 30
+
+print("SO IT BEGINS!!!")
 
 Popen(
     ["bash", "run_carla_server.sh"],

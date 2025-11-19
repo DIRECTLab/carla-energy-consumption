@@ -1,9 +1,10 @@
 # Current todos for the project
 
+1. Desktop shortcut is kind of working, but crashing for some reason when running the stuff, see the output log I made in the home directory, should show the errors that are occuring and how to fix
 1. [] Clean up the scripts so all paths work and the layout is more intuitive with the addition of the new script/way to run carla
 1. [] Make sure docs are updated to reflect the new way to run carla
 1. [] Clean up the demo files themselves now that things are working to be more optimized
-1. [] move the `notes` directory into the docs folder, and cleanup links as needed
+1. [x] move the `notes` directory into the docs folder, and cleanup links as needed
 1. [x] rename the various demo files to have a more intuitive naming system
 1. [x] refactor the `run_carla_demo.sh` script to make demos even easier
     * [x] Start with kenworth as default

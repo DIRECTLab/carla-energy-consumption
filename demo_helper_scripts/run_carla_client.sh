@@ -53,7 +53,7 @@ else
   echo "Carla conda env does not exist, installing..."
   conda create -n carlaclient-env python=3.8 -y
   conda activate carlaclient-env
-  conda install -c conda-forge pandas matplotlib pygame shapely networkx pyautogui opencv-python -y
+  conda install -c conda-forge pandas matplotlib pygame shapely networkx pyautogui opencv -y
   pip install carla==0.9.14
 fi
 
