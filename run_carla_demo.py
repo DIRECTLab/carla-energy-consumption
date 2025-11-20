@@ -41,7 +41,7 @@ unreal_window_handle = None
 while unreal_window_handle is None:
     try:
         unreal_window_handle_bytes = check_output(
-            ["xdotool", "search", "--name", WINDOW_NAME]
+            ["xdotool", "search", "--onlyvisible", "--name", WINDOW_NAME]
         ) 
         unreal_window_handle = unreal_window_handle_bytes.split()[0]
     except CalledProcessError:
@@ -58,7 +58,8 @@ while not image_found:
         print("Waiting to load...")
         sleep(RETRY_WINDOW)
 
-run_sub_process(["xdotool", "windowactivate", unreal_window_handle])
+print("FOCUS")
+run_sub_process(["xdotool", "windowfocus", unreal_window_handle])
 keyDown('alt')
 press('p')
 keyUp('alt')
