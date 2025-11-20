@@ -10,6 +10,8 @@ When in doubt, opt for [multitracking.py](multitracking.py). This program is the
 More information about usage and options can be obtained with the `-h` option. 
 See also [automated_demo.md](./docs/automated_demo.md).
 
+* See [CARLA_DEMO.md](./docs/CARLA_DEMO.md) for instructions on how to get Carla running for demos.
+
 - [automatic_control.py](automatic_control.py) tracks a vehicle which is automatically controlled on the client side.
 
   Basic Usage

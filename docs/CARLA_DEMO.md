@@ -27,7 +27,7 @@
 
 Note:
 * Options can be passed to [run_carla_demo.py](../run_carla_demo.py) just as if they are being passed to [client.sh](../demo_helper_scripts/client.sh).
-  * Eg. `python run_carla_demo.py -a` will run the automated demo. 
+  * Eg. `python run_carla_demo.py -a` will run the automated driving and traffic demo. 
 * There is a help message you can see by running `python run_carla_demo.py -h` which will tell you how to use the options.
 
 ### More Manual Method
@@ -53,4 +53,4 @@ start the server.
     1. Run `./client.sh`
         * See [client.sh](../demo_helper_scripts/client.sh)
         * Note that the client will crash if you do not have a steering wheel connected to the machine when you run the script.
-        * Run `run_carla_demo.sh -h` for help message on configuration options that are available.
+        * Run `client.sh -h` for help message on configuration options that are available.
