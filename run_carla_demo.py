@@ -24,7 +24,7 @@ EXPECTED_TIME_UNTIL_WINDOW_APPEARANCE = 70
 RETRY_WINDOW = 5
 WAIT_BEFORE_CLIENT_START = 30
 
-print("SO IT BEGINS!!!")
+
 
 Popen(
     ["bash", "run_server.sh"],

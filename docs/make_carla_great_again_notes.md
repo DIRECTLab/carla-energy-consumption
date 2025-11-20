@@ -21,11 +21,17 @@ install scrot
 * `opencv`
 * `pyautogui`
 
-Window that I want
-xdotool getwindowname 71303231
-CarlaUE4 - Unreal Editor
+## notes on the window finding issues
+* The actual Carla editor window
+  * xdotool getwindowname 71303231
+  * CarlaUE4 - Unreal Editor
 
-Name of loading screen
-xdotool getwindowname 71303175
-Unreal Editor - CarlaUE4
+* Name of loading screen
+  * xdotool getwindowname 71303175
+  * Unreal Editor - CarlaUE4
+
+## Notes on why starting from desktop shortcut might not be working
+* My scripts do start the conda env twice techincally, does that matter?
+* Or possible the conda envs are mixing somehow since the serve one needs a different env
+
 
