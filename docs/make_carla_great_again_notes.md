@@ -20,3 +20,12 @@ install scrot
 
 * `opencv`
 * `pyautogui`
+
+Window that I want
+xdotool getwindowname 71303231
+CarlaUE4 - Unreal Editor
+
+Name of loading screen
+xdotool getwindowname 71303175
+Unreal Editor - CarlaUE4
+
