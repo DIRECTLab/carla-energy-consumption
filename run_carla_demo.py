@@ -95,8 +95,6 @@ for key, value in args_dict.items():
         command_args.append(f"-{key}")
     elif value is not None and value is not False:
         command_args.append(f"-{key}")
-        print(type(key))
-        print(type(value))
         command_args.append(f"{value}")
 
 run_sub_process(
