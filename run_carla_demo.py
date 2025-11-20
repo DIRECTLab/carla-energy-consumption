@@ -1,11 +1,5 @@
-from time import sleep
-from pyautogui import (
-    keyDown, 
-    press, 
-    keyUp, 
-    locateOnScreen, 
-    ImageNotFoundException
-)
+# Standard Library
+from sys import exit as sys_exit
 from subprocess import (
     DEVNULL,
     check_output, 
@@ -14,6 +8,25 @@ from subprocess import (
     Popen
 )
 from argparse import ArgumentParser
+from time import sleep
+
+# GUI tool
+try:
+    from pyautogui import (
+        keyDown, 
+        press, 
+        keyUp, 
+        locateOnScreen, 
+        ImageNotFoundException
+    )
+except ModuleNotFoundError:
+    print(
+        "ERROR: pyautogui package not found.\n"
+        "Ensure your conda env is installed and activated.\n"
+        "See documentation in repo for help."
+    )
+    sys_exit(1)
+
 
 PATH_TO_HELPER_SCRIPTS = "./demo_helper_scripts"
 PATH_TO_UI_IMAGE = "./docs/figures/carlaUE4-play-btn.png"
@@ -46,12 +59,11 @@ parser.add_argument(
     '-d', action='store_true', 
     help='Debug mode. Show all output from client start script.'
 )
-
 args_dict = vars(parser.parse_args())
 
 
 Popen(
-    ["bash", "run_server.sh"],
+    ["bash", "server.sh"],
     cwd=PATH_TO_HELPER_SCRIPTS,
     stdout=DEVNULL, 
     stderr=DEVNULL
@@ -89,7 +101,7 @@ press('p')
 keyUp('alt')
 
 sleep(WAIT_BEFORE_CLIENT_START)
-command_args = ["bash", "run_client.sh"]
+command_args = ["bash", "client.sh"]
 for key, value in args_dict.items():
     if value is True:
         command_args.append(f"-{key}")
