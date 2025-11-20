@@ -21,9 +21,9 @@ try:
     )
 except ModuleNotFoundError:
     print(
-        "ERROR: pyautogui package not found.\n"
+        "ERROR: pyautogui package not found.\n\n"
         "Ensure your conda env is installed and activated.\n"
-        "See documentation in repo for help."
+        "See `conda_env_setup.md` in `docs/` for help."
     )
     sys_exit(1)
 

@@ -19,7 +19,7 @@
 1. Open a terminal
 1. Navigate to the [PROJECTS_ROOT_FOLDER/](../)
 1. Activate the `carlaclient-env` conda environment
-    * If you cannot find the `carlaclient-env` env, navigate to [demo_helper_scripts/](../demo_helper_scripts/) and run `client.sh -i` this will install the conda env. Then retry from step 2. 
+    * If you cannot find the `carlaclient-env` env, see [conda_env_setup.md](./conda_env_setup.md) Then retry from step 2. 
 1. Run `python run_carla_demo.py`
     * See [run_carla_demo.py](../run_carla_demo.py)
     * It takes about 2 or 3 minutes then the demo will be ready to go.
