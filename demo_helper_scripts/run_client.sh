@@ -1,8 +1,6 @@
 #!/bin/bash
 eval "$(conda shell.bash hook)"
 
-echo "CWD: $(pwd)"
-
 show_help() {
   echo "Usage: $0 [-v VEHICLE] [-r RES] [-h]"
   echo ""
@@ -31,8 +29,6 @@ PATH_TO_MULTITRACKING="../"
 PATH_TO_OUTPUT="../output"
 PATH_TO_MANUAL_CONTROL="../"
 PATH_TO_DRAW_CHARGERS="../navigation"
-
-# navigation/draw_chargers.py
 
 while getopts "v:c:s:r:adh" opt; do
   case $opt in
