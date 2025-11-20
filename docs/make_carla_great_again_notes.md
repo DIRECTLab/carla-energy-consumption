@@ -33,5 +33,3 @@ install scrot
 ## Notes on why starting from desktop shortcut might not be working
 * My scripts do start the conda env twice techincally, does that matter?
 * Or possible the conda envs are mixing somehow since the serve one needs a different env
-
-
