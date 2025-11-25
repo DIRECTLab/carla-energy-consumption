@@ -22,6 +22,7 @@ install scrot
 * `pyautogui`
 
 ## notes on the window finding issues
+
 * The actual Carla editor window
   * xdotool getwindowname 71303231
   * CarlaUE4 - Unreal Editor
@@ -31,5 +32,6 @@ install scrot
   * Unreal Editor - CarlaUE4
 
 ## Notes on why starting from desktop shortcut might not be working
+
 * My scripts do start the conda env twice techincally, does that matter?
 * Or possible the conda envs are mixing somehow since the serve one needs a different env
