@@ -61,7 +61,6 @@ parser.add_argument(
 )
 args_dict = vars(parser.parse_args())
 
-
 Popen(
     ["bash", "server.sh"],
     cwd=PATH_TO_HELPER_SCRIPTS,
