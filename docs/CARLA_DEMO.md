@@ -11,12 +11,25 @@
     * [create_world.md](./create_world.md)
     * [add_new_vehicle.md](./add_new_vehicle.md)
     * [steering_wheel_manual.md](./steering_wheel_manual.md)
+* Ensure the steering wheel is connected to the machine.
 
 ## After setup is complete
 
-### Fully Automated
+### Option 1: Fully Automated Startup
 
-### Automated Options Method
+This will only run Carla demo with all of the defaults. To have more configurability see [option 2](#option-2-automated-with-options)
+
+The Defaults
+* Kenworth truck
+* Map10
+* Manual Driving.
+
+Steps
+1. Double Click the Carla Charge Icon on the desktop.
+1. Wait.
+    * Should take about 2-3 minutes to load.
+
+### Option 2: Automated with Options
 
 1. Open a terminal
 1. Navigate to the [PROJECTS_ROOT_FOLDER/](../)
@@ -24,7 +37,7 @@
     * If you cannot find the `carlaclient-env` env, see [conda_env_setup.md](./conda_env_setup.md) Then retry from step 2. 
 1. Run `python run_carla_demo.py`
     * See [run_carla_demo.py](../run_carla_demo.py)
-    * It takes about 2 or 3 minutes then the demo will be ready to go.
+    * It takes about 2-3 minutes then the demo will be ready to go.
     * Giving no options will run all the defaults for the demo.
 
 Note:
@@ -32,9 +45,9 @@ Note:
   * Eg. `python run_carla_demo.py -a` will run the automated driving and traffic demo. 
 * There is a help message you can see by running `python run_carla_demo.py -h` which will tell you how to use the options.
 
-### Manual Method
+### Option 3: Manual Method
 
-*This is the older method for getting the demo running, still works but the current method is more automated. Try this method should the automated method fail.*
+*This is the older method for getting the demo running, still works but the current method is more automated. Try this method should the automated methods fail.*
 
 1. Starting the Carla Server
     1. Open a terminal
