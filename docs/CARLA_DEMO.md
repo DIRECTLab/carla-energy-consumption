@@ -30,9 +30,9 @@ Note:
   * Eg. `python run_carla_demo.py -a` will run the automated driving and traffic demo. 
 * There is a help message you can see by running `python run_carla_demo.py -h` which will tell you how to use the options.
 
-### More Manual Method
+### Manual Method
 
-*This is the older method for getting the demo running, still works but the current method is more automated.*
+*This is the older method for getting the demo running, still works but the current method is more automated. Try this method should the automated method fail.*
 
 1. Starting the Carla Server
     1. Open a terminal
