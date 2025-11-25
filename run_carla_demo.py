@@ -29,7 +29,7 @@ except ModuleNotFoundError:
 
 
 PATH_TO_HELPER_SCRIPTS = "./demo_helper_scripts"
-PATH_TO_UI_IMAGE = "./docs/figures/carlaUE4-play-btn.png"
+PATH_TO_UI_IMAGE = "./docs/figures/bigscreen-carlaUE4-playbtn.png"
 WINDOW_NAME = "CarlaUE4 - Unreal Editor"
 
 IMAGE_CONFIDENCE = 0.8
@@ -79,11 +79,13 @@ while unreal_window_handle is None:
             ["xdotool", "search", "--onlyvisible", "--name", WINDOW_NAME]
         ) 
         unreal_window_handle = unreal_window_handle_bytes.split()[0]
+        print("Unreal windown handle: ", unreal_window_handle)
     except CalledProcessError:
         sleep(RETRY_WINDOW)
 
 
 print("Searching for image...")
+run_sub_process(["xdotool", "windowfocus", unreal_window_handle])
 image_found = False
 while not image_found:
     try: 
