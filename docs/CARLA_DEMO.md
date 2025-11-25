@@ -14,7 +14,9 @@
 
 ## After setup is complete
 
-### Current Method
+### Fully Automated
+
+### Automated Options Method
 
 1. Open a terminal
 1. Navigate to the [PROJECTS_ROOT_FOLDER/](../)

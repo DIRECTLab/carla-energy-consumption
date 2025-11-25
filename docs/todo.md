@@ -2,8 +2,6 @@
 
 ## In Progress
 
-1. [] Get Carla demo able to run from desktop icon
-    * Works on smaller sized desktop but the play btn image detection fails on the big screen. Need to decrease confidence or change the image of the btn based on resolution.
 
 
 ## Backlog
@@ -16,6 +14,8 @@
 
 ## Completed
 
+1. [x] Get Carla demo able to run from desktop icon
+    * Works on smaller sized desktop but the play btn image detection fails on the big screen. Need to decrease confidence or change the image of the btn based on resolution.
 1. [x] Make sure docs are updated to reflect the new way to run carla
 1. [x] Clean up the scripts so all paths work and the layout is more intuitive with the addition of the new script/way to run carla
 1. [x] move the `notes` directory into the docs folder, and cleanup links as needed

@@ -69,10 +69,8 @@ Popen(
     stderr=DEVNULL
 )
 
-print("Waiting for window to appear")
 sleep(EXPECTED_TIME_UNTIL_WINDOW_APPEARANCE)
 
-print("Checking for window")
 unreal_window_handle = None
 while unreal_window_handle is None:
     try:
@@ -80,23 +78,18 @@ while unreal_window_handle is None:
             ["xdotool", "search", "--onlyvisible", "--name", WINDOW_NAME]
         ) 
         unreal_window_handle = unreal_window_handle_bytes.split()[0]
-        print("Unreal windown handle: ", unreal_window_handle)
     except CalledProcessError:
         sleep(RETRY_WINDOW)
 
 
-print("Searching for image...")
 run_sub_process(["xdotool", "windowfocus", unreal_window_handle])
 image_found = False
 while not image_found:
     try: 
         image_found = locateOnScreen(image=PATH_TO_UI_IMAGE, confidence=IMAGE_CONFIDENCE)
-        print("image_found output: ", image_found)
     except ImageNotFoundException:
-        print("Waiting to load...")
         sleep(RETRY_WINDOW)
 
-print("FOCUS")
 run_sub_process(["xdotool", "windowfocus", unreal_window_handle])
 keyDown('alt')
 press('p')
