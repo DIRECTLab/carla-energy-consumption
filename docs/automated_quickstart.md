@@ -1,4 +1,5 @@
 # Instructions to run a quick automated simulation that produces some charger use data
+
 Terminal 1:
 1. Start the CARLA server
 1. Click the play button once running

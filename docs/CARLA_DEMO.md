@@ -32,7 +32,7 @@ Note:
 
 ### More Manual Method
 
-*This is more the older method for getting the demo running, still works but the current method is more automated.*
+*This is the older method for getting the demo running, still works but the current method is more automated.*
 
 1. Starting the Carla Server
     1. Open a terminal
