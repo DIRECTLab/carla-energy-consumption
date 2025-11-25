@@ -29,10 +29,11 @@ except ModuleNotFoundError:
 
 
 PATH_TO_HELPER_SCRIPTS = "./demo_helper_scripts"
-PATH_TO_UI_IMAGE = "./docs/figures/bigscreen-carlaUE4-playbtn.png"
+PATH_TO_UI_IMAGE = "./docs/figures/carlaUE4-playbtn.png"
 WINDOW_NAME = "CarlaUE4 - Unreal Editor"
 
-IMAGE_CONFIDENCE = 0.8
+IMAGE_CONFIDENCE = 0.5 #Has to be confidence level .5 to recognize the smaller screen image of play
+                        #btn on the big screen
 
 EXPECTED_TIME_UNTIL_WINDOW_APPEARANCE = 70
 RETRY_WINDOW = 5
