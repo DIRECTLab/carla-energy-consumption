@@ -4,6 +4,7 @@
 
 ## Backlog
 
+1. [] Go through the notes and update them to be more accurate, remove out of date info.
 1. [] Update the CARLA_DEMO doc to match the process for UE5 instead of UE4
   * update the main projects README to match the changes for UE5
 1. [] Fix the client.sh demo helper script so it works with the conda-environemnts folder and the client env yaml
