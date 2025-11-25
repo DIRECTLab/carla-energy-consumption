@@ -17,19 +17,21 @@ def get_actor_display_name(actor, truncate=250):
 
 class HUD(object):
     def __init__(self, width, height, help):
+        #font variables
+        default_font_size = 18
+
         self.dim = (width, height)
-        font = pygame.font.Font(pygame.font.get_default_font(), 20)
+        font = pygame.font.Font(pygame.font.get_default_font(), default_font_size)
         font_name = 'courier' if os.name == 'nt' else 'mono'
         fonts = [x for x in pygame.font.get_fonts() if font_name in x]
         default_font = 'ubuntumono'
         mono = default_font if default_font in fonts else fonts[0]
         mono = pygame.font.match_font(mono)
-        self._font_mono = pygame.font.Font(mono, 12 if os.name == 'nt' else 14)
+        self._font_mono = pygame.font.Font(mono, default_font_size if os.name == 'nt' else default_font_size)
         self._notifications = FadingText(font, (width, 40), (0, height - 40))
         self.help = HelpText(help, pygame.font.Font(mono, 24), width, height)
         self.server_fps = 0
         self.frame = 0
-        self.simulation_time = 0
         self._show_info = True
         self._info_text = []
         self._server_clock = pygame.time.Clock()
@@ -44,31 +46,17 @@ class HUD(object):
         self._notifications.tick(world, clock)
         if not self._show_info:
             return
-        transform = world.player.get_transform()
         velocity = world.player.get_velocity()
         control = world.player.get_control()
-        heading = 'N' if abs(transform.rotation.yaw) < 89.5 else ''
-        heading += 'S' if abs(transform.rotation.yaw) > 90.5 else ''
-        heading += 'E' if 179.5 > transform.rotation.yaw > 0.5 else ''
-        heading += 'W' if -0.5 > transform.rotation.yaw > -179.5 else ''
         colhist = world.collision_sensor.get_collision_history()
-        collision = [colhist[x + self.frame - 200] for x in range(0, 200)]
+        collision = [colhist[x + self.frame - 250] for x in range(0, 250)]
         max_col = max(1.0, max(collision))
         collision = [x / max_col for x in collision]
-        vehicles = world.world.get_actors().filter('vehicle.*')
         self._info_text = [
             'Server:  % 16.0f FPS' % self.server_fps,
             'Client:  % 16.0f FPS' % clock.get_fps(),
             '',
-            'Vehicle: % 20s' % get_actor_display_name(world.player, truncate=20),
-            'Map:     % 20s' % world.world.get_map().name.split('/')[-1],
-            'Simulation time: % 12s' % datetime.timedelta(seconds=int(self.simulation_time)),
-            '',
-            'Speed:   % 15.0f km/h' % (3.6 * math.sqrt(velocity.x**2 + velocity.y**2 + velocity.z**2)),
-            u'Heading:% 16.0f\N{DEGREE SIGN} % 2s' % (transform.rotation.yaw, heading),
-            'Location:% 20s' % ('(% 5.1f, % 5.1f)' % (transform.location.x, transform.location.y)),
-            'GNSS:% 24s' % ('(% 2.6f, % 3.6f)' % (world.gnss_sensor.lat, world.gnss_sensor.lon)),
-            'Height:  % 18.0f m' % transform.location.z,
+            'Speed:   % 15.0f mph' % (2.237 * math.sqrt(velocity.x**2 + velocity.y**2 + velocity.z**2)),
             ''
         ]
         if isinstance(control, carla.VehicleControl):
@@ -95,18 +83,8 @@ class HUD(object):
             '',
             'Collision:',
             collision,
-            '',
-            'Number of vehicles: % 8d' % len(vehicles)
         ]
-        if len(vehicles) > 1:
-            self._info_text += ['Nearby vehicles:']
-            distance = lambda l: math.sqrt((l.x - transform.location.x)**2 + (l.y - transform.location.y)**2 + (l.z - transform.location.z)**2)
-            vehicles = [(distance(x.get_location()), x) for x in vehicles if x.id != world.player.id]
-            for d, vehicle in sorted(vehicles):
-                if d > 200.0:
-                    break
-                vehicle_type = get_actor_display_name(vehicle, truncate=22)
-                self._info_text.append('% 4dm %s' % (d, vehicle_type))
+
 
     def toggle_info(self):
         self._show_info = not self._show_info
@@ -118,13 +96,15 @@ class HUD(object):
         self._notifications.set_text('Error: %s' % text, (255, 0, 0))
 
     def render(self, display):
+        background_box_width = 275
+
         if self._show_info:
-            info_surface = pygame.Surface((220, self.dim[1]))
+            info_surface = pygame.Surface((background_box_width, self.dim[1]))
             info_surface.set_alpha(100)
             display.blit(info_surface, (0, 0))
             v_offset = 4
-            bar_h_offset = 100
-            bar_width = 106
+            bar_h_offset = 127 # moves the throttle, steer, brake, reverse, handbrake, manual, and gear blocks horizontally
+            bar_width = 140 # Changes the size of the throttle, steer, and brake bars
             for item in self._info_text:
                 if v_offset + 18 > self.dim[1]:
                     break

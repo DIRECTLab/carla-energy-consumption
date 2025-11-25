@@ -20,14 +20,6 @@
 * The RTX 4080 has less VRAM however, and Carla is now crashing.
   * Will look into reducing VRAM use of the editor.
 
-## TODOs
-1. fix the charging pads, z-axis
-1. Figure out the Reinforcement learning plugin for Unreal Engine 5
-1. Speed up Carla!
-1. Fix the kenworth truck so it is driving well, especially the brakes
-1. Add a working trailer to the kenworth
-  * How do we work with more than four wheels that move?
-1. Figure out Sunshine and Moon stuff to possible stream the demo better
 
 ## Longterm Goals
 * Integrate reinforcement learning into Carla (through the PythonAPI)
@@ -128,4 +120,3 @@ TODO end the script record for the day
         ```
 
     * Restarted `make launch` at 09:49, failed again with the same error at 9:59
-
