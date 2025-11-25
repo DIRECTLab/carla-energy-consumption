@@ -5,6 +5,7 @@
 
 ## Backlog
 
+1. [] Write up in the docs or notes how the desktop shortcut works so next guy can figure it out should there be issues.
 1. [] Is there a more robust way than expiicitly putting the path to UE4 in the server script to get the desktop shortcut start way working? Thinking about setting this up on other machines than just the one carla machine.
 1. [] Clean up the demo files themselves now that things are working to be more optimized
 1. [] Update [roadlanes_README.md](../input/creation/roadlanes_README.md) to match new ways of running carla
