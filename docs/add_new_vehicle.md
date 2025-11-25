@@ -1,10 +1,13 @@
 # Adding a New Vehicle to CARLA
+
 ## Helpful Links
+
 - Link to the documentation on importing an fbx file into CARLA for a new vehicle. [CARLA v0.9.14 Adding vehicle documentation](https://carla.readthedocs.io/en/0.9.14/tuto_content_authoring_vehicles/)
 - [Youtube Tutorial](https://www.youtube.com/watch?v=0F3ugwkISGk)
 - [How to export the fbx file from CARLA](https://forums.unrealengine.com/t/export-fbx-from-ue4/374740/2)
 
 ## Instructions
+
 Don't forget to remove the extra stuff from the blender file.
 I don't think we need a fancy fbx model that moves. You add the moving wheels 
 seperately. Though it might be useful for how the trailer moves behind the 
@@ -51,6 +54,7 @@ cab...hmmm
 
 
 ## Notes
+
 Step 12 pertains mostly to the problems I had while trying to import the Kenworth truck. I got it working in the simulator ONLY after removing any reference whatsoever to the middle left and middle right wheels. The [`KenworthTruck.fbx`](../kenworth_trucks/KenworthTruck.fbx) file should work straight out of the box, which means you can start [this tutorial](https://www.youtube.com/watch?v=0F3ugwkISGk&t=1027s) at `11:41`.
 
 There is a new feature in the documentation about adding an N wheeled vehicle.

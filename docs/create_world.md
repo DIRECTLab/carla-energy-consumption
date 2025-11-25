@@ -1,12 +1,15 @@
 # World Creation Notes
 
 ## Method #1: Using Driving Scenario Creator
+
 ### Videos/Links
+
 * [Map Your World: Using Open Source Tools in Blender for CARLA Simulator](https://www.youtube.com/watch?v=5QLc27o7zhc)
 * Use this link to get the Driving Scenario Creator: [Blender-Driving-Scenario-Creator](https://github.com/johschmitz/blender-driving-scenario-creator/releases?page=1)
 * Google Maps Link: [Distribution Center Local Address](https://www.google.com/maps/place/Union+Pacific+Intermodal./@40.7547322,-112.042675,14.08z/data=!4m6!3m5!1s0x8752f2599c9c084d:0x21695c5b6d42739d!8m2!3d40.7495492!4d-112.0189232!16s%2Fg%2F1pxwgcv22?entry=ttu&g_ep=EgoyMDI1MDYwNC4wIKXMDSoASAFQAw%3D%3D)
 
 ### Fixes
+
 If you can't install the Driving_Scenario_Creator.zip file and Blender talks about not having scenariogeneration, lxml, numpy, scipy then you are going to have to uninstall them one by one using the Blender's Python and then install them using the Blender's Python. It's a headache and a half, but Chat was super helpful getting the correct commands. Here are a couple that I used to uninstall and reinstall:
 ```bash
 ./python3.11 -m pip uninstall lxml #uninstalls from Blender's python
@@ -51,6 +54,7 @@ Note: The Blender add on might still not work for straight road, arc, clothoid e
 
 
 ## Method #2: Using Pre-Baked osm-to-xodr converter in CARLA 
+
 1. Go to the URL `https://www.openstreetmap.org/export#map=17/40.770154/-111.891686` to open up OpenStreetMap in SLC,UT
 1. Select the `manually select a different area` to snip the area that you want to export in an .osm file.
 1. Rename the .osm file in downloads

@@ -1,7 +1,12 @@
+# Manual for using the Steering Wheel
+
+## Images
+
 ![Steering Wheel Diagram](./figures/steering_wheel.png "Steering Wheel Diagram")
 ![Pedals Diagram](./figures/pedals.png "Pedals Diagram")
 
-# How to drive
+## How to drive
+
 * Turn the steering wheel to turn the car
 * Press the gas pedal to accelerate the car
 * Press the brake pedal to decelerate
