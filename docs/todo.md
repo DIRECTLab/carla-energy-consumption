@@ -12,6 +12,8 @@
 1. [] fix the charging pads, z-axis
 1. [] Figure out the Reinforcement learning plugin for Unreal Engine 5
 1. [] Speed up Carla!
+  * Find a way to shutoff raytracing, to make the graphics simpler
+  * Headless mode
 1. [] Fix the kenworth truck so it is driving well, especially the brakes
 1. [] Add a working trailer to the kenworth
   * How do we work with more than four wheels that move?
