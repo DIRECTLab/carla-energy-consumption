@@ -6,6 +6,13 @@
 - [Youtube Tutorial](https://www.youtube.com/watch?v=0F3ugwkISGk)
 - [How to export the fbx file from CARLA](https://forums.unrealengine.com/t/export-fbx-from-ue4/374740/2)
 
+## Notes
+
+Step 12 pertains mostly to the problems I had while trying to import the Kenworth truck. I got it working in the simulator ONLY after removing any reference whatsoever to the middle left and middle right wheels. The [`KenworthTruck.fbx`](../kenworth_trucks/KenworthTruck.fbx) file should work straight out of the box, which means you can start [this tutorial](https://www.youtube.com/watch?v=0F3ugwkISGk&t=1027s) at `11:41`.
+
+There is a new feature in the documentation about adding an N wheeled vehicle.
+This may be useful when adding a trailer to the truck.
+
 ## Instructions
 
 Don't forget to remove the extra stuff from the blender file.
@@ -50,12 +57,3 @@ cab...hmmm
 1. Once you satisfied with the changes you have made, you need to make it a vehicle that we can drive with the steering wheel.
     - First go to the `input/examples` folder in `CARLA-ENGERGY-CONSUMPTION`. Copy the `kenworth.csv` file, but change the name of the file and change `vehicle.kenworth.t860e` into `vehicle.<make of your vehicle>.<model of your vehicle>`. In the Make/Modle sections, put the same labels that you put in the Vehicle Factory for your vehicle. Notice, that everything has to be lowercase even if you captilized it in the Vehicle Factory.
     - Update `run_carla_demo.sh` by going to the line that runs manual_control_steeringwheel and replace the vehicle.csv file with the .csv file that you just created. If everything was done correctly, then you should be able to type `run_carla_demo.sh` in the terminal and it will run the client side and upload your new vehicle to test in the simulation. 
-
-
-
-## Notes
-
-Step 12 pertains mostly to the problems I had while trying to import the Kenworth truck. I got it working in the simulator ONLY after removing any reference whatsoever to the middle left and middle right wheels. The [`KenworthTruck.fbx`](../kenworth_trucks/KenworthTruck.fbx) file should work straight out of the box, which means you can start [this tutorial](https://www.youtube.com/watch?v=0F3ugwkISGk&t=1027s) at `11:41`.
-
-There is a new feature in the documentation about adding an N wheeled vehicle.
-This may be useful when adding a trailer to the truck.

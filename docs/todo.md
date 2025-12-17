@@ -10,6 +10,11 @@
 1. [] Update [add_new_vehicle.md](./add_new_vehicle.md) to match the new ways of running carla 
 1. [] Create a setup script that automates the setup process for the Carla server.
     * Install all dependencies into a new Conda env
+1. [] Fully thresh out the unreal 5 branch to upgrade to Carla Unreal 5
+1. [] Figure out the best way to not have roads just dying or if I need to change that at all
+1. [] Fix the graphics
+1. [] Add traffic controls
+1. [] Add weather conditions
 
 ## Completed
 
@@ -23,12 +28,3 @@
 1. [x] refactor the `run_carla_demo.sh` script to make demos even easier
     * [x] Start with kenworth as default
     * [x] to be able to run the manual and/or the automated demo
-
-## Things To Do (these were in [create_world.md](./create_world.md))
-
-1. [] Figure out the best way to not have roads just dying or if I need to change that at all
-1. [] Fix the graphics
-1. [] Add traffic controls
-1. [] Figure out the correct coordinates to upload the charging pads
-1. [] Add weather conditions
-1. [] Add NPC's

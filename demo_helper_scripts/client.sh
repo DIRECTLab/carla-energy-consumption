@@ -74,7 +74,7 @@ else
       $PATH_TO_OUTPUT/Town10_lap \
       -w $PATH_TO_INPUT_EXAMPLES/automation-demo-chargers.csv \
       --seed 0 \
-      -t 10000\
+      -t 1800\
       -d 0.05
   else
     if $DEBUG; then
