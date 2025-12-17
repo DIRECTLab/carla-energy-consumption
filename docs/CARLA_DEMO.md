@@ -7,10 +7,10 @@
 * You can clone the repository here: [carla repo](https://github.com/carla-simulator/carla/tree/ue4-dev?tab=readme-ov-file).
 * Make sure to follow the CARLA teams [documentation](https://carla.readthedocs.io/en/0.9.14/build_linux/) for getting carla setup correctly.
 * Other Helpful Docs for setup and configurations
-    * [carla_install_help.md](./carla_install_help.md)
-    * [create_world.md](./create_world.md)
-    * [add_new_vehicle.md](./add_new_vehicle.md)
-    * [steering_wheel_manual.md](./steering_wheel_manual.md)
+  * [carla_install_help.md](./carla_install_help.md)
+  * [create_world.md](./create_world.md)
+  * [add_new_vehicle.md](./add_new_vehicle.md)
+  * [steering_wheel_manual.md](./steering_wheel_manual.md)
 * Ensure the steering wheel is connected to the machine.
 
 ## After setup is complete

@@ -24,7 +24,7 @@ ls /home/carla/blender-4.4.3-linux-x64/4.4/python/lib/python3.11/site-packages/l
 ```
 I would repeat the process above until I had everything I needed to install the .zip file.
 
-The creator of this tool either dropped an underscore, missed some arguments, or initialized things wrong. These are all of my fixes in order to get his tool to work correctly on Blender 4.4.
+The creator of this tool either dropped an underscore, missed some arguments, or initialized things wrong. Note this was with `v0.28.4` since then the issue has been resolved by the creator in `v0.28.5` but I leave these troubleshooting solutions for future reference to deal with future bugs. These are all of my fixes in order to get his tool to work correctly on `Blender v4.4`.
 * If you get warning errors about missing a parameter when drawing a 4-way junction breaks go to `/home/carla/.config/blender/4.4/scripts/addons/blender-driving-scenario-creator/junction_four_way.py` and adjust `helpers.set_connecting_road_properties(context, 'right', road_contact_point, width_lane_incoming)` to be `helpers.set_connecting_road_properties(context, 'right', road_contact_point, width_lane_incoming, width_lane_incoming)`. We will just assume that the width of the lane coming and leaving are going to be the same width.
 * If none of the road tools draw in Driving Scenario Creator.
     1. For me the most common error was Blender couldn't create an instance of DSC_OT_(tool name) to callback function 'invoke'. If this is the same case for you then you have to change these files:

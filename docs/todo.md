@@ -2,18 +2,18 @@
 
 ## In Progress
 
-
-
 ## Backlog
 
 1. [] Write up in the docs or notes how the desktop shortcut works so next guy can figure it out should there be issues.
 1. [] Is there a more robust way than expiicitly putting the path to UE4 in the server script to get the desktop shortcut start way working? Thinking about setting this up on other machines than just the one carla machine.
 1. [] Clean up the demo files themselves now that things are working to be more optimized
-1. [] Update [roadlanes_README.md](../input/creation/roadlanes_README.md) to match new ways of running carla
 1. [] Update [add_new_vehicle.md](./add_new_vehicle.md) to match the new ways of running carla 
+1. [] Create a setup script that automates the setup process for the Carla server.
+    * Install all dependencies into a new Conda env
 
 ## Completed
 
+1. [x] Add to World creator docs which version using and how Zac did it.
 1. [x] Get Carla demo able to run from desktop icon
     * Works on smaller sized desktop but the play btn image detection fails on the big screen. Need to decrease confidence or change the image of the btn based on resolution.
 1. [x] Make sure docs are updated to reflect the new way to run carla
