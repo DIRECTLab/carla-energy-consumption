@@ -1,5 +1,11 @@
 # Instructions to run a quick automated simulation that produces some charger use data
 
+## Script Method
+
+1. Run the [run_carla_demo.py](../run_carla_demo.py) script with the `-a` option.
+
+## Manual Method
+
 Terminal 1:
 1. Start the CARLA server
 1. Click the play button once running
@@ -9,5 +15,3 @@ Terminal 2:
 1. `python multitracking.py input/examples/tracked_agents.csv output/Town10_lap -w input/examples/automation-demo-chargers.csv --seed 0 -t 230 -d 0.05`
 
 After Terminal 2 finishes, close the CARLA server. 
-
-**Note:** The automated demo can also be run more easily using the [run_carla_demo.py](../run_carla_demo.py) script with the `-a` option.

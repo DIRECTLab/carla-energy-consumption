@@ -4,8 +4,9 @@
 
 ## Priority
 
-1. [] Create a yml file so the client conda env is easily reproducible on another machine
-1. [] Create a yml file so the server conda env is easily reproducible on another machine
+1. [] Create yml files that are tracked in the repo so the conda envs are easily reproducible on another machine
+    * [] yml for client conda env
+    * [] yml for server conda env
 
 ## Backlog
 
@@ -13,7 +14,7 @@
 1. [] Is there a more robust way than explicitly putting the path to UE4 in the server script to get the desktop shortcut start way working? Thinking about setting this up on other machines than just the one carla machine.
 1. [] Clean up the demo files themselves now that things are working to be more optimized
 1. [] Update [add_new_vehicle.md](./add_new_vehicle.md) to match the new ways of running carla 
-1. [] Create a setup script that automates the setup process for the Carla server.
+1. [] Create a script that automates the setup process for the Carla server.
     * Install all dependencies into a new Conda env
 1. [] Fully thresh out the unreal 5 branch to upgrade to Carla Unreal 5
 1. [] Fix up that SLC map we created
