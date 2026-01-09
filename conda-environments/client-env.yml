@@ -1,0 +1,12 @@
+name: carlaclient-env
+channels:
+  - conda-forge
+dependencies:
+  - python=3.8
+  - pandas
+  - shapely
+  - pyautogui
+  - matplotlib
+  - networkx
+  - pygame
+  - opencv
