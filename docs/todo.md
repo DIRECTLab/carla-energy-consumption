@@ -5,7 +5,7 @@
 ## Priority
 
 1. [] Create yml files that are tracked in the repo so the conda envs are easily reproducible on another machine
-    * [] yml for client conda env
+    * [x] yml for client conda env
     * [] yml for server conda env
 
 ## Backlog
