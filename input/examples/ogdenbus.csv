@@ -1,2 +1,2 @@
-vehicle,agent_type,number
-vehicle.ogden.ebus,basic,0
+vehicle,agent_type,number,color,lane_offset
+vehicle.ogden.ebus,basic,1,"255,255,255",0
