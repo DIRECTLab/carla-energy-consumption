@@ -41,9 +41,9 @@ WINDOW_NAME            = "CarlaUE4 - Unreal Editor"
 SERVER_EXECUTABLE      = "/home/directlab/carla/Unreal/CarlaUE4/Saved/StagedBuilds/LinuxNoEditor/CarlaUE4.sh"
 
 IMAGE_CONFIDENCE                      = 0.5
-EXPECTED_TIME_UNTIL_WINDOW_APPEARANCE = 30
+EXPECTED_TIME_UNTIL_WINDOW_APPEARANCE = 25
 RETRY_WINDOW                          = 5
-WAIT_BEFORE_CLIENT_START              = 20
+WAIT_BEFORE_CLIENT_START              = 35
 MAP_LOAD_TIMEOUT                      = 180.0
 
 
@@ -394,7 +394,7 @@ if not args_dict.get('no_prompt'):
 progress = ProgressWindow()
 
 # ── Step 1: Port cleanup ───────────────────────────────────────────────────────
-progress.advance("NOT Cleaning up old processes and ports...")
+progress.advance("Cleaning up old processes and ports...")
 cleanup_ports(progress)
 
 # ── Step 2: Start CARLA server ─────────────────────────────────────────────────

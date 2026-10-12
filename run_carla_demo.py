@@ -41,6 +41,7 @@ WINDOW_NAME            = "CarlaUE4 - Unreal Editor"
 IMAGE_CONFIDENCE                      = 0.5
 EXPECTED_TIME_UNTIL_WINDOW_APPEARANCE = 70
 RETRY_WINDOW                          = 5
+EXPECTED_TIME_UNTIL_SIMULATION_STARTED= 25
 WAIT_BEFORE_CLIENT_START              = 60
 MAP_LOAD_TIMEOUT                      = 180.0
 
@@ -448,6 +449,7 @@ keyDown('alt')
 press('p')
 keyUp('alt')
 progress.set_status("Play pressed!")
+sleep(EXPECTED_TIME_UNTIL_SIMULATION_STARTED)
 
 # ── Step 5: Load map (skip for Town10) ───────────────────────────────────────
 progress.advance(f"Loading map: {selected_map}...")
