@@ -39,9 +39,9 @@ PATH_TO_UI_IMAGE       = os.path.join(PROJECT_ROOT, "docs/figures/carlaUE4-playb
 WINDOW_NAME            = "CarlaUE4 - Unreal Editor"
 
 IMAGE_CONFIDENCE                      = 0.5
-EXPECTED_TIME_UNTIL_WINDOW_APPEARANCE = 60
+EXPECTED_TIME_UNTIL_WINDOW_APPEARANCE = 70
 RETRY_WINDOW                          = 5
-WAIT_BEFORE_CLIENT_START              = 30
+WAIT_BEFORE_CLIENT_START              = 60
 MAP_LOAD_TIMEOUT                      = 180.0
 
 # Town10 variants — skip map reload to preserve custom assets
@@ -397,17 +397,16 @@ if not args_dict.get('no_prompt'):
 progress = ProgressWindow()
 
 # ── Step 1: Port cleanup ───────────────────────────────────────────────────────
-progress.advance("NOT Cleaning up old processes and ports...")
+progress.advance("Cleaning up old processes and ports...")
 cleanup_ports(progress)
 
 # ── Step 2: Start CARLA server ─────────────────────────────────────────────────
 progress.advance("Launching CARLA server...")
-server_log = open(os.path.expanduser("~/server_debug.log"), "w")
 Popen(
     ["bash", "server.sh"],
     cwd=PATH_TO_HELPER_SCRIPTS,
-    stdout=server_log,
-    stderr=server_log
+    stdout=DEVNULL,
+    stderr=DEVNULL
 )
 
 if server_only:
