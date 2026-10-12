@@ -9,6 +9,9 @@ class CarlaControl(Control):
     def __init__(self, world, start_in_autopilot):
         super().__init__()
         self._autopilot_enabled = start_in_autopilot
+	#if self._autopilot_enabled:
+        #	world.player.set_autopilot(True)
+        self._autopilot_enabled = start_in_autopilot
         world.player.set_autopilot(self._autopilot_enabled)
         self._reverse = False
 
