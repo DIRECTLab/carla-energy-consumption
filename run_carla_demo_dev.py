@@ -14,6 +14,10 @@ import signal
 import tkinter as tk
 import threading
 import subprocess
+import socket
+import time
+from time import sleep, monotonic
+from subprocess import TimeoutExpired
 
 # GUI tool
 try:
@@ -40,11 +44,7 @@ PATH_TO_UI_IMAGE       = os.path.join(PROJECT_ROOT, "docs/figures/carlaUE4-playb
 WINDOW_NAME            = "CarlaUE4 - Unreal Editor"
 SERVER_EXECUTABLE      = "/home/directlab/carla/Unreal/CarlaUE4/Saved/StagedBuilds/LinuxNoEditor/CarlaUE4.sh"
 
-IMAGE_CONFIDENCE                      = 0.5
-EXPECTED_TIME_UNTIL_WINDOW_APPEARANCE = 25
-RETRY_WINDOW                          = 5
-WAIT_BEFORE_CLIENT_START              = 35
-MAP_LOAD_TIMEOUT                      = 180.0
+WAIT_BEFORE_CLIENT_START              = 25
 
 
 # ── Vehicle ID map ─────────────────────────────────────────────────────────────
@@ -179,6 +179,29 @@ class ProgressWindow:
         except Exception:
             pass
 
+# ── Helpers ────────────────────────────────────────────────────────────────────
+def wait_for_server(proc, host="localhost", port=2000, timeout=240):
+    deadline = monotonic() + timeout
+    while monotonic() < deadline:
+        if proc.poll() is not None:
+            return False                 # server died during startup
+        try:
+            with socket.create_connection((host, port), timeout=2):
+                return True
+        except OSError:
+            sleep(2)
+    return False
+
+def stop_server(proc):
+    if proc is None or proc.poll() is not None:
+        return
+    try:
+        os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
+        proc.wait(timeout=10)
+    except TimeoutExpired:
+        os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
+    except ProcessLookupError:
+        pass
 
 # ── Port cleanup ───────────────────────────────────────────────────────────────
 def cleanup_ports(progress=None):
@@ -212,34 +235,6 @@ def cleanup_ports(progress=None):
     sleep(2)
     if progress:
         progress.set_status("Ports cleared.")
-
-
-# ── Map loader ─────────────────────────────────────────────────────────────────
-
-# Launch the server directly into the specific map as a listen/dedicated server
-#subprocess.Popen([server_executable, f"{target_map}?listen", "-log"])
-
-# def load_map(map_name, progress=None):
-#     if map_name in TOWN10_MAPS: // THIS VARIABLE HAS BEEN DELETED
-#         if progress:
-#             progress.set_status("Town 10 — skipping reload to preserve custom assets.")
-#         return True
-#     try:
-#         import carla
-#         if progress:
-#             progress.set_status(f"Connecting to load {map_name}...")
-#         client = carla.Client('localhost', 2000)
-#         client.set_timeout(MAP_LOAD_TIMEOUT)
-#         if progress:
-#             progress.set_status(f"Loading {map_name} — may take a while first time...")
-#         subprocess.Popen([server_executable, f"{map_name}?listen", "-log"])
-#         if progress:
-#             progress.set_status(f"{map_name} loaded!")
-#         return True
-#     except Exception as e:
-#         if progress:
-#             progress.set_status(f"Map load warning: {e}")
-#         return False
 
 # ── Focus pygame window ────────────────────────────────────────────────────────
 def focus_pygame_window():
@@ -400,19 +395,19 @@ cleanup_ports(progress)
 # ── Step 2: Start CARLA server ─────────────────────────────────────────────────
 progress.advance("Launching CARLA server...")
 server_log = open(os.path.expanduser("~/server_debug.log"), "w")
-#Popen(
-#    ["bash", "server-build.sh"],
-#    cwd=PATH_TO_HELPER_SCRIPTS,
-#    stdout=server_log,
-#    stderr=server_log
-#)
-process = subprocess.Popen(
-    [SERVER_EXECUTABLE, f"{selected_map}?listen", "-log"],
-    cwd=PATH_TO_HELPER_SCRIPTS,
+
+server_args = [SERVER_EXECUTABLE, f"{selected_map}?listen", "-log",
+               "-carla-rpc-port=2000"]
+#if not server_only:
+#    server_args.append("-RenderOffScreen")
+
+server_proc = Popen(
+    server_args,
+    cwd=os.path.dirname(SERVER_EXECUTABLE),
     stdout=server_log,
-    stderr=server_log
+    stderr=server_log,
+    start_new_session=True,
 )
-#subprocess.Popen([SERVER_EXECUTABLE, f"{map_name}?listen", "-log"])
 
 if server_only:
     progress.set_status("Server Only — Carla build loading.")
@@ -423,30 +418,23 @@ if server_only:
 
 # ── Step 3: Wait for packaged build to boot ───────────────────────────────────
 progress.advance("Waiting for CARLA server to boot...")
-sleep(EXPECTED_TIME_UNTIL_WINDOW_APPEARANCE)  # keep this, packaged builds still take time to load
+def wait_for_server(host="localhost", port=2000, timeout=180):
+    start = time.time()
+    while time.time() - start < timeout:
+        try:
+            with socket.create_connection((host, port), timeout=2):
+                return True
+        except OSError:
+            sleep(2)
+    return False
 
-# ── Step 4: Press Play ────────────────────────────────────────────────────────
-progress.set_status("Skipped step original 4")
-
-# ── Step 5: Load map (skip for Town10) ───────────────────────────────────────
-#progress.advance(f"Loading map: {selected_map}...")
-#if selected_map:
-#    if selected_map in TOWN10_MAPS: // THIS VARIABLE HAS BEEN DELETED
-#        progress.set_status("Town 10 — skipping reload to preserve custom assets.")
-#        sleep(5)
-#    else:
-#        sleep(10)
-#        load_map(selected_map, progress)
-#        sleep(5)
-
-#progress.set_status("Skipping map load")
-# ── Step 6: Wait to settle ────────────────────────────────────────────────────
+# ── Step 4: Wait to settle ────────────────────────────────────────────────────
 progress.advance("Waiting for simulation to settle...")
 for i in range(WAIT_BEFORE_CLIENT_START, 0, -5):
     progress.set_status(f"Starting in {i} seconds...")
     sleep(5)
 
-# ── Step 7: Start driving program ─────────────────────────────────────────────
+# ── Step 5: Start driving program ─────────────────────────────────────────────
 progress.advance("Starting driving program...")
 progress.complete()
 
