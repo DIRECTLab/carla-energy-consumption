@@ -18,6 +18,7 @@ import socket
 import time
 from time import sleep, monotonic
 from subprocess import TimeoutExpired
+import carla
 
 # GUI tool
 try:
@@ -42,9 +43,9 @@ PROJECT_ROOT           = os.path.expanduser("~/carla-energy-consumption")
 PATH_TO_HELPER_SCRIPTS = os.path.join(PROJECT_ROOT, "demo_helper_scripts")
 PATH_TO_UI_IMAGE       = os.path.join(PROJECT_ROOT, "docs/figures/carlaUE4-playbtn.png")
 WINDOW_NAME            = "CarlaUE4 - Unreal Editor"
-SERVER_EXECUTABLE      = "/home/directlab/carla/Unreal/CarlaUE4/Saved/StagedBuilds/LinuxNoEditor/CarlaUE4.sh"
+SERVER_EXECUTABLE      = "/home/directlab/carla_logan_blank/LinuxNoEditor/CarlaUE4.sh"
 
-WAIT_BEFORE_CLIENT_START              = 25
+WAIT_BEFORE_CLIENT_START = 5
 
 
 # ── Vehicle ID map ─────────────────────────────────────────────────────────────
@@ -180,28 +181,25 @@ class ProgressWindow:
             pass
 
 # ── Helpers ────────────────────────────────────────────────────────────────────
-def wait_for_server(proc, host="localhost", port=2000, timeout=240):
+def wait_for_world(proc, map_name, timeout=300, progress=None):
+    """Return True once the server reports map_name and is ticking."""
     deadline = monotonic() + timeout
     while monotonic() < deadline:
         if proc.poll() is not None:
-            return False                 # server died during startup
+            return False                      # server process died
         try:
-            with socket.create_connection((host, port), timeout=2):
+            client = carla.Client("localhost", 2000)
+            client.set_timeout(5.0)
+            world = client.get_world()
+            if world.get_map().name.endswith(map_name):
+                world.wait_for_tick(5.0)      # confirms the sim is actually ticking
                 return True
-        except OSError:
-            sleep(2)
+        except RuntimeError:
+            pass                              # port closed or still loading
+        if progress:
+            progress.set_status("Waiting for the map to finish loading...")
+        sleep(2)
     return False
-
-def stop_server(proc):
-    if proc is None or proc.poll() is not None:
-        return
-    try:
-        os.killpg(os.getpgid(proc.pid), signal.SIGTERM)
-        proc.wait(timeout=10)
-    except TimeoutExpired:
-        os.killpg(os.getpgid(proc.pid), signal.SIGKILL)
-    except ProcessLookupError:
-        pass
 
 # ── Port cleanup ───────────────────────────────────────────────────────────────
 def cleanup_ports(progress=None):
@@ -313,9 +311,12 @@ def show_selection_window():
     mode_var = tk.StringVar(value=CONTROL_MODES[0][0])
     for cid, clabel in CONTROL_MODES:
         make_radio(cf, clabel, mode_var, cid)
+        if cid == "auto":
+            tk.Label(cf, text="  * Automated Demo ignored for Town 03",
+                font=("Courier New", 9), fg=GREY, bg=CARD).pack(anchor="w", pady=(5, 0))
 
     tk.Label(cf, text="  * Vehicle/map ignored in Server Only mode",
-             font=("Courier New", 9), fg=GREY, bg=CARD).pack(anchor="w", pady=(5, 0))
+        font=("Courier New", 9), fg=GREY, bg=CARD).pack(anchor="w", pady=(5, 0))
 
     btn_frame = tk.Frame(root, bg=BG, pady=20)
     btn_frame.pack(fill="x", padx=30)
@@ -380,7 +381,7 @@ vehicle_key  = None
 if not args_dict.get('no_prompt'):
     vehicle_key, selected_map, mode = show_selection_window()
     args_dict['v'] = vehicle_key
-    if mode == "auto":
+    if mode == "auto" and selected_map != "Town03_Opt":
         auto_mode = True
     elif mode == "server_only":
         server_only = True
@@ -398,8 +399,6 @@ server_log = open(os.path.expanduser("~/server_debug.log"), "w")
 
 server_args = [SERVER_EXECUTABLE, f"{selected_map}?listen", "-log",
                "-carla-rpc-port=2000"]
-#if not server_only:
-#    server_args.append("-RenderOffScreen")
 
 server_proc = Popen(
     server_args,
@@ -418,15 +417,11 @@ if server_only:
 
 # ── Step 3: Wait for packaged build to boot ───────────────────────────────────
 progress.advance("Waiting for CARLA server to boot...")
-def wait_for_server(host="localhost", port=2000, timeout=180):
-    start = time.time()
-    while time.time() - start < timeout:
-        try:
-            with socket.create_connection((host, port), timeout=2):
-                return True
-        except OSError:
-            sleep(2)
-    return False
+if not wait_for_world(server_proc, selected_map, progress=progress):
+    progress.set_status("Server failed to load. See ~/server_debug.log")
+    sleep(5)
+    sys_exit(1)
+sleep(3)
 
 # ── Step 4: Wait to settle ────────────────────────────────────────────────────
 progress.advance("Waiting for simulation to settle...")
